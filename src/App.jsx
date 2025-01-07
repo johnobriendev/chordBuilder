@@ -1,35 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from 'react';
+
+
+
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="min-h-screen bg-gray-50">
+      {/* Header section */}
+      <header className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <h1 className="text-2xl font-bold text-gray-900">Guitar Chord Creator</h1>
+        </div>
+      </header>
+
+      {/* Main content area */}
+      <main className="max-w-7xl mx-auto px-4 py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Placeholder for Chord Creator */}
+          <section className="bg-white rounded-lg shadow">
+            <div className="p-6">
+              <h2 className="text-xl font-semibold mb-4">Create New Chord</h2>
+              <div className="h-96 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center">
+                <p className="text-gray-500">Chord Creator</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Placeholder for Chord Sheet */}
+          <section className="bg-white rounded-lg shadow">
+            <div className="p-6">
+              <h2 className="text-xl font-semibold mb-4">Chord Sheet</h2>
+              <div className="h-96 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center">
+                <p className="text-gray-500">Chord Sheet</p>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  );
+ 
+};
 
 export default App
