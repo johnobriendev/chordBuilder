@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import GuitarDiagram from './components/GuitarDiagram';
-
+import ChordSheet from './components/ChordSheet';
 
 
 function App() {
@@ -39,25 +39,7 @@ function App() {
           <section className="bg-white rounded-lg shadow">
             <div className="p-6">
               <h2 className="text-xl font-semibold mb-4">Chord Sheet</h2>
-              {chords.length === 0 ? (
-                <div className="h-96 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center">
-                  <p className="text-gray-500">Add some chords to see them here</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {chords.map(chord => (
-                    <div key={chord.id} className="p-4 border rounded">
-                      <h3 className="font-medium">{chord.title || 'Untitled Chord'}</h3>
-                      <p className="text-sm text-gray-600">
-                        Starting Fret: {chord.startingFret}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        Notes: {chord.notes.length}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <ChordSheet chords={chords} />
             </div>
           </section>
         </div>
