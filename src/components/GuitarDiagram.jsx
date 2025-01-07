@@ -1,11 +1,14 @@
 import React, {useState} from 'react';
+import { Trash2, Plus } from 'lucide-react';
 
 const GuitarDiagram = () => {
   const NUM_STRINGS = 6;
   const NUM_FRETS = 6;
 
-  // State for tracking note positions
+  // State for tracking note positions and chord name and fret number
   const [notes, setNotes] = useState(new Set());
+  const [title, setTitle] = useState('');
+  const [startingFret, setStartingFret] = useState(1);
   
   // Create a unique string identifier for each note position
   const createNoteId = (string, fret) => `${string}-${fret}`;
@@ -25,9 +28,50 @@ const GuitarDiagram = () => {
   };
 
 
+  const clearDiagram = () => {
+    setNotes(new Set());
+    setTitle('');
+    setStartingFret(1);
+  };
+
+  const handleStartingFretChange = (e) => {
+    const value = parseInt(e.target.value) || 1;
+    setStartingFret(Math.max(1, Math.min(24, value)));
+  };
+
+
   return (
     <div className="w-full max-w-lg mx-auto p-4">
+      <div className="mb-4 space-y-4">
+        <input
+          type="text"
+          placeholder="Diagram Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="w-full p-2 border rounded"
+        />
+        
+        <div className="flex items-center gap-2">
+          <label className="whitespace-nowrap">
+            Starting Fret:
+            <input
+              type="number"
+              min="1"
+              max="24"
+              value={startingFret}
+              onChange={handleStartingFretChange}
+              className="w-20 p-2 border rounded ml-2"
+            />
+          </label>
+        </div>
+      </div>
+
       <div className="relative border-2 border-gray-300 rounded p-4">
+        {startingFret > 1 && (
+            <div className="absolute -left-8 top-1/2 transform -translate-y-1/2 text-lg font-bold">
+              {startingFret}
+            </div>
+        )}
         <div className="relative h-[32rem] w-64 mx-auto">
           {/* Fret lines (horizontal) */}
           {[...Array(NUM_FRETS + 1)].map((_, index) => (
@@ -69,6 +113,32 @@ const GuitarDiagram = () => {
           ))}
         </div>
       </div>
+      <div className="mt-4 flex gap-2">
+        <button
+          onClick={clearDiagram}
+          className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+        >
+          <Trash2 size={16} /> Clear
+        </button>
+        <button
+          onClick={() => {
+            if (onAddToSheet) {
+              onAddToSheet({
+                title,
+                startingFret,
+                notes: Array.from(notes),
+                id: Date.now()
+              });
+              clearDiagram();
+            }
+          }}
+          className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+        >
+          <Plus size={16} /> Add to Sheet
+        </button>
+      </div>
+
+
     </div>
   );
 };
