@@ -1,14 +1,15 @@
 import React, {useState} from 'react';
 import { Trash2, Plus } from 'lucide-react';
 
-const GuitarDiagram = () => {
+const GuitarDiagram = ({ onAddToSheet = () => {} }) => {
   const NUM_STRINGS = 6;
   const NUM_FRETS = 6;
 
   // State for tracking note positions and chord name and fret number
   const [notes, setNotes] = useState(new Set());
   const [title, setTitle] = useState('');
-  const [startingFret, setStartingFret] = useState(1);
+  const [fretNumbers, setFretNumbers] = useState(Array(NUM_FRETS).fill(''));
+
   
   // Create a unique string identifier for each note position
   const createNoteId = (string, fret) => `${string}-${fret}`;
@@ -31,12 +32,15 @@ const GuitarDiagram = () => {
   const clearDiagram = () => {
     setNotes(new Set());
     setTitle('');
-    setStartingFret(1);
+    setFretNumbers(Array(NUM_FRETS + 1).fill(''));
+
   };
 
-  const handleStartingFretChange = (e) => {
-    const value = parseInt(e.target.value) || 1;
-    setStartingFret(Math.max(1, Math.min(24, value)));
+  const handleFretNumberChange = (index, value) => {
+    const newFretNumbers = [...fretNumbers];
+    // Allow empty string or numbers
+    newFretNumbers[index] = value === '' ? '' : parseInt(value) || '';
+    setFretNumbers(newFretNumbers);
   };
 
 
@@ -50,29 +54,25 @@ const GuitarDiagram = () => {
           onChange={(e) => setTitle(e.target.value)}
           className="w-full p-2 border rounded"
         />
-        
-        <div className="flex items-center gap-2">
-          <label className="whitespace-nowrap">
-            Starting Fret:
-            <input
-              type="number"
-              min="1"
-              max="24"
-              value={startingFret}
-              onChange={handleStartingFretChange}
-              className="w-20 p-2 border rounded ml-2"
-            />
-          </label>
-        </div>
       </div>
 
       <div className="relative border-2 border-gray-300 rounded p-4">
-        {startingFret > 1 && (
-            <div className="absolute -left-8 top-1/2 transform -translate-y-1/2 text-lg font-bold">
-              {startingFret}
-            </div>
-        )}
         <div className="relative h-[32rem] w-64 mx-auto">
+          {/* Fret numbers on the left */}
+          <div className="absolute -left-12 top-0 bottom-0 w-8 flex flex-col justify-between">
+            {[...Array(NUM_FRETS)].map((_, index) => (
+              <div key={`fret-number-${index}`} className="relative flex-1 flex items-center">
+                <input
+                  type="number"
+                  value={fretNumbers[index]}
+                  onChange={(e) => handleFretNumberChange(index, e.target.value)}
+                  className="w-8 p-1 text-sm border rounded"
+                  placeholder="#"
+                />
+              </div>
+            ))}
+          </div>
+
           {/* Fret lines (horizontal) */}
           {[...Array(NUM_FRETS + 1)].map((_, index) => (
             <div
@@ -125,7 +125,7 @@ const GuitarDiagram = () => {
             if (onAddToSheet) {
               onAddToSheet({
                 title,
-                startingFret,
+                fretNumbers,
                 notes: Array.from(notes),
                 id: Date.now()
               });
