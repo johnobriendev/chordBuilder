@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Grid } from 'lucide-react';
-import GuitarDiagram from './components/GuitarDiagram';
-import ChordDisplay from './components/ChordDisplay';
+
 
 // Separate controls component
 const ChordSheetControls = ({ gridConfig, onGridChange, onExport }) => {
