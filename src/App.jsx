@@ -35,7 +35,7 @@ function App() {
             </div>
           </section>
 
-          {/* Placeholder for Chord Sheet */}
+          {/* Chord Sheet Section */}
           <section className="bg-white rounded-lg shadow">
             <div className="p-6">
               <h2 className="text-xl font-semibold mb-4">Chord Sheet</h2>

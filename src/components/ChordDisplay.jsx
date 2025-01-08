@@ -5,25 +5,24 @@ const ChordDisplay = ({ chord, size = 'medium' }) => {
   const NUM_STRINGS = 6;
   const NUM_FRETS = 6;
 
-  // Define size configurations for different contexts
-  // These values create proportional scaling while maintaining readability
+  
   const sizeConfigs = {
     small: {
-      containerClass: 'h-32 w-24',
-      dotSize: 'w-3 h-3',
-      titleClass: 'text-sm',
+      containerClass: 'w-full aspect-[2/3]', // Maintain aspect ratio
+      dotSize: 'w-[8%] h-[8%]',
+      titleClass: 'text-xs',
       fretNumberClass: 'text-xs'
     },
     medium: {
-      containerClass: 'h-48 w-32',
-      dotSize: 'w-4 h-4',
-      titleClass: 'text-base',
+      containerClass: 'w-full aspect-[2/3]',
+      dotSize: 'w-[10%] h-[10%]',
+      titleClass: 'text-sm',
       fretNumberClass: 'text-sm'
     },
     large: {
-      containerClass: 'h-64 w-48',
-      dotSize: 'w-5 h-5',
-      titleClass: 'text-lg',
+      containerClass: 'w-full aspect-[2/3]',
+      dotSize: 'w-[12%] h-[12%]',
+      titleClass: 'text-base',
       fretNumberClass: 'text-base'
     }
   };
