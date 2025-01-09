@@ -98,7 +98,7 @@ const GuitarDiagram = ({ onAddToSheet = () => {} }) => {
                   type="number"
                   value={fretNumbers[index]}
                   onChange={(e) => handleFretNumberChange(index, e.target.value)}
-                  className="w-8 p-1 text-sm border rounded"
+                  className="w-10 p-1 text-sm border rounded"
                   placeholder="#"
                 />
               </div>

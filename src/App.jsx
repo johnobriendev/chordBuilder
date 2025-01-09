@@ -16,8 +16,10 @@ function App() {
 
   // Handler for adding new chords to the sheet
   const handleAddChord = (chordData) => {
-    setChords(prevChords => [...prevChords, chordData]);
-    console.log('New chord added:', chordData); 
+    setChords(prevChords => [...prevChords, {
+      ...chordData,
+      id: chordData.id.toString() // Ensure ID is a string for drag-and-drop
+    }]);
   };
 
 
@@ -46,7 +48,6 @@ function App() {
                 onGridChange={handleGridChange}
                 onExport={handleExport}
                 onPreview={() => setShowPreview(true)}
-
               />
             </div>
           </div>
@@ -70,12 +71,12 @@ function App() {
 
           {/* Right column - Chord Sheet */}
           <div className="flex-grow">
-            <section className="bg-white shadow-lg rounded-lg">
               <ChordSheet 
                 chords={chords} 
                 gridConfig={gridConfig}
+                setChords={setChords}
+                isDraggable={true}
               />
-            </section>
           </div>
         </div>
       </main>
@@ -90,6 +91,7 @@ function App() {
           chords={chords} 
           gridConfig={gridConfig}
           isPreview={true}
+          isDraggable={false}
         />
       </Modal>
     </div>
@@ -100,48 +102,3 @@ function App() {
 
 export default App
 
-
-
-// <div className="min-h-screen bg-gray-50">
-     
-// <header className="bg-white shadow-sm">
-//   <div className="max-w-7xl mx-auto px-4 py-4">
-//     <h1 className="text-2xl font-bold text-gray-900">Guitar Chord Creator</h1>
-//   </div>
-// </header>
-
-
-// <main className="max-w-7xl mx-auto px-4 py-6">
-//   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-//     
-//     <section className="bg-white rounded-lg shadow">
-//       <div className="p-6">
-//         <h2 className="text-xl font-semibold mb-4">Create New Chord</h2>
-//         <GuitarDiagram onAddToSheet={handleAddChord} />
-//       </div>
-//     </section>
-
-    
-//     <section>
-//       <div className="mb-4">
-//         <h2 className="text-xl font-semibold mb-4">Chord Sheet</h2>
-//         <div className="bg-white rounded-lg shadow p-4">
-//           <ChordSheetControls 
-//             gridConfig={gridConfig}
-//             onGridChange={handleGridChange}
-//             onExport={handleExport}
-//           />
-//         </div>
-//       </div>
-      
-      
-//       <div className="bg-white shadow-lg rounded-lg">
-//         <ChordSheet 
-//           chords={chords} 
-//           gridConfig={gridConfig}
-//         />
-//       </div>
-//     </section>
-//   </div>
-// </main>
-// </div> */}
