@@ -7,12 +7,15 @@ const GuitarDiagram = ({ onAddToSheet = () => {} }) => {
 
   // State for tracking note positions and chord name and fret number
   const [notes, setNotes] = useState(new Set());
+  const [openStrings, setOpenStrings] = useState(new Set());
   const [title, setTitle] = useState('');
   const [fretNumbers, setFretNumbers] = useState(Array(NUM_FRETS).fill(''));
 
   
   // Create a unique string identifier for each note position
   const createNoteId = (string, fret) => `${string}-${fret}`;
+  const createOpenStringId = (string) => `open-${string}`;
+
   
   // Toggle note at the clicked position
   const toggleNote = (string, fret) => {
@@ -24,15 +27,28 @@ const GuitarDiagram = ({ onAddToSheet = () => {} }) => {
     } else {
       newNotes.add(noteId);
     }
-    
     setNotes(newNotes);
+  };
+
+  const toggleOpenString = (string) => {
+    const openStringId = createOpenStringId(string);
+    const newOpenStrings = new Set(openStrings);
+    
+    if (newOpenStrings.has(openStringId)) {
+      newOpenStrings.delete(openStringId);
+    } else {
+      newOpenStrings.add(openStringId);
+    }
+    
+    setOpenStrings(newOpenStrings);
   };
 
 
   const clearDiagram = () => {
     setNotes(new Set());
+    setOpenStrings(new Set());
     setTitle('');
-    setFretNumbers(Array(NUM_FRETS + 1).fill(''));
+    setFretNumbers(Array(NUM_FRETS).fill(''));
 
   };
 
@@ -46,7 +62,7 @@ const GuitarDiagram = ({ onAddToSheet = () => {} }) => {
 
   return (
     <div className="w-full max-w-lg mx-auto p-4">
-      <div className="mb-4 space-y-4">
+      <div className="mb-4">
         <input
           type="text"
           placeholder="Diagram Title"
@@ -57,7 +73,23 @@ const GuitarDiagram = ({ onAddToSheet = () => {} }) => {
       </div>
 
       <div className="relative border-2 border-gray-300 rounded p-4">
-        <div className="relative h-[32rem] w-64 mx-auto">
+        <div className="relative h-[28rem] w-64 mx-auto">
+          {/* Open string positions */}
+          <div className="absolute w-full" style={{ top: '-24px' }}>
+            {[...Array(NUM_STRINGS)].map((_, stringIndex) => (
+              <div
+                key={`open-${stringIndex}`}
+                className="absolute w-6 h-6 -ml-3 flex items-center justify-center cursor-pointer hover:bg-gray-100 rounded-full"
+                style={{ left: `${(stringIndex * 100) / (NUM_STRINGS - 1)}%` }}
+                onClick={() => toggleOpenString(stringIndex)}
+              >
+                {openStrings.has(createOpenStringId(stringIndex)) && (
+                  <div className="w-4 h-4 border-2 border-blue-500 rounded-full" />
+                )}
+              </div>
+            ))}
+          </div>
+
           {/* Fret numbers on the left */}
           <div className="absolute -left-12 top-0 bottom-0 w-8 flex flex-col justify-between">
             {[...Array(NUM_FRETS)].map((_, index) => (
@@ -73,7 +105,7 @@ const GuitarDiagram = ({ onAddToSheet = () => {} }) => {
             ))}
           </div>
 
-          {/* Fret lines (horizontal) */}
+          {/* Fret lines */}
           {[...Array(NUM_FRETS + 1)].map((_, index) => (
             <div
               key={`fret-${index}`}
@@ -82,7 +114,7 @@ const GuitarDiagram = ({ onAddToSheet = () => {} }) => {
             />
           ))}
           
-          {/* Strings (vertical) */}
+          {/* Strings */}
           {[...Array(NUM_STRINGS)].map((_, stringIndex) => (
             <div
               key={`string-${stringIndex}`}
@@ -113,6 +145,7 @@ const GuitarDiagram = ({ onAddToSheet = () => {} }) => {
           ))}
         </div>
       </div>
+
       <div className="mt-4 flex gap-2">
         <button
           onClick={clearDiagram}
@@ -122,23 +155,20 @@ const GuitarDiagram = ({ onAddToSheet = () => {} }) => {
         </button>
         <button
           onClick={() => {
-            if (onAddToSheet) {
-              onAddToSheet({
-                title,
-                fretNumbers,
-                notes: Array.from(notes),
-                id: Date.now()
-              });
-              clearDiagram();
-            }
+            onAddToSheet({
+              title,
+              fretNumbers,
+              notes: Array.from(notes),
+              openStrings: Array.from(openStrings),
+              id: Date.now()
+            });
+            clearDiagram();
           }}
           className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
         >
           <Plus size={16} /> Add to Sheet
         </button>
       </div>
-
-
     </div>
   );
 };
