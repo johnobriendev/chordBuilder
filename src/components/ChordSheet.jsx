@@ -3,13 +3,26 @@ import React, { forwardRef } from 'react'
 import ChordDisplay from './ChordDisplay';
 import { Trash2, Edit2 } from 'lucide-react';
 
-// Constants for A4 paper size and layout
-const A4 = {
-  width: '210mm',
-  height: '297mm',
-  margin: '20mm',
-  topPadding: '10mm' // Reduced top padding to start content higher
+// We'll use more precise spacing for different grid sizes
+const getSpacingConfig = (cols) => {
+  if (cols <= 4) {
+    return {
+      gridGap: '2rem',    // 32px gap between chords
+      displaySize: 'large'
+    };
+  } else if (cols <= 6) {
+    return {
+      gridGap: '1.5rem',  // 24px gap between chords
+      displaySize: 'medium'
+    };
+  } else {
+    return {
+      gridGap: '1rem',    // 16px gap between chords
+      displaySize: 'small'
+    };
+  }
 };
+
 
 const ChordSheet = forwardRef(({ 
   id = 'chord-sheet',
@@ -21,12 +34,10 @@ const ChordSheet = forwardRef(({
   setChords,
   onEditChord
 }, ref) => {
-  // Calculate display size based on grid configuration
-  const getDisplaySize = () => {
-    if (gridConfig.cols <= 4) return 'large';
-    if (gridConfig.cols <= 6) return 'medium';
-    return 'small';
-  };
+
+  // Get spacing configuration based on grid size
+  const spacing = getSpacingConfig(gridConfig.cols);
+
 
   // Handle deletion of a chord
   const handleDeleteChord = (index) => {
@@ -41,20 +52,18 @@ const ChordSheet = forwardRef(({
   : chords;
 
 
-  // Calculate grid gap based on the number of columns
-  const getGridGap = () => {
-    if (gridConfig.cols <= 4) return 'gap-8';
-    if (gridConfig.cols <= 6) return 'gap-6';
-    return 'gap-4';
-  };
+
 
   const renderContent = () => (
     <div
-      className={`grid ${getGridGap()} w-full`}
       style={{
+        display: 'grid',
         gridTemplateColumns: `repeat(${gridConfig.cols}, minmax(0, 1fr))`,
-        padding: isPreview ? A4.margin : '1rem',
-        paddingTop: isPreview ? A4.topPadding : '1rem', // Use smaller top padding
+        gap: spacing.gridGap,
+        width: '100%',
+        padding: '0.75in',  // Standard 3/4 inch margin
+        boxSizing: 'border-box',
+        backgroundColor: 'white'
       }}
     >
       {slots.map((chord, index) => {
@@ -63,16 +72,18 @@ const ChordSheet = forwardRef(({
         return (
           <div 
             key={chord ? chord.id : `empty-${index}`}
-            className={`
-              flex items-start justify-center
-              ${!chord && isInteractive ? 'border-2 border-dashed border-gray-200 rounded-lg min-h-[120px]' : ''}
-            `}
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'flex-start',
+              position: 'relative'
+            }}
           >
             {chord && (
-              <div className="relative group w-full">
+              <div style={{ width: '100%', position: 'relative' }}>
                 <ChordDisplay 
                   chord={chord} 
-                  size={getDisplaySize()} 
+                  size={spacing.displaySize} 
                 />
                 
                 {isInteractive && (
@@ -82,7 +93,6 @@ const ChordSheet = forwardRef(({
                       onClick={() => onEditChord(chord, index)}
                       className="p-1.5 bg-blue-500 text-white rounded-md
                                hover:bg-blue-600 focus:outline-none"
-                      title="Edit chord"
                     >
                       <Edit2 size={16} />
                     </button>
@@ -90,7 +100,6 @@ const ChordSheet = forwardRef(({
                       onClick={() => handleDeleteChord(index)}
                       className="p-1.5 bg-red-500 text-white rounded-md
                                hover:bg-red-600 focus:outline-none"
-                      title="Delete chord"
                     >
                       <Trash2 size={16} />
                     </button>
@@ -112,21 +121,14 @@ const ChordSheet = forwardRef(({
     <div 
       ref={ref}
       id={id}
-      className={`
-        bg-white
-        ${isInteractive ? 'shadow-lg rounded-lg' : ''}
-      `}
       style={{
-        width: isPreview ? A4.width : '100%',
-        minHeight: isPreview ? A4.height : isInteractive ? '500px' : 'auto',
-        margin: '0 auto',
-        position: 'relative',
-        boxSizing: 'border-box',
+        width: isPreview ? '8.5in' : '100%',  
+        minHeight: isPreview ? '11in' : 'auto', 
+        margin: '0',
+        padding: '0',
+        backgroundColor: 'white',
         overflow: 'hidden',
-        // Add display flex to ensure content starts from the top
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'stretch'
+        boxSizing: 'border-box'
       }}
     >
       {renderContent()}
@@ -134,10 +136,7 @@ const ChordSheet = forwardRef(({
   );
 });
 
-
-
   
-
-  ChordSheet.displayName = 'ChordSheet';
+ChordSheet.displayName = 'ChordSheet';
 
 export default ChordSheet;
