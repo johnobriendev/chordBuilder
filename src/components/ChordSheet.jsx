@@ -1,11 +1,26 @@
 // src/components/ChordSheet.jsx
-import {useState} from 'react';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import React, { forwardRef } from 'react'
 import ChordDisplay from './ChordDisplay';
 import { Trash2, Edit2 } from 'lucide-react';
 
-const ChordSheet = ({ chords = [], gridConfig, isPreview = false, setChords, onEditChord }) => {
+// Constants for A4 paper size and layout
+const A4 = {
+  width: '210mm',
+  height: '297mm',
+  margin: '20mm',
+  topPadding: '10mm' // Reduced top padding to start content higher
+};
 
+const ChordSheet = forwardRef(({ 
+  id = 'chord-sheet',
+  chords = [], 
+  gridConfig, 
+  isPreview = false,
+  isPrinting = false, 
+  isInteractive = false,
+  setChords,
+  onEditChord
+}, ref) => {
   // Calculate display size based on grid configuration
   const getDisplaySize = () => {
     if (gridConfig.cols <= 4) return 'large';
@@ -13,112 +28,116 @@ const ChordSheet = ({ chords = [], gridConfig, isPreview = false, setChords, onE
     return 'small';
   };
 
-
   // Handle deletion of a chord
   const handleDeleteChord = (index) => {
+    if (!isInteractive) return;
     const newChords = chords.filter((_, idx) => idx !== index);
     setChords(newChords);
   };
 
-  const handleEditChord = (chord, index) => {
-    // Call the parent component's edit handler with the chord and its position
-    onEditChord(chord, index);
+  // For interactive mode, show all slots. For preview/print, only show filled slots
+  const slots = isInteractive
+  ? Array(gridConfig.rows * gridConfig.cols).fill(null).map((_, index) => chords[index] || null)
+  : chords;
+
+
+  // Calculate grid gap based on the number of columns
+  const getGridGap = () => {
+    if (gridConfig.cols <= 4) return 'gap-8';
+    if (gridConfig.cols <= 6) return 'gap-6';
+    return 'gap-4';
   };
 
-  // Calculate total slots needed
-  const totalSlots = gridConfig.rows * gridConfig.cols;
-
-  // Create array of all slots (filled with chords or empty)
-  const slots = Array(totalSlots).fill(null).map((_, index) => chords[index] || null);
-
-
-  const renderEditableContent = () => (
+  const renderContent = () => (
     <div
+      className={`grid ${getGridGap()} w-full`}
       style={{
-        display: 'grid',
-        gridTemplateColumns: `repeat(${gridConfig.cols}, 1fr)`,
-        gap: '1rem',
-        position: 'relative'
+        gridTemplateColumns: `repeat(${gridConfig.cols}, minmax(0, 1fr))`,
+        padding: isPreview ? A4.margin : '1rem',
+        paddingTop: isPreview ? A4.topPadding : '1rem', // Use smaller top padding
       }}
     >
-      {slots.map((chord, index) => (
-        <div 
-          key={chord ? chord.id : `empty-${index}`}
-          className="min-h-[120px]"
-        >
-          {chord ? (
-            <div className="relative group">
-              <ChordDisplay chord={chord} size={getDisplaySize()} />
-              
-              {/* Action buttons container */}
-              <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 
-                            transition-opacity flex gap-1 p-1">
-                {/* Edit button */}
-                <button
-                  onClick={() => handleEditChord(chord, index)}
-                  className="p-1.5 bg-blue-500 text-white rounded-md
-                           hover:bg-blue-600 focus:outline-none 
-                           focus:ring-2 focus:ring-blue-500 shadow-sm"
-                  title="Edit chord"
-                >
-                  <Edit2 size={16} />
-                </button>
+      {slots.map((chord, index) => {
+        if (!chord && (isPreview)) return null;
+
+        return (
+          <div 
+            key={chord ? chord.id : `empty-${index}`}
+            className={`
+              flex items-start justify-center
+              ${!chord && isInteractive ? 'border-2 border-dashed border-gray-200 rounded-lg min-h-[120px]' : ''}
+            `}
+          >
+            {chord && (
+              <div className="relative group w-full">
+                <ChordDisplay 
+                  chord={chord} 
+                  size={getDisplaySize()} 
+                />
                 
-                {/* Delete button */}
-                <button
-                  onClick={() => handleDeleteChord(index)}
-                  className="p-1.5 bg-red-500 text-white rounded-md
-                           hover:bg-red-600 focus:outline-none 
-                           focus:ring-2 focus:ring-red-500 shadow-sm"
-                  title="Delete chord"
-                >
-                  <Trash2 size={16} />
-                </button>
+                {isInteractive && (
+                  <div className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 
+                                transition-opacity flex gap-1 p-1 z-10">
+                    <button
+                      onClick={() => onEditChord(chord, index)}
+                      className="p-1.5 bg-blue-500 text-white rounded-md
+                               hover:bg-blue-600 focus:outline-none"
+                      title="Edit chord"
+                    >
+                      <Edit2 size={16} />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteChord(index)}
+                      className="p-1.5 bg-red-500 text-white rounded-md
+                               hover:bg-red-600 focus:outline-none"
+                      title="Delete chord"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                )}
               </div>
-            </div>
-          ) : !isPreview ? (
-            <div className="aspect-square border-2 border-dashed 
-                          border-gray-200 rounded-lg flex items-center 
-                          justify-center h-full">
+            )}
+            
+            {!chord && isInteractive && (
               <span className="text-gray-400 text-sm">Empty</span>
-            </div>
-          ) : null}
-        </div>
-      ))}
-    </div>
-  );
-
-  const renderPreviewContent = () => (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: `repeat(${gridConfig.cols}, 1fr)`,
-        gap: '1rem'
-      }}
-    >
-      {slots.map((chord, index) => (
-        <div key={chord ? chord.id : `empty-${index}`}>
-          {chord && <ChordDisplay chord={chord} size={getDisplaySize()} />}
-        </div>
-      ))}
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 
   return (
     <div 
-      className={`bg-white ${isPreview ? '' : 'shadow-lg rounded-lg'}`}
+      ref={ref}
+      id={id}
+      className={`
+        bg-white
+        ${isInteractive ? 'shadow-lg rounded-lg' : ''}
+      `}
       style={{
-        width: isPreview ? '8.5in' : '100%',
-        height: isPreview ? '11in' : 'auto',
-        padding: isPreview ? '0.75in' : '1.5rem',
-        margin: isPreview ? '0 auto' : undefined
+        width: isPreview ? A4.width : '100%',
+        minHeight: isPreview ? A4.height : isInteractive ? '500px' : 'auto',
+        margin: '0 auto',
+        position: 'relative',
+        boxSizing: 'border-box',
+        overflow: 'hidden',
+        // Add display flex to ensure content starts from the top
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'stretch'
       }}
     >
-      {!isPreview ? renderEditableContent() : renderPreviewContent()}
+      {renderContent()}
     </div>
   );
-};
+});
+
+
+
+  
+
+  ChordSheet.displayName = 'ChordSheet';
 
 export default ChordSheet;
-
-

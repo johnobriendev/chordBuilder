@@ -5,6 +5,8 @@ import GuitarDiagram from './components/GuitarDiagram';
 import ChordSheet from './components/ChordSheet';
 import ChordSheetControls from './components/ChordSheetControls';
 import { Modal } from './components/Modal';
+import { generatePDF } from './utils/pdfUtils';
+
 
 
 function App() {
@@ -15,7 +17,7 @@ function App() {
   const [editingChord, setEditingChord] = useState(null);
   const [editingIndex, setEditingIndex] = useState(null);
 
-
+  
 
   // Handler for adding new chords to the sheet
   const handleAddChord = (chordData) => {
@@ -52,10 +54,49 @@ function App() {
     console.log('Grid changed:', { rows, cols });
   };
 
-  const handleExport = () => {
-    // TODO: Implement PDF export
-    console.log('Export PDF');
+  const handleExport = async () => {
+    try {
+      // Find the modal content that contains the preview
+      const modalContent = document.querySelector('.modal-preview-content');
+      if (!modalContent) {
+        throw new Error('Preview content not found');
+      }
+      
+      // Generate PDF directly from the modal content
+      const success = await generatePDF(modalContent, 'my-chord-sheet.pdf');
+      
+      if (success) {
+        console.log('PDF generated successfully');
+        // Optionally close the preview after successful export
+        //setShowPreview(false);
+      } else {
+        console.error('Failed to generate PDF');
+      }
+    } catch (error) {
+      console.error('Error exporting PDF:', error);
+    }
   };
+
+  // Generate the preview actions (buttons)
+  const previewActions = (
+    <>
+      <button 
+        onClick={() => setShowPreview(false)}
+        className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded"
+      >
+        Close
+      </button>
+      <button 
+        onClick={handleExport}
+        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+      >
+        Download PDF
+      </button>
+    </>
+  );
+  
+
+  
 
 
   return (
@@ -69,7 +110,7 @@ function App() {
               <ChordSheetControls 
                 gridConfig={gridConfig}
                 onGridChange={handleGridChange}
-                onExport={handleExport}
+                //onExport={handleExport}
                 onPreview={() => setShowPreview(true)}
               />
             </div>
@@ -102,6 +143,7 @@ function App() {
                 gridConfig={gridConfig}
                 setChords={setChords}
                 onEditChord={handleEditChord}
+                isInteractive={true}  
               />
           </div>
         </div>
@@ -112,6 +154,7 @@ function App() {
         isOpen={showPreview}
         onClose={() => setShowPreview(false)}
         title="PDF Preview"
+        actions={previewActions}
       >
         <ChordSheet 
           chords={chords} 
@@ -119,6 +162,9 @@ function App() {
           isPreview={true}
         />
       </Modal>
+
+      
+
     </div>
   
   );

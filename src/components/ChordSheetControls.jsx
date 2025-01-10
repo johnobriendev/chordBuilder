@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Grid } from 'lucide-react';
+import { Grid, Eye } from 'lucide-react';
 
 
 // Separate controls component
-const ChordSheetControls = ({ gridConfig, onGridChange, onExport, onPreview }) => {
+const ChordSheetControls = ({ gridConfig, onGridChange, onPreview }) => {
   const gridOptions = [
     { label: '4 x 4', rows: 4, cols: 4 },
     { label: '6 x 6', rows: 6, cols: 6 },
@@ -30,14 +30,10 @@ const ChordSheetControls = ({ gridConfig, onGridChange, onExport, onPreview }) =
         onClick={onPreview}
         className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
       >
-        Preview PDF
+        <Eye size={16} />
+        Preview & Download PDF
       </button>
-      <button 
-        onClick={onExport}
-        className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      >
-        Export PDF
-      </button>
+      
     </div>
   );
 };

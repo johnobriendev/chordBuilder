@@ -10,12 +10,13 @@ const ChordDisplay = ({ chord, size = 'medium' }) => {
       containerClass: 'w-14 h-20',
       wrapperClass: 'w-16',
       dotSize: 'w-1 h-1',
-      titleClass: 'text-[10px]',
+      titleClass: 'text-xs',
       fretNumberClass: 'text-[8px]',
       openStringTop: '-8px',
-      titleSpacing: 'mb-2',
-      fretNumberOffset: '-18px', // Increased left offset for fret numbers
-      fretNumberWidth: '14px'    // Wider space for fret numbers
+      titleSpacing: 'h-6', // Fixed height for title area
+      containerSpacing: 'mt-2', // Space between title and diagram
+      fretNumberOffset: '-18px',
+      fretNumberWidth: '14px'
     },
     medium: {
       containerClass: 'w-20 h-28',
@@ -24,7 +25,8 @@ const ChordDisplay = ({ chord, size = 'medium' }) => {
       titleClass: 'text-sm',
       fretNumberClass: 'text-xs',
       openStringTop: '-12px',
-      titleSpacing: 'mb-3',
+      titleSpacing: 'h-8', // Fixed height for title area
+      containerSpacing: 'mt-3', // Space between title and diagram
       fretNumberOffset: '-24px',
       fretNumberWidth: '16px'
     },
@@ -32,10 +34,11 @@ const ChordDisplay = ({ chord, size = 'medium' }) => {
       containerClass: 'w-24 h-32',
       wrapperClass: 'w-28',
       dotSize: 'w-2.5 h-2.5',
-      titleClass: 'text-sm',
+      titleClass: 'text-base',
       fretNumberClass: 'text-sm',
       openStringTop: '-12px',
-      titleSpacing: 'mb-4',
+      titleSpacing: 'h-10', // Fixed height for title area
+      containerSpacing: 'mt-4', // Space between title and diagram
       fretNumberOffset: '-30px',
       fretNumberWidth: '20px'
     }
@@ -57,12 +60,16 @@ const ChordDisplay = ({ chord, size = 'medium' }) => {
 
 
   return (
-    <div className={`flex flex-col items-center ${sizeConfig.wrapperClass}`}>
-      <h3 className={`font-medium ${sizeConfig.titleClass} ${sizeConfig.titleSpacing} truncate w-full text-center`}>
-        {chord.title || 'Untitled Chord'}
-      </h3>
+    <div className="flex flex-col items-center w-full">
+      {/* Title container with fixed height */}
+      <div className={`w-full ${sizeConfig.titleSpacing} flex items-center justify-center`}>
+        <h3 className={`font-medium ${sizeConfig.titleClass} text-center px-1 leading-tight`}>
+          {chord.title || 'Untitled Chord'}
+        </h3>
+      </div>
 
-      <div className="relative">
+      {/* Diagram container */}
+      <div className={`relative ${sizeConfig.containerSpacing}`}>
         {/* Open String Indicators */}
         <div className="absolute w-full" style={{ top: sizeConfig.openStringTop }}>
           {[...Array(NUM_STRINGS)].map((_, stringIndex) => (
@@ -81,7 +88,7 @@ const ChordDisplay = ({ chord, size = 'medium' }) => {
           ))}
         </div>
 
-        {/* Fret Numbers with improved positioning */}
+        {/* Fret Numbers */}
         <div 
           className="absolute top-0 bottom-0"
           style={{ 
@@ -146,8 +153,8 @@ const ChordDisplay = ({ chord, size = 'medium' }) => {
       </div>
     </div>    
   );
+
 };
 
 export default ChordDisplay;
-
 

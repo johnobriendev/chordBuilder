@@ -1,6 +1,6 @@
 import { X } from 'lucide-react';
 
-export const Modal = ({ isOpen, onClose, title, children }) => {
+export const Modal = ({ isOpen, onClose, title, children, actions }) => {
   if (!isOpen) return null;
 
   return (
@@ -15,9 +15,14 @@ export const Modal = ({ isOpen, onClose, title, children }) => {
             <X size={20} />
           </button>
         </div>
-        <div className="p-8 bg-gray-50 overflow-auto max-h-[80vh]">
+        <div className="p-8 bg-gray-50 overflow-auto max-h-[80vh] modal-preview-content">
           {children}
         </div>
+        {actions && (
+          <div className="p-4 border-t flex justify-end gap-2">
+            {actions}
+          </div>
+        )}
       </div>
     </div>
   );
