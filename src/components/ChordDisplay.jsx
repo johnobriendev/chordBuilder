@@ -13,7 +13,7 @@ const ChordDisplay = ({ chord, size = 'medium' }) => {
       titleClass: 'text-xs',
       fretNumberClass: 'text-[8px]',
       openStringTop: '-8px',
-      titleSpacing: 'h-6', // Fixed height for title area
+      titleSpacing: 'h-8', // Fixed height for title area
       containerSpacing: 'mt-2', // Space between title and diagram
       fretNumberOffset: '-18px',
       fretNumberWidth: '14px'
