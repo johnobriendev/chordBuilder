@@ -14,7 +14,7 @@ const ChordDisplay = ({ chord, size = 'medium' }) => {
       fretNumberClass: 'text-[8px]',
       openStringTop: '-8px',
       titleSpacing: 'mb-2',
-      fretNumberOffset: '-16px', // Increased left offset for fret numbers
+      fretNumberOffset: '-18px', // Increased left offset for fret numbers
       fretNumberWidth: '14px'    // Wider space for fret numbers
     },
     medium: {
@@ -25,7 +25,7 @@ const ChordDisplay = ({ chord, size = 'medium' }) => {
       fretNumberClass: 'text-xs',
       openStringTop: '-12px',
       titleSpacing: 'mb-3',
-      fretNumberOffset: '-20px',
+      fretNumberOffset: '-24px',
       fretNumberWidth: '16px'
     },
     large: {
@@ -36,7 +36,7 @@ const ChordDisplay = ({ chord, size = 'medium' }) => {
       fretNumberClass: 'text-sm',
       openStringTop: '-12px',
       titleSpacing: 'mb-4',
-      fretNumberOffset: '-24px',
+      fretNumberOffset: '-30px',
       fretNumberWidth: '20px'
     }
   };

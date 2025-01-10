@@ -1,15 +1,34 @@
-import React, {useState} from 'react';
-import { Trash2, Plus } from 'lucide-react';
+import React, {useState, useEffect} from 'react';
+import { Trash2, Plus, Save } from 'lucide-react';
 
-const GuitarDiagram = ({ onAddToSheet = () => {} }) => {
+const GuitarDiagram = ({ onAddToSheet = () => {}, initialChord = null }) => {
   const NUM_STRINGS = 6;
   const NUM_FRETS = 6;
 
-  // State for tracking note positions and chord name and fret number
+  //State for tracking note positions and chord name and fret number
   const [notes, setNotes] = useState(new Set());
   const [openStrings, setOpenStrings] = useState(new Set());
   const [title, setTitle] = useState('');
   const [fretNumbers, setFretNumbers] = useState(Array(NUM_FRETS).fill(''));
+
+
+  // Use useEffect to properly initialize the component when initialChord changes
+  useEffect(() => {
+    if (initialChord) {
+      // Initialize notes - convert array of note IDs back to Set
+      setNotes(new Set(initialChord.notes));
+      
+      // Initialize open strings - convert array back to Set
+      setOpenStrings(new Set(initialChord.openStrings));
+      
+      // Initialize title
+      setTitle(initialChord.title);
+      
+      // Initialize fret numbers
+      setFretNumbers(initialChord.fretNumbers);
+    }
+  }, [initialChord]); 
+ 
 
   
   // Create a unique string identifier for each note position
@@ -57,6 +76,18 @@ const GuitarDiagram = ({ onAddToSheet = () => {} }) => {
     // Allow empty string or numbers
     newFretNumbers[index] = value === '' ? '' : parseInt(value) || '';
     setFretNumbers(newFretNumbers);
+  };
+
+
+  const handleSubmit = () => {
+    onAddToSheet({
+      title,
+      fretNumbers,
+      notes: Array.from(notes),
+      openStrings: Array.from(openStrings),
+      id: initialChord ? initialChord.id : Date.now()
+    });
+    clearDiagram();
   };
 
 
@@ -154,19 +185,18 @@ const GuitarDiagram = ({ onAddToSheet = () => {} }) => {
           <Trash2 size={16} /> Clear
         </button>
         <button
-          onClick={() => {
-            onAddToSheet({
-              title,
-              fretNumbers,
-              notes: Array.from(notes),
-              openStrings: Array.from(openStrings),
-              id: Date.now()
-            });
-            clearDiagram();
-          }}
+          onClick={handleSubmit}
           className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
         >
-          <Plus size={16} /> Add to Sheet
+          {initialChord ? (
+            <>
+              <Save size={16} /> Save Changes
+            </>
+          ) : (
+            <>
+              <Plus size={16} /> Add to Sheet
+            </>
+          )}
         </button>
       </div>
     </div>

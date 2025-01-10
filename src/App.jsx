@@ -12,15 +12,38 @@ function App() {
   const [chords, setChords] = useState([]);
   const [gridConfig, setGridConfig] = useState({ rows: 4, cols: 4 });
   const [showPreview, setShowPreview] = useState(false);
+  const [editingChord, setEditingChord] = useState(null);
+  const [editingIndex, setEditingIndex] = useState(null);
+
 
 
   // Handler for adding new chords to the sheet
   const handleAddChord = (chordData) => {
-    setChords(prevChords => [...prevChords, {
-      ...chordData,
-      id: chordData.id.toString() // Ensure ID is a string for drag-and-drop
-    }]);
+    if (editingIndex !== null) {
+      // We're editing an existing chord
+      const updatedChords = [...chords];
+      updatedChords[editingIndex] = {
+        ...chordData,
+        id: editingChord.id // Preserve the original ID
+      };
+      setChords(updatedChords);
+      setEditingChord(null);
+      setEditingIndex(null);
+    } else {
+      // We're adding a new chord
+      setChords(prevChords => [...prevChords, {
+        ...chordData,
+        id: chordData.id.toString()
+      }]);
+    }
   };
+
+  // Handler for initiating chord edits
+  const handleEditChord = (chord, index) => {
+    setEditingChord(chord);
+    setEditingIndex(index);
+  };
+
 
 
   const handleGridChange = (event) => {
@@ -41,7 +64,7 @@ function App() {
       <header className="bg-white shadow-sm">
         <div className="max-w-[1400px] mx-auto px-4 py-4">
           <div className="flex items-center justify-between gap-8">
-            <h1 className="text-2xl font-bold text-gray-900 whitespace-nowrap">Guitar Chord Creator</h1>
+            <h1 className="text-2xl font-bold text-gray-900 whitespace-nowrap">Chord and Scale Builder</h1>
             <div className="flex-grow flex justify-end">
               <ChordSheetControls 
                 gridConfig={gridConfig}
@@ -60,9 +83,12 @@ function App() {
           <div className="lg:w-[400px] flex-shrink-0">
             <section className="bg-white rounded-lg shadow">
               <div className="p-6">
-                <h2 className="text-xl font-semibold mb-4">Create New Chord</h2>
+                <h2 className="text-xl font-semibold mb-4">
+                  {editingChord ? 'Edit Chord' : 'Create New Chord'}
+                </h2>
                 <GuitarDiagram 
                   onAddToSheet={handleAddChord}
+                  initialChord={editingChord}
                   className="w-full max-w-sm mx-auto"
                 />
               </div>
@@ -75,7 +101,7 @@ function App() {
                 chords={chords} 
                 gridConfig={gridConfig}
                 setChords={setChords}
-                isDraggable={true}
+                onEditChord={handleEditChord}
               />
           </div>
         </div>
@@ -91,7 +117,6 @@ function App() {
           chords={chords} 
           gridConfig={gridConfig}
           isPreview={true}
-          isDraggable={false}
         />
       </Modal>
     </div>

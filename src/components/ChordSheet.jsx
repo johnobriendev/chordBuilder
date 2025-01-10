@@ -2,12 +2,9 @@
 import {useState} from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import ChordDisplay from './ChordDisplay';
+import { Trash2, Edit2 } from 'lucide-react';
 
-
-
-const ChordSheet = ({ chords = [], gridConfig, isPreview = false, isDraggable = true, classname = ''  }) => {
-
- 
+const ChordSheet = ({ chords = [], gridConfig, isPreview = false, setChords, onEditChord }) => {
 
   // Calculate display size based on grid configuration
   const getDisplaySize = () => {
@@ -16,128 +13,112 @@ const ChordSheet = ({ chords = [], gridConfig, isPreview = false, isDraggable = 
     return 'small';
   };
 
-  const handleDragEnd = (result) => {
-    if (!result.destination || !setChords) return;
 
-    const items = Array.from(chords);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-
-    setChords(items);
+  // Handle deletion of a chord
+  const handleDeleteChord = (index) => {
+    const newChords = chords.filter((_, idx) => idx !== index);
+    setChords(newChords);
   };
 
+  const handleEditChord = (chord, index) => {
+    // Call the parent component's edit handler with the chord and its position
+    onEditChord(chord, index);
+  };
 
-   // Calculate total slots needed
-   const totalSlots = gridConfig.rows * gridConfig.cols;
-  
-   // Create array of all slots (filled with chords or empty)
-   const slots = Array(totalSlots).fill(null).map((_, index) => {
-     return chords[index] || null;
-   });
- 
-   // Generate grid template based on configuration
-   const gridTemplateStyle = {
-     gridTemplateColumns: `repeat(${gridConfig.cols}, minmax(0, 1fr))`,
-     gap: '1rem',
-     width: '100%'
-   };
+  // Calculate total slots needed
+  const totalSlots = gridConfig.rows * gridConfig.cols;
 
-   const renderContent = () => {
-    if (isDraggable) {
-      return (
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <Droppable droppableId="chord-grid">
-            {(provided) => (
-              <div
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                className="grid"
-                style={gridTemplateStyle}
-              >
-                {slots.map((chord, index) => (
-                  <div key={chord ? chord.id : `empty-${index}`} className="aspect-square">
-                    {chord ? (
-                      <Draggable
-                        draggableId={chord.id.toString()}
-                        index={index}
-                      >
-                        {(provided, snapshot) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            className="h-full flex items-center justify-center"
-                          >
-                            <ChordDisplay
-                              chord={chord}
-                              size={getDisplaySize()}
-                            />
-                          </div>
-                        )}
-                      </Draggable>
-                    ) : (
-                      !isPreview && (
-                        <div className="h-full border-2 border-dashed border-gray-200 rounded-lg flex items-center justify-center">
-                          <span className="text-gray-400 text-sm">Empty</span>
-                        </div>
-                      )
-                    )}
-                  </div>
-                ))}
-                {provided.placeholder}
+  // Create array of all slots (filled with chords or empty)
+  const slots = Array(totalSlots).fill(null).map((_, index) => chords[index] || null);
+
+
+  const renderEditableContent = () => (
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: `repeat(${gridConfig.cols}, 1fr)`,
+        gap: '1rem',
+        position: 'relative'
+      }}
+    >
+      {slots.map((chord, index) => (
+        <div 
+          key={chord ? chord.id : `empty-${index}`}
+          className="min-h-[120px]"
+        >
+          {chord ? (
+            <div className="relative group">
+              <ChordDisplay chord={chord} size={getDisplaySize()} />
+              
+              {/* Action buttons container */}
+              <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 
+                            transition-opacity flex gap-1 p-1">
+                {/* Edit button */}
+                <button
+                  onClick={() => handleEditChord(chord, index)}
+                  className="p-1.5 bg-blue-500 text-white rounded-md
+                           hover:bg-blue-600 focus:outline-none 
+                           focus:ring-2 focus:ring-blue-500 shadow-sm"
+                  title="Edit chord"
+                >
+                  <Edit2 size={16} />
+                </button>
+                
+                {/* Delete button */}
+                <button
+                  onClick={() => handleDeleteChord(index)}
+                  className="p-1.5 bg-red-500 text-white rounded-md
+                           hover:bg-red-600 focus:outline-none 
+                           focus:ring-2 focus:ring-red-500 shadow-sm"
+                  title="Delete chord"
+                >
+                  <Trash2 size={16} />
+                </button>
               </div>
-            )}
-          </Droppable>
-        </DragDropContext>
-      );
-    }
+            </div>
+          ) : !isPreview ? (
+            <div className="aspect-square border-2 border-dashed 
+                          border-gray-200 rounded-lg flex items-center 
+                          justify-center h-full">
+              <span className="text-gray-400 text-sm">Empty</span>
+            </div>
+          ) : null}
+        </div>
+      ))}
+    </div>
+  );
 
-    return (
-      <div className="grid" style={gridTemplateStyle}>
-        {slots.map((chord, index) => (
-          <div key={chord ? chord.id : `empty-${index}`} className="aspect-square flex items-center justify-center">
-            {chord && (
-              <ChordDisplay
-                chord={chord}
-                size={getDisplaySize()}
-              />
-            )}
-          </div>
-        ))}
-      </div>
-    );
-  };
+  const renderPreviewContent = () => (
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: `repeat(${gridConfig.cols}, 1fr)`,
+        gap: '1rem'
+      }}
+    >
+      {slots.map((chord, index) => (
+        <div key={chord ? chord.id : `empty-${index}`}>
+          {chord && <ChordDisplay chord={chord} size={getDisplaySize()} />}
+        </div>
+      ))}
+    </div>
+  );
 
-
-   
-
-
-    return (
-      <div 
-        className={`bg-white ${isPreview ? '' : 'shadow-lg rounded-lg'}`}
-        style={{
-          ...(isPreview 
-            ? {
-                width: '8.5in',
-                height: '11in',
-                padding: '0.75in',
-                margin: '0 auto'
-              }
-            : {
-                width: '100%',
-                padding: '1.5rem'
-              }
-          )
-        }}
-      >
-        {renderContent()}
-      </div>
-    );
- 
-  
+  return (
+    <div 
+      className={`bg-white ${isPreview ? '' : 'shadow-lg rounded-lg'}`}
+      style={{
+        width: isPreview ? '8.5in' : '100%',
+        height: isPreview ? '11in' : 'auto',
+        padding: isPreview ? '0.75in' : '1.5rem',
+        margin: isPreview ? '0 auto' : undefined
+      }}
+    >
+      {!isPreview ? renderEditableContent() : renderPreviewContent()}
+    </div>
+  );
 };
 
 export default ChordSheet;
-
 
 
