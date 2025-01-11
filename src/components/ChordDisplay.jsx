@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ChordDisplay = ({ chord, size = 'medium' }) => {
+const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
   // Constants to match GuitarDiagram
   const NUM_STRINGS = 6;
   const NUM_FRETS = 6;
@@ -44,10 +44,32 @@ const ChordDisplay = ({ chord, size = 'medium' }) => {
     }
   };
 
+  const mobileSizeConfigs = {
+    small: {
+      ...sizeConfigs.small,
+      containerClass: 'w-12 h-16', // Smaller on mobile
+      wrapperClass: 'w-14',
+      titleClass: 'text-[10px]'
+    },
+    medium: {
+      ...sizeConfigs.medium,
+      containerClass: 'w-16 h-24', // Smaller on mobile
+      wrapperClass: 'w-20',
+      titleClass: 'text-xs'
+    },
+    large: {
+      ...sizeConfigs.large,
+      containerClass: 'w-20 h-28', // Smaller on mobile
+      wrapperClass: 'w-24',
+      titleClass: 'text-sm'
+    }
+  };
+
+
   
 
   // Get the appropriate size configuration
-  const sizeConfig = sizeConfigs[size];
+  const sizeConfig = isPreview ? sizeConfigs[size] : mobileSizeConfigs[size];
 
 
   // Function to check if a note exists at a given position

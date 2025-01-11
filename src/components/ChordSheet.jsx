@@ -52,6 +52,17 @@ const ChordSheet = forwardRef(({
   : chords;
 
 
+  const getMobileStyles = () => {
+    if (isPreview) return {}; // No mobile styles in preview mode
+    
+    return {
+      padding: '0.5rem',  // Smaller padding on mobile
+      transform: window.innerWidth < 640 ? 'scale(0.9)' : 'none',
+      transformOrigin: 'top left'
+    };
+  };
+
+
 
 
   const renderContent = () => (
@@ -61,9 +72,10 @@ const ChordSheet = forwardRef(({
         gridTemplateColumns: `repeat(${gridConfig.cols}, minmax(0, 1fr))`,
         gap: spacing.gridGap,
         width: '100%',
-        padding: '0.75in',  // Standard 3/4 inch margin
+        padding: isPreview ? '0.75in' : '0.5rem',
         boxSizing: 'border-box',
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        ...getMobileStyles()
       }}
     >
       {slots.map((chord, index) => {
@@ -121,13 +133,14 @@ const ChordSheet = forwardRef(({
     <div 
       ref={ref}
       id={id}
+      className={!isPreview ? 'max-w-full overflow-x-auto' : ''}
       style={{
         width: isPreview ? '8.5in' : '100%',  
         minHeight: isPreview ? '11in' : 'auto', 
         margin: '0',
         padding: '0',
         backgroundColor: 'white',
-        overflow: 'hidden',
+        overflow: isPreview ? 'hidden' : 'auto',
         boxSizing: 'border-box'
       }}
     >
