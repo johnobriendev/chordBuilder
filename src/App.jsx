@@ -104,9 +104,9 @@ function App() {
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow-sm">
         <div className="max-w-[1400px] mx-auto px-4 py-4">
-          <div className="flex items-center justify-between gap-8">
-            <h1 className="text-2xl font-bold text-gray-900 whitespace-nowrap">Chord and Scale Builder</h1>
-            <div className="flex-grow flex justify-end">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Chord and Scale Builder</h1>
+            <div className="w-full sm:w-auto">
               <ChordSheetControls 
                 gridConfig={gridConfig}
                 onGridChange={handleGridChange}
@@ -119,12 +119,12 @@ function App() {
       </header>
 
       <main className="max-w-[1400px] mx-auto px-4 py-6">
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-6">
           {/* Left column - Chord Creator */}
-          <div className="lg:w-[400px] flex-shrink-0">
+          <div className="w-full lg:w-[400px] flex-shrink-0">
             <section className="bg-white rounded-lg shadow">
-              <div className="p-6">
-                <h2 className="text-xl font-semibold mb-4">
+              <div className="p-4 sm:p-6">
+                <h2 className="text-lg sm:text-xl font-semibold mb-4">
                   {editingChord ? 'Edit Chord' : 'Create New Chord'}
                 </h2>
                 <GuitarDiagram 
