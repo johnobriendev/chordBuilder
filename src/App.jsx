@@ -18,6 +18,7 @@ function App() {
   const [editingChord, setEditingChord] = useState(null);
   const [editingIndex, setEditingIndex] = useState(null);
   const [showHelp, setShowHelp] = useState(false);
+  const [sheetTitle, setSheetTitle] = useState("My Chord Sheet");
 
   
 
@@ -153,7 +154,9 @@ function App() {
                 gridConfig={gridConfig}
                 setChords={setChords}
                 onEditChord={handleEditChord}
-                isInteractive={true}  
+                isInteractive={true} 
+                title={sheetTitle}
+                onTitleChange={setSheetTitle} 
               />
           </div>
         </div>
@@ -170,6 +173,7 @@ function App() {
           chords={chords} 
           gridConfig={gridConfig}
           isPreview={true}
+          title={sheetTitle}
         />
       </Modal>
 

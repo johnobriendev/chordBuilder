@@ -32,11 +32,37 @@ const ChordSheet = forwardRef(({
   isPrinting = false, 
   isInteractive = false,
   setChords,
-  onEditChord
+  onEditChord,
+  title = "",
+  onTitleChange
 }, ref) => {
 
   // Get spacing configuration based on grid size
   const spacing = getSpacingConfig(gridConfig.cols);
+
+
+  const renderTitle = () => {
+    if (isInteractive) {
+      return (
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => onTitleChange(e.target.value)}
+          className="w-full text-2xl font-bold text-gray-900 px-4 py-2 mb-4
+                     border-b border-transparent hover:border-gray-200 focus:border-gray-300
+                     focus:outline-none bg-transparent"
+          placeholder="Enter Sheet Title"
+        />
+      );
+    }
+    
+    // For preview/PDF mode
+    return (
+      <h2 className="text-2xl font-bold text-gray-900 text-center mb-8">
+        {title}
+      </h2>
+    );
+  };
 
 
   // Handle deletion of a chord
@@ -145,6 +171,7 @@ const ChordSheet = forwardRef(({
         boxSizing: 'border-box'
       }}
     >
+      {renderTitle()}
       {renderContent()}
     </div>
   );
