@@ -6,6 +6,7 @@ import ChordSheet from './components/ChordSheet';
 import ChordSheetControls from './components/ChordSheetControls';
 import { Modal } from './components/Modal';
 import { generatePDF } from './utils/pdfUtils';
+import { HelpCircle } from 'lucide-react';
 
 
 
@@ -16,6 +17,7 @@ function App() {
   const [showPreview, setShowPreview] = useState(false);
   const [editingChord, setEditingChord] = useState(null);
   const [editingIndex, setEditingIndex] = useState(null);
+  const [showHelp, setShowHelp] = useState(false);
 
   
 
@@ -106,6 +108,14 @@ function App() {
         <div className="max-w-[1400px] mx-auto px-4 py-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Chord and Scale Builder</h1>
+            <button
+                onClick={() => setShowHelp(true)}
+                className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 
+                         text-gray-700 rounded-md flex items-center gap-2"
+              >
+                <HelpCircle size={16} />
+                How to Use
+              </button>
             <div className="w-full sm:w-auto">
               <ChordSheetControls 
                 gridConfig={gridConfig}
@@ -161,6 +171,47 @@ function App() {
           gridConfig={gridConfig}
           isPreview={true}
         />
+      </Modal>
+
+
+      <Modal
+        isOpen={showHelp}
+        onClose={() => setShowHelp(false)}
+        title="How to Use Chord Sheet Builder"
+      >
+        <div className="space-y-6 text-gray-700">
+          <section>
+            <h3 className="text-lg font-semibold mb-2">Creating Chords</h3>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>Use the diagram on the left to create your chord</li>
+              <li>Click on the fretboard to add or remove notes</li>
+              <li>Click above the strings to mark them as open strings</li>
+              <li>Add fret numbers using the inputs on the left side if needed</li>
+              <li>Give your chord a name in the input field above the diagram</li>
+              <li>Click "Add to Sheet" to add it to your chord sheet</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3 className="text-lg font-semibold mb-2">Managing Your Chord Sheet</h3>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>Choose your grid size (4x4, 6x6, or 8x8) from the dropdown menu</li>
+              <li>Hover over any chord to reveal edit and delete buttons</li>
+              <li>Click the edit button (pencil icon) to modify an existing chord</li>
+              <li>Click the delete button (trash icon) to remove a chord</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3 className="text-lg font-semibold mb-2">Exporting Your Chord Sheet</h3>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>Click "Preview & Export" to see how your sheet will look</li>
+              <li>In the preview modal, click "Download PDF" to save your chord sheet</li>
+              <li>The PDF will maintain the exact layout you see in the preview</li>
+            </ul>
+          </section>
+
+        </div>
       </Modal>
 
       
