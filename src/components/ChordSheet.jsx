@@ -92,10 +92,11 @@ const ChordSheet = forwardRef(({
             }}
           >
             {chord && (
-              <div style={{ width: '100%', position: 'relative' }}>
+              <div style={{ width: '100%', position: 'relative' }} className="group">
                 <ChordDisplay 
                   chord={chord} 
                   size={spacing.displaySize} 
+                  isPreview={isPreview} 
                 />
                 
                 {isInteractive && (
