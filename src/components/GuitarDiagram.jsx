@@ -103,7 +103,7 @@ const GuitarDiagram = ({ onAddToSheet = () => {}, initialChord = null }) => {
         />
       </div>
 
-      <div className="relative border-2 border-gray-300 rounded p-4">
+      <div className="relative border-2 border-grey-300 rounded p-6">
         <div className="relative h-[28rem] w-64 mx-auto">
           {/* Open string positions */}
           <div className="absolute w-full" style={{ top: '-24px' }}>
