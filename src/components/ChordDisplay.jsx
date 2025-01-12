@@ -134,20 +134,20 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
           ))}
         </div>
 
-        <div className={`${sizeConfig.containerClass} border border-gray-300 rounded p-1`}>
+        <div className={`${sizeConfig.containerClass} border ${isPreview ? 'border-gray-300' : 'border-black'} rounded p-1`}>
           {/* Fret Lines and Strings */}
           <div className="absolute inset-0">
             {[...Array(NUM_FRETS + 1)].map((_, index) => (
               <div
                 key={`fret-${index}`}
-                className="absolute w-full h-px bg-gray-300"
+                className={`absolute w-full h-px ${isPreview ? 'bg-gray-300' : 'bg-black'}`}
                 style={{ top: `${(index * 100) / NUM_FRETS}%` }}
               />
             ))}
             {[...Array(NUM_STRINGS)].map((_, stringIndex) => (
               <div
                 key={`string-${stringIndex}`}
-                className="absolute top-0 bottom-0 w-px bg-gray-300"
+                className={`absolute top-0 bottom-0 w-px ${isPreview ? 'bg-gray-300' : 'bg-black'}`}
                 style={{ left: `${(stringIndex * 100) / (NUM_STRINGS - 1)}%` }}
               />
             ))}

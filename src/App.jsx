@@ -104,11 +104,11 @@ function App() {
 
   return (
 
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm">
+    <div className="min-h-screen bg-slate-600">
+      <header className="bg-stone-400 shadow-sm">
         <div className="max-w-[1400px] mx-auto px-4 py-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Chord and Scale Builder</h1>
+            <h1 className="text-xl sm:text-2xl font-light text-gray-900">Chord and Scale Builder</h1>
             <button
                 onClick={() => setShowHelp(true)}
                 className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 
@@ -133,10 +133,10 @@ function App() {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Left column - Chord Creator */}
           <div className="w-full lg:w-[400px] flex-shrink-0">
-            <section className="bg-white rounded-lg shadow">
+            <section className="bg-stone-300 rounded-lg shadow">
               <div className="p-4 sm:p-6">
-                <h2 className="text-lg sm:text-xl font-semibold mb-4">
-                  {editingChord ? 'Edit Chord' : 'Create New Chord'}
+                <h2 className="text-lg sm:text-xl font-light mb-4">
+                  {editingChord ? 'Edit Chord' : 'Create New Chord or Scale'}
                 </h2>
                 <GuitarDiagram 
                   onAddToSheet={handleAddChord}
@@ -200,6 +200,7 @@ function App() {
             <h3 className="text-lg font-semibold mb-2">Managing Your Chord Sheet</h3>
             <ul className="list-disc pl-5 space-y-2">
               <li>Choose your grid size (4x4, 6x6, or 8x8) from the dropdown menu</li>
+              <li>Click the Chord Sheet name to edit or erase it.</li>
               <li>Hover over any chord to reveal edit and delete buttons</li>
               <li>Click the edit button (pencil icon) to modify an existing chord</li>
               <li>Click the delete button (trash icon) to remove a chord</li>

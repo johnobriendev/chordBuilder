@@ -96,14 +96,14 @@ const GuitarDiagram = ({ onAddToSheet = () => {}, initialChord = null }) => {
       <div className="mb-4">
         <input
           type="text"
-          placeholder="Diagram Title"
+          placeholder="Enter Chord or Scale name"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border rounded bg-slate-300 placeholder-black"
         />
       </div>
 
-      <div className="relative border-2 border-grey-300 rounded p-6">
+      <div className="relative border-2 border-slate-500 rounded p-6">
         <div className="relative h-[28rem] w-64 mx-auto">
           {/* Open string positions */}
           <div className="absolute w-full" style={{ top: '-24px' }}>
@@ -129,7 +129,7 @@ const GuitarDiagram = ({ onAddToSheet = () => {}, initialChord = null }) => {
                   type="number"
                   value={fretNumbers[index]}
                   onChange={(e) => handleFretNumberChange(index, e.target.value)}
-                  className="w-10 p-1 text-sm border rounded"
+                  className="w-10 p-1 text-sm border rounded bg-slate-300 placeholder-black"
                   placeholder="#"
                 />
               </div>
@@ -140,7 +140,7 @@ const GuitarDiagram = ({ onAddToSheet = () => {}, initialChord = null }) => {
           {[...Array(NUM_FRETS + 1)].map((_, index) => (
             <div
               key={`fret-${index}`}
-              className="absolute w-full h-px bg-gray-400"
+              className="absolute w-full h-px bg-slate-600"
               style={{ top: `${(index * 100) / NUM_FRETS}%` }}
             />
           ))}
@@ -149,7 +149,7 @@ const GuitarDiagram = ({ onAddToSheet = () => {}, initialChord = null }) => {
           {[...Array(NUM_STRINGS)].map((_, stringIndex) => (
             <div
               key={`string-${stringIndex}`}
-              className="absolute top-0 bottom-0 w-px bg-gray-400"
+              className="absolute top-0 bottom-0 w-px bg-slate-600"
               style={{ left: `${(stringIndex * 100) / (NUM_STRINGS - 1)}%` }}
             />
           ))}

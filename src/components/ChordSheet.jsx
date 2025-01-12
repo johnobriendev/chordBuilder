@@ -41,28 +41,7 @@ const ChordSheet = forwardRef(({
   const spacing = getSpacingConfig(gridConfig.cols);
 
 
-  const renderTitle = () => {
-    if (isInteractive) {
-      return (
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => onTitleChange(e.target.value)}
-          className="w-full text-2xl font-bold text-gray-900 px-4 py-2 mb-4
-                     border-b border-transparent hover:border-gray-200 focus:border-gray-300
-                     focus:outline-none bg-transparent"
-          placeholder="Enter Sheet Title"
-        />
-      );
-    }
-    
-    // For preview/PDF mode
-    return (
-      <h2 className="text-2xl font-bold text-gray-900 text-center mb-8">
-        {title}
-      </h2>
-    );
-  };
+  
 
 
   // Handle deletion of a chord
@@ -88,6 +67,29 @@ const ChordSheet = forwardRef(({
     };
   };
 
+  const renderTitle = () => {
+    if (isInteractive) {
+      return (
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => onTitleChange(e.target.value)}
+          className="w-full text-2xl font-light text-gray-900 px-4 py-2 mb-4
+                     border-b border-transparent hover:border-gray-200 hover:text-blue-500 focus:border-gray-300
+                     focus:outline-none bg-transparent placeholder-black"
+          placeholder="Enter Sheet Title"
+        />
+      );
+    }
+    
+    // For preview/PDF mode
+    return (
+      <h2 className="text-2xl font-bold text-gray-900 text-center mb-8">
+        {title}
+      </h2>
+    );
+  };
+
 
 
 
@@ -100,9 +102,10 @@ const ChordSheet = forwardRef(({
         width: '100%',
         padding: isPreview ? '0.75in' : '0.5rem',
         boxSizing: 'border-box',
-        backgroundColor: 'white',
+        backgroundColor: isPreview ? 'white' : '#d6d3d1',
         ...getMobileStyles()
       }}
+      
     >
       {slots.map((chord, index) => {
         if (!chord && (isPreview)) return null;
@@ -148,7 +151,7 @@ const ChordSheet = forwardRef(({
             )}
             
             {!chord && isInteractive && (
-              <span className="text-gray-400 text-sm">Empty</span>
+              <span className="text-gray-600 text-sm">Empty</span>
             )}
           </div>
         );
@@ -166,7 +169,7 @@ const ChordSheet = forwardRef(({
         minHeight: isPreview ? '11in' : 'auto', 
         margin: '0',
         padding: '0',
-        backgroundColor: 'white',
+        backgroundColor: isPreview ? 'white' : '#d6d3d1',
         overflow: isPreview ? 'hidden' : 'auto',
         boxSizing: 'border-box'
       }}
