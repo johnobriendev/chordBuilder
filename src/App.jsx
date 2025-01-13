@@ -6,7 +6,7 @@ import ChordSheet from './components/ChordSheet';
 import ChordSheetControls from './components/ChordSheetControls';
 import { Modal } from './components/Modal';
 import { generatePDF } from './utils/pdfUtils';
-import { HelpCircle } from 'lucide-react';
+import { HelpCircle, AlertTriangle } from 'lucide-react';
 
 
 
@@ -19,6 +19,11 @@ function App() {
   const [editingIndex, setEditingIndex] = useState(null);
   const [showHelp, setShowHelp] = useState(false);
   const [sheetTitle, setSheetTitle] = useState("My Chord Sheet");
+  const [error, setError] = useState('');
+  const [showError, setShowError] = useState(false);
+
+  // Calculate the maximum number of chords based on grid configuration
+  const getMaxChords = (config) => config.rows * config.cols;
 
   
 
@@ -35,7 +40,25 @@ function App() {
       setEditingChord(null);
       setEditingIndex(null);
     } else {
-      // We're adding a new chord
+      // adding a new chord, see if limit is hit
+      const maxChords = getMaxChords(gridConfig);
+
+      if (chords.length >= maxChords) {
+        // Show error message
+        setError(`Cannot add more chords. The current ${gridConfig.rows}x${gridConfig.cols} grid can only display ${maxChords} chords. Please switch to a larger grid size or remove some chords.`);
+        setShowError(true);
+        
+        // Automatically hide error after 5 seconds
+        setTimeout(() => {
+          setShowError(false);
+          setError('');
+        }, 5000);
+        
+        return; // Don't add the chord
+      }
+
+
+      //if limit wasn't hit, add the chord
       setChords(prevChords => [...prevChords, {
         ...chordData,
         id: chordData.id.toString()
@@ -53,8 +76,21 @@ function App() {
 
   const handleGridChange = (event) => {
     const [cols, rows] = event.target.value.split('x').map(num => parseInt(num.trim()));
-    setGridConfig({ rows, cols });
-    console.log('Grid changed:', { rows, cols });
+    const newConfig = { rows, cols };
+    const maxChords = rows * cols;
+
+    if (chords.length > maxChords) {
+      setError(`Warning: Switching to a ${rows}x${cols} grid will hide ${chords.length - maxChords} chord(s). These hidden chords will still appear in the preview and PDF. Please remove some chords or switch to a larger grid.`);
+      setShowError(true);
+      
+      // Keep error visible a bit longer for this warning
+      setTimeout(() => {
+        setShowError(false);
+        setError('');
+      }, 7000);
+    }
+
+    setGridConfig(newConfig);
   };
 
   const handleExport = async () => {
@@ -105,6 +141,19 @@ function App() {
   return (
 
     <div className="min-h-screen bg-slate-600">
+      {showError && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 
+                      max-w-md w-full bg-red-50 border border-red-200 rounded-lg 
+                      shadow-lg p-4 text-red-700">
+          <div className="flex items-start">
+            <AlertTriangle className="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" />
+            <div>
+              {error}
+            </div>
+          </div>
+        </div>
+      )}
+
       <header className="bg-stone-400 shadow-sm">
         <div className="max-w-[1400px] mx-auto px-4 py-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
