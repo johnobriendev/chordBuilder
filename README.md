@@ -1,10 +1,10 @@
 # Guitar Chord Sheet Builder
 
-A React-based web application for creating, editing, and exporting guitar chord and scale sheets. Users can create custom chord diagrams, arrange them in a grid layout, and export them as PDF documents. Great for guitar teachers and students.
+A React-based web application for creating, editing, and exporting chord and scale sheets for 4 and 6 stringed instruments. Users can create custom chord diagrams, arrange them in a grid layout, and export them as PDF documents. Great for guitar, bass, ukelele, and mandolin teachers and students.
 
 ## Features
 
-- Create custom guitar chord diagrams with an intuitive interface for placing notes and indicators
+- Create custom chord diagrams with an intuitive interface for placing notes and indicators
 - Add fret numbers and open string indicators with simple click interactions
 - Edit and delete existing chords through a user-friendly interface
 - Arrange chords in customizable grid layouts with multiple size options (4x4, 6x6, 8x8)
