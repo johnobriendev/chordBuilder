@@ -23,8 +23,8 @@ A React-based web application for creating, editing, and exporting guitar chord 
 
 ## Installation
 
-1. Clone the repository: `git clone [your-repository-url]`
-2. Navigate to the project directory: `cd guitar-chord-sheet-builder`
+1. Clone the repository: `git clone [repository-url]`
+2. Navigate to the project directory: `cd chordBuilder `
 3. Install dependencies: `npm install`
 4. Start the development server: `npm run dev`
 
@@ -91,15 +91,6 @@ Use the grid selector in the top toolbar to choose between different grid sizes:
 - PDF generation maintains consistent margins and spacing regardless of screen size
 - Mobile view provides scrollable interface while maintaining diagram clarity
 
-
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
 
 ## License
 
