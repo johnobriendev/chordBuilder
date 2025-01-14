@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import { Trash2, Plus, Save } from 'lucide-react';
+import { Trash2, Plus, Save, Guitar } from 'lucide-react';
 
 const GuitarDiagram = ({ onAddToSheet = () => {}, initialChord = null }) => {
-  const NUM_STRINGS = 6;
+  //const NUM_STRINGS = 6;
+  const [numStrings, setNumStrings] = useState(6);
   const NUM_FRETS = 6;
 
   //State for tracking note positions and chord name and fret number
@@ -11,8 +12,17 @@ const GuitarDiagram = ({ onAddToSheet = () => {}, initialChord = null }) => {
   const [title, setTitle] = useState('');
   const [fretNumbers, setFretNumbers] = useState(Array(NUM_FRETS).fill(''));
 
+  // Reset states when changing number of strings
+  useEffect(() => {
+    // Clear all notes and open strings when switching string count
+    setNotes(new Set());
+    setOpenStrings(new Set());
+    setTitle('');
+    setFretNumbers(Array(NUM_FRETS).fill(''));
+  }, [numStrings]);
 
-  // Use useEffect to properly initialize the component when initialChord changes
+
+  //  initialize the component when initialChord changes
   useEffect(() => {
     if (initialChord) {
       // Initialize notes - convert array of note IDs back to Set
@@ -26,6 +36,8 @@ const GuitarDiagram = ({ onAddToSheet = () => {}, initialChord = null }) => {
       
       // Initialize fret numbers
       setFretNumbers(initialChord.fretNumbers);
+      //set number of strings
+      setNumStrings(initialChord.numStrings || 6);
     }
   }, [initialChord]); 
  
@@ -68,7 +80,6 @@ const GuitarDiagram = ({ onAddToSheet = () => {}, initialChord = null }) => {
     setOpenStrings(new Set());
     setTitle('');
     setFretNumbers(Array(NUM_FRETS).fill(''));
-
   };
 
   const handleFretNumberChange = (index, value) => {
@@ -85,7 +96,8 @@ const GuitarDiagram = ({ onAddToSheet = () => {}, initialChord = null }) => {
       fretNumbers,
       notes: Array.from(notes),
       openStrings: Array.from(openStrings),
-      id: initialChord ? initialChord.id : Date.now()
+      id: initialChord ? initialChord.id : Date.now(),
+      numStrings
     });
     clearDiagram();
   };
@@ -93,6 +105,19 @@ const GuitarDiagram = ({ onAddToSheet = () => {}, initialChord = null }) => {
 
   return (
     <div className="w-full max-w-lg mx-auto p-4">
+      <div className="mb-4 flex items-center gap-2">
+        <Guitar size={20} className="text-gray-600" />
+        <select
+          value={numStrings}
+          onChange={(e) => setNumStrings(Number(e.target.value))}
+          className="px-3 py-2 border rounded-md text-gray-700 text-sm"
+        >
+          <option value={6}>6 Strings</option>
+          <option value={4}>4 Strings</option>
+        </select>
+      </div>
+
+      
       <div className="mb-4">
         <input
           type="text"
@@ -107,11 +132,11 @@ const GuitarDiagram = ({ onAddToSheet = () => {}, initialChord = null }) => {
         <div className="relative h-[28rem] w-64 mx-auto">
           {/* Open string positions */}
           <div className="absolute w-full" style={{ top: '-24px' }}>
-            {[...Array(NUM_STRINGS)].map((_, stringIndex) => (
+            {[...Array(numStrings)].map((_, stringIndex) => (
               <div
                 key={`open-${stringIndex}`}
                 className="absolute w-6 h-6 -ml-3 flex items-center justify-center cursor-pointer hover:bg-gray-100 rounded-full"
-                style={{ left: `${(stringIndex * 100) / (NUM_STRINGS - 1)}%` }}
+                style={{ left: `${(stringIndex * 100) / (numStrings - 1)}%` }}
                 onClick={() => toggleOpenString(stringIndex)}
               >
                 {openStrings.has(createOpenStringId(stringIndex)) && (
@@ -146,23 +171,23 @@ const GuitarDiagram = ({ onAddToSheet = () => {}, initialChord = null }) => {
           ))}
           
           {/* Strings */}
-          {[...Array(NUM_STRINGS)].map((_, stringIndex) => (
+          {[...Array(numStrings)].map((_, stringIndex) => (
             <div
               key={`string-${stringIndex}`}
               className="absolute top-0 bottom-0 w-px bg-slate-600"
-              style={{ left: `${(stringIndex * 100) / (NUM_STRINGS - 1)}%` }}
+              style={{ left: `${(stringIndex * 100) / (numStrings - 1)}%` }}
             />
           ))}
 
           {/* Note positions */}
-          {[...Array(NUM_STRINGS)].map((_, stringIndex) => (
+          {[...Array(numStrings)].map((_, stringIndex) => (
             <React.Fragment key={`string-positions-${stringIndex}`}>
               {[...Array(NUM_FRETS)].map((_, fretIndex) => (
                 <div
                   key={`position-${stringIndex}-${fretIndex}`}
                   className="absolute w-6 h-6 -ml-3 -mt-3 flex items-center justify-center cursor-pointer hover:bg-gray-100 rounded-full"
                   style={{
-                    left: `${(stringIndex * 100) / (NUM_STRINGS - 1)}%`,
+                    left: `${(stringIndex * 100) / (numStrings - 1)}%`,
                     top: `${((fretIndex * 100) / NUM_FRETS) + (100 / (NUM_FRETS * 2))}%`
                   }}
                   onClick={() => toggleNote(stringIndex, fretIndex)}

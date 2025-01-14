@@ -2,7 +2,7 @@ import React from 'react';
 
 const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
   // Constants to match GuitarDiagram
-  const NUM_STRINGS = 6;
+  const NUM_STRINGS = chord.numStrings || 6;
   const NUM_FRETS = 6;
 
   const sizeConfigs = {
