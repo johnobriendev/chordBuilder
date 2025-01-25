@@ -232,7 +232,17 @@ function App() {
         onClose={() => setShowHelp(false)}
         title="How to Use Chord Sheet Builder"
       >
-        <div className="space-y-6 text-gray-700">
+        <video 
+            className="w-full max-w-3xl rounded-lg shadow-lg"
+            controls
+            autoPlay
+            muted
+          >
+            <source src="/chordapp-demo.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+
+          <div className="space-y-6 mt-4 text-gray-700">
           <section>
             <h3 className="text-lg font-semibold mb-2">Creating Chords</h3>
             <ul className="list-disc pl-5 space-y-2">
@@ -266,6 +276,8 @@ function App() {
           </section>
 
         </div>
+
+        
       </Modal>
 
       
@@ -278,3 +290,37 @@ function App() {
 
 export default App
 
+{/* <div className="space-y-6 text-gray-700">
+          <section>
+            <h3 className="text-lg font-semibold mb-2">Creating Chords</h3>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>Use the diagram on the left to create your chord</li>
+              <li>Click on the fretboard to add or remove notes</li>
+              <li>Click above the strings to mark them as open strings</li>
+              <li>Add fret numbers using the inputs on the left side if needed</li>
+              <li>Give your chord a name in the input field above the diagram</li>
+              <li>Click "Add to Sheet" to add it to your chord sheet</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3 className="text-lg font-semibold mb-2">Managing Your Chord Sheet</h3>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>Choose your grid size (4x4, 6x6, or 8x8) from the dropdown menu</li>
+              <li>Click the Chord Sheet name to edit or erase it.</li>
+              <li>Hover over any chord to reveal edit and delete buttons</li>
+              <li>Click the edit button (pencil icon) to modify an existing chord</li>
+              <li>Click the delete button (trash icon) to remove a chord</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3 className="text-lg font-semibold mb-2">Exporting Your Chord Sheet</h3>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>Click "Preview & Export" to see how your sheet will look</li>
+              <li>In the preview modal, click "Download PDF" to save your chord sheet</li>
+              <li>The PDF will maintain the exact layout you see in the preview</li>
+            </ul>
+          </section>
+
+        </div> */}
