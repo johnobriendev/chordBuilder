@@ -1,26 +1,40 @@
 import React, { useState } from 'react';
 import { Grid, Eye } from 'lucide-react';
 
-
-// Separate controls component
+// Separate controls component with extended grid options
 const ChordSheetControls = ({ gridConfig, onGridChange, onPreview }) => {
+  // Extended grid options that include diagram type information
   const gridOptions = [
-    { label: '4 x 4', rows: 4, cols: 4 },
-    { label: '6 x 6', rows: 6, cols: 6 },
-    { label: '8 x 8', rows: 8, cols: 8 }
+    // 6-fret diagram options (original functionality)
+    { label: '4 x 4 (6-fret)', rows: 4, cols: 4, diagramType: '6-fret' },
+    { label: '6 x 6 (6-fret)', rows: 6, cols: 6, diagramType: '6-fret' },
+    { label: '8 x 8 (6-fret)', rows: 8, cols: 8, diagramType: '6-fret' },
+    
+    // 12-fret diagram options (new functionality)
+    { label: '2 x 1 (12-fret)', rows: 1, cols: 2, diagramType: '12-fret' },
+    { label: '2 x 2 (12-fret)', rows: 2, cols: 2, diagramType: '12-fret' }
   ];
+
+  // Create a unique value for each grid option that includes diagram type
+  const createGridValue = (option) => `${option.cols}x${option.rows}-${option.diagramType}`;
+  
+  // Parse the current grid config back to a value that matches our options
+  const getCurrentValue = () => {
+    const currentDiagramType = gridConfig.diagramType || '6-fret';
+    return `${gridConfig.cols}x${gridConfig.rows}-${currentDiagramType}`;
+  };
 
   return (
     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
       <div className="flex items-center gap-2">
         <Grid size={20} className="text-gray-600" />
         <select
-          value={`${gridConfig.cols}x${gridConfig.rows}`}
+          value={getCurrentValue()}
           onChange={onGridChange}
           className="w-full sm:w-auto px-3 py-2 border rounded-md text-gray-700 text-sm"
         >
           {gridOptions.map((option) => (
-            <option key={option.label} value={`${option.cols}x${option.rows}`}>
+            <option key={createGridValue(option)} value={createGridValue(option)}>
               {option.label}
             </option>
           ))}
@@ -33,7 +47,6 @@ const ChordSheetControls = ({ gridConfig, onGridChange, onPreview }) => {
         <Eye size={16} />
         Preview & Download PDF
       </button>
-      
     </div>
   );
 };
