@@ -18,10 +18,27 @@ const ChordSheetControls = ({ gridConfig, onGridChange, onPreview }) => {
   // Create a unique value for each grid option that includes diagram type
   const createGridValue = (option) => `${option.cols}x${option.rows}-${option.diagramType}`;
   
-  // Parse the current grid config back to a value that matches our options
+  // This is the fixed version - it properly handles the diagramType formatting
   const getCurrentValue = () => {
+    // The gridConfig.diagramType comes in as "6-fret" or "12-fret" 
+    // We need to make sure we match exactly what our options expect
     const currentDiagramType = gridConfig.diagramType || '6-fret';
-    return `${gridConfig.cols}x${gridConfig.rows}-${currentDiagramType}`;
+    const constructedValue = `${gridConfig.cols}x${gridConfig.rows}-${currentDiagramType}`;
+    
+    // Debug logging to help understand what's happening (remove in production)
+    console.log('Current gridConfig:', gridConfig);
+    console.log('Constructed value:', constructedValue);
+    console.log('Available options:', gridOptions.map(opt => createGridValue(opt)));
+    
+    // Verify this value exists in our options
+    const matchingOption = gridOptions.find(opt => createGridValue(opt) === constructedValue);
+    if (!matchingOption) {
+      console.warn('No matching option found for:', constructedValue);
+      // Fallback to first option if no match found
+      return createGridValue(gridOptions[0]);
+    }
+    
+    return constructedValue;
   };
 
   return (

@@ -13,7 +13,7 @@ import { HelpCircle, AlertTriangle } from 'lucide-react';
 function App() {
   // State to manage the collection of chords
   const [chords, setChords] = useState([]);
-  const [gridConfig, setGridConfig] = useState({ rows: 4, cols: 4 });
+  const [gridConfig, setGridConfig] = useState({ rows: 4, cols: 4, diagramType: '6-fret' });
   const [showPreview, setShowPreview] = useState(false);
   const [editingChord, setEditingChord] = useState(null);
   const [editingIndex, setEditingIndex] = useState(null);
@@ -21,6 +21,22 @@ function App() {
   const [sheetTitle, setSheetTitle] = useState("My Chord Sheet");
   const [error, setError] = useState('');
   const [showError, setShowError] = useState(false);
+
+  const getExpectedDiagramType = (config) => {
+    return config.diagramType || '6-fret';
+  };
+
+  const isChordCompatibleWithGrid = (chord, gridConfig) => {
+    if (!chord) return true;
+
+    const chordFrets = chord.numFrets || 6;
+    const expectedType = getExpectedDiagramType(gridConfig);
+
+    if (expectedType === '6-fret' && chordFrets === 6) return true;
+    if (expectedType === '12-fret' && chordFrets === 12) return true;
+
+    return false;
+  };
 
 
   const createSafeFilename = (title) => {
@@ -61,35 +77,57 @@ function App() {
   // Handler for adding new chords to the sheet
   const handleAddChord = (chordData) => {
     if (editingIndex !== null) {
-      // We're editing an existing chord
-      const updatedChords = [...chords];
-      updatedChords[editingIndex] = {
-        ...chordData,
-        id: editingChord.id // Preserve the original ID
-      };
-      setChords(updatedChords);
-      setEditingChord(null);
-      setEditingIndex(null);
-    } else {
-      // adding a new chord, see if limit is hit
-      const maxChords = getMaxChords(gridConfig);
-
-      if (chords.length >= maxChords) {
-        // Show error message
-        setError(`Cannot add more chords. The current ${gridConfig.rows}x${gridConfig.cols} grid can only display ${maxChords} chords. Please switch to a larger grid size or remove some chords.`);
+      // Editing existing chord - validate compatibility
+      if (!isChordCompatibleWithGrid(chordData, gridConfig)) {
+        const expectedFrets = gridConfig.diagramType === '12-fret' ? 12 : 6;
+        setError(`This chord has ${chordData.numFrets} frets, but the current grid expects ${expectedFrets}-fret diagrams. Please switch to a compatible grid or adjust the chord's fret count.`);
         setShowError(true);
 
-        // Automatically hide error after 5 seconds
         setTimeout(() => {
           setShowError(false);
           setError('');
         }, 5000);
 
-        return; // Don't add the chord
+        return;
       }
 
+      const updatedChords = [...chords];
+      updatedChords[editingIndex] = {
+        ...chordData,
+        id: editingChord.id
+      };
+      setChords(updatedChords);
+      setEditingChord(null);
+      setEditingIndex(null);
+    } else {
+      // Adding new chord - validate compatibility and capacity
+      if (!isChordCompatibleWithGrid(chordData, gridConfig)) {
+        const expectedFrets = gridConfig.diagramType === '12-fret' ? 12 : 6;
+        setError(`This chord has ${chordData.numFrets} frets, but the current grid expects ${expectedFrets}-fret diagrams. Please switch to a compatible grid or adjust the chord's fret count.`);
+        setShowError(true);
 
-      //if limit wasn't hit, add the chord
+        setTimeout(() => {
+          setShowError(false);
+          setError('');
+        }, 5000);
+
+        return;
+      }
+
+      const maxChords = getMaxChords(gridConfig);
+      if (chords.length >= maxChords) {
+        const gridLabel = `${gridConfig.rows}x${gridConfig.cols} ${gridConfig.diagramType}`;
+        setError(`Cannot add more chords. The current ${gridLabel} grid can only display ${maxChords} chords. Please switch to a larger grid size or remove some chords.`);
+        setShowError(true);
+
+        setTimeout(() => {
+          setShowError(false);
+          setError('');
+        }, 5000);
+
+        return;
+      }
+
       setChords(prevChords => [...prevChords, {
         ...chordData,
         id: chordData.id.toString()
@@ -106,15 +144,42 @@ function App() {
 
 
   const handleGridChange = (event) => {
-    const [cols, rows] = event.target.value.split('x').map(num => parseInt(num.trim()));
-    const newConfig = { rows, cols };
+    const value = event.target.value;
+
+    // Parse format like "2x1-12-fret"
+    const lastHyphenIndex = value.lastIndexOf('-');
+    const dimensionsAndType = value.substring(0, lastHyphenIndex);
+    const fretPart = value.substring(lastHyphenIndex + 1);
+
+    const secondLastHyphenIndex = dimensionsAndType.lastIndexOf('-');
+    const dimensions = dimensionsAndType.substring(0, secondLastHyphenIndex);
+    const fretNumber = dimensionsAndType.substring(secondLastHyphenIndex + 1);
+
+    const [cols, rows] = dimensions.split('x').map(num => parseInt(num.trim()));
+    const diagramType = `${fretNumber}-${fretPart}`;
+
+    const newConfig = { rows, cols, diagramType };
     const maxChords = rows * cols;
 
-    if (chords.length > maxChords) {
-      setError(`Warning: Switching to a ${rows}x${cols} grid will hide ${chords.length - maxChords} chord(s). These hidden chords will still appear in the preview and PDF. Please remove some chords or switch to a larger grid.`);
+    // Check compatibility and capacity
+    const incompatibleChords = chords.filter(chord => !isChordCompatibleWithGrid(chord, newConfig));
+
+    if (incompatibleChords.length > 0) {
+      const currentType = gridConfig.diagramType === '12-fret' ? '12' : '6';
+      const newType = newConfig.diagramType === '12-fret' ? '12' : '6';
+
+      setError(`Warning: You have ${incompatibleChords.length} chord(s) with ${currentType} frets, but you're switching to a ${newType}-fret grid. These incompatible chords will be hidden in the sheet view but will still appear in preview and PDF.`);
       setShowError(true);
 
-      // Keep error visible a bit longer for this warning
+      setTimeout(() => {
+        setShowError(false);
+        setError('');
+      }, 7000);
+    } else if (chords.length > maxChords) {
+      const gridLabel = `${rows}x${cols} ${newConfig.diagramType}`;
+      setError(`Warning: Switching to a ${gridLabel} grid will hide ${chords.length - maxChords} chord(s). These hidden chords will still appear in the preview and PDF.`);
+      setShowError(true);
+
       setTimeout(() => {
         setShowError(false);
         setError('');
