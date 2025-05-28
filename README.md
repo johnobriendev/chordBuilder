@@ -80,10 +80,7 @@ Use the grid selector in the top toolbar to choose between different grid sizes:
 - **Interactive Editing**: Hover states and edit controls for easy management
 - **PDF Export**: Clean, professional-looking PDF output
 
-## Development
 
-- **Building for Production**: `npm run build`
-- **Preview Production Build**: `npm run preview`
 
 ### Important Notes
 
