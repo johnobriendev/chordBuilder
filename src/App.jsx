@@ -22,10 +22,41 @@ function App() {
   const [error, setError] = useState('');
   const [showError, setShowError] = useState(false);
 
+
+  const createSafeFilename = (title) => {
+    // If title is empty or only whitespace, use default
+    if (!title || title.trim().length === 0) {
+      return 'my-chord-sheet.pdf';
+    }
+
+    // Remove or replace problematic characters
+    // This regex removes: < > : " | ? * / \ and other control characters
+    let safeTitle = title
+      .replace(/[<>:"|?*\/\\]/g, '') // Remove completely invalid characters
+      .replace(/\s+/g, '-') // Replace spaces and multiple whitespace with hyphens
+      .replace(/[^\w\-_.]/g, '') // Remove any remaining non-word characters except hyphens, underscores, and dots
+      .replace(/-+/g, '-') // Replace multiple consecutive hyphens with single hyphen
+      .replace(/^-+|-+$/g, '') // Remove leading and trailing hyphens
+      .toLowerCase(); // Convert to lowercase for consistency
+
+    // If after sanitization we have nothing left, use default
+    if (safeTitle.length === 0) {
+      return 'my-chord-sheet.pdf';
+    }
+
+    // Limit filename length to prevent filesystem issues
+    if (safeTitle.length > 50) {
+      safeTitle = safeTitle.substring(0, 50);
+    }
+
+    // Ensure it ends with .pdf
+    return safeTitle.endsWith('.pdf') ? safeTitle : `${safeTitle}.pdf`;
+  };
+
   // Calculate the maximum number of chords based on grid configuration
   const getMaxChords = (config) => config.rows * config.cols;
 
-  
+
 
   // Handler for adding new chords to the sheet
   const handleAddChord = (chordData) => {
@@ -47,13 +78,13 @@ function App() {
         // Show error message
         setError(`Cannot add more chords. The current ${gridConfig.rows}x${gridConfig.cols} grid can only display ${maxChords} chords. Please switch to a larger grid size or remove some chords.`);
         setShowError(true);
-        
+
         // Automatically hide error after 5 seconds
         setTimeout(() => {
           setShowError(false);
           setError('');
         }, 5000);
-        
+
         return; // Don't add the chord
       }
 
@@ -82,7 +113,7 @@ function App() {
     if (chords.length > maxChords) {
       setError(`Warning: Switching to a ${rows}x${cols} grid will hide ${chords.length - maxChords} chord(s). These hidden chords will still appear in the preview and PDF. Please remove some chords or switch to a larger grid.`);
       setShowError(true);
-      
+
       // Keep error visible a bit longer for this warning
       setTimeout(() => {
         setShowError(false);
@@ -100,10 +131,13 @@ function App() {
       if (!modalContent) {
         throw new Error('Preview content not found');
       }
-      
-      // Generate PDF directly from the modal content
-      const success = await generatePDF(modalContent, 'my-chord-sheet.pdf');
-      
+
+      // Create safe filename from the current sheet title
+      const filename = createSafeFilename(sheetTitle);
+
+      // Generate PDF with the dynamic filename
+      const success = await generatePDF(modalContent, filename);
+
       if (success) {
         console.log('PDF generated successfully');
         // Optionally close the preview after successful export
@@ -119,13 +153,13 @@ function App() {
   // Generate the preview actions (buttons)
   const previewActions = (
     <>
-      <button 
+      <button
         onClick={() => setShowPreview(false)}
         className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded"
       >
         Close
       </button>
-      <button 
+      <button
         onClick={handleExport}
         className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
       >
@@ -133,9 +167,9 @@ function App() {
       </button>
     </>
   );
-  
 
-  
+
+
 
 
   return (
@@ -159,15 +193,15 @@ function App() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <h1 className="text-xl sm:text-2xl font-light text-gray-900">Chord and Scale Builder</h1>
             <button
-                onClick={() => setShowHelp(true)}
-                className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 
+              onClick={() => setShowHelp(true)}
+              className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 
                          text-gray-700 rounded-md flex items-center gap-2"
-              >
-                <HelpCircle size={16} />
-                How to Use
-              </button>
+            >
+              <HelpCircle size={16} />
+              How to Use
+            </button>
             <div className="w-full sm:w-auto">
-              <ChordSheetControls 
+              <ChordSheetControls
                 gridConfig={gridConfig}
                 onGridChange={handleGridChange}
                 //onExport={handleExport}
@@ -187,7 +221,7 @@ function App() {
                 <h2 className="text-lg sm:text-xl font-light mb-4">
                   {editingChord ? 'Edit Chord' : 'Create New Chord or Scale'}
                 </h2>
-                <GuitarDiagram 
+                <GuitarDiagram
                   onAddToSheet={handleAddChord}
                   initialChord={editingChord}
                   className="w-full max-w-sm mx-auto"
@@ -198,15 +232,15 @@ function App() {
 
           {/* Right column - Chord Sheet */}
           <div className="flex-grow">
-              <ChordSheet 
-                chords={chords} 
-                gridConfig={gridConfig}
-                setChords={setChords}
-                onEditChord={handleEditChord}
-                isInteractive={true} 
-                title={sheetTitle}
-                onTitleChange={setSheetTitle} 
-              />
+            <ChordSheet
+              chords={chords}
+              gridConfig={gridConfig}
+              setChords={setChords}
+              onEditChord={handleEditChord}
+              isInteractive={true}
+              title={sheetTitle}
+              onTitleChange={setSheetTitle}
+            />
           </div>
         </div>
       </main>
@@ -218,8 +252,8 @@ function App() {
         title="PDF Preview"
         actions={previewActions}
       >
-        <ChordSheet 
-          chords={chords} 
+        <ChordSheet
+          chords={chords}
           gridConfig={gridConfig}
           isPreview={true}
           title={sheetTitle}
@@ -232,17 +266,17 @@ function App() {
         onClose={() => setShowHelp(false)}
         title="How to Use Chord Sheet Builder"
       >
-        <video 
-            className="w-full max-w-3xl rounded-lg shadow-lg"
-            controls
-            autoPlay
-            muted
-          >
-            <source src="/chordapp-demo.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+        <video
+          className="w-full max-w-3xl rounded-lg shadow-lg"
+          controls
+          autoPlay
+          muted
+        >
+          <source src="/chordapp-demo.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
 
-          <div className="space-y-6 mt-4 text-gray-700">
+        <div className="space-y-6 mt-4 text-gray-700">
           <section>
             <h3 className="text-lg font-semibold mb-2">Creating Chords</h3>
             <ul className="list-disc pl-5 space-y-2">
@@ -277,50 +311,16 @@ function App() {
 
         </div>
 
-        
+
       </Modal>
 
-      
+
 
     </div>
-  
+
   );
- 
+
 };
 
 export default App
 
-{/* <div className="space-y-6 text-gray-700">
-          <section>
-            <h3 className="text-lg font-semibold mb-2">Creating Chords</h3>
-            <ul className="list-disc pl-5 space-y-2">
-              <li>Use the diagram on the left to create your chord</li>
-              <li>Click on the fretboard to add or remove notes</li>
-              <li>Click above the strings to mark them as open strings</li>
-              <li>Add fret numbers using the inputs on the left side if needed</li>
-              <li>Give your chord a name in the input field above the diagram</li>
-              <li>Click "Add to Sheet" to add it to your chord sheet</li>
-            </ul>
-          </section>
-
-          <section>
-            <h3 className="text-lg font-semibold mb-2">Managing Your Chord Sheet</h3>
-            <ul className="list-disc pl-5 space-y-2">
-              <li>Choose your grid size (4x4, 6x6, or 8x8) from the dropdown menu</li>
-              <li>Click the Chord Sheet name to edit or erase it.</li>
-              <li>Hover over any chord to reveal edit and delete buttons</li>
-              <li>Click the edit button (pencil icon) to modify an existing chord</li>
-              <li>Click the delete button (trash icon) to remove a chord</li>
-            </ul>
-          </section>
-
-          <section>
-            <h3 className="text-lg font-semibold mb-2">Exporting Your Chord Sheet</h3>
-            <ul className="list-disc pl-5 space-y-2">
-              <li>Click "Preview & Export" to see how your sheet will look</li>
-              <li>In the preview modal, click "Download PDF" to save your chord sheet</li>
-              <li>The PDF will maintain the exact layout you see in the preview</li>
-            </ul>
-          </section>
-
-        </div> */}
