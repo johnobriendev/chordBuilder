@@ -1,62 +1,77 @@
-import React, { useState } from 'react';
-import { Grid, Eye } from 'lucide-react';
+import React from 'react';
+import { Grid, Eye, Guitar } from 'lucide-react';
 
-// Separate controls component with extended grid options
 const ChordSheetControls = ({ gridConfig, onGridChange, onPreview }) => {
-  // Extended grid options that include diagram type information
-  const gridOptions = [
-    // 6-fret diagram options (original functionality)
-    { label: '4 x 4 (6-fret)', rows: 4, cols: 4, diagramType: '6-fret' },
-    { label: '6 x 6 (6-fret)', rows: 6, cols: 6, diagramType: '6-fret' },
-    { label: '8 x 8 (6-fret)', rows: 8, cols: 8, diagramType: '6-fret' },
-    
-    // 12-fret diagram options (new functionality)
-    { label: '2 x 1 (12-fret)', rows: 1, cols: 2, diagramType: '12-fret' },
-    { label: '2 x 2 (12-fret)', rows: 2, cols: 2, diagramType: '12-fret' }
-  ];
+  // Organize options by diagram type for better UX
+  const gridOptionsByType = {
+    '6-fret': [
+      { label: '4 x 4', rows: 4, cols: 4, diagramType: '6-fret' },
+      { label: '6 x 6', rows: 6, cols: 6, diagramType: '6-fret' },
+      { label: '8 x 8', rows: 8, cols: 8, diagramType: '6-fret' }
+    ],
+    '12-fret': [
+      { label: '2 x 1', rows: 1, cols: 2, diagramType: '12-fret' },
+      { label: '2 x 2', rows: 2, cols: 2, diagramType: '12-fret' }
+    ]
+  };
 
-  // Create a unique value for each grid option that includes diagram type
+  const currentDiagramType = gridConfig.diagramType || '6-fret';
+  const availableGridOptions = gridOptionsByType[currentDiagramType] || gridOptionsByType['6-fret'];
+
   const createGridValue = (option) => `${option.cols}x${option.rows}-${option.diagramType}`;
   
-  // This is the fixed version - it properly handles the diagramType formatting
-  const getCurrentValue = () => {
-    // The gridConfig.diagramType comes in as "6-fret" or "12-fret" 
-    // We need to make sure we match exactly what our options expect
-    const currentDiagramType = gridConfig.diagramType || '6-fret';
+  const getCurrentGridValue = () => {
     const constructedValue = `${gridConfig.cols}x${gridConfig.rows}-${currentDiagramType}`;
+    const matchingOption = availableGridOptions.find(opt => createGridValue(opt) === constructedValue);
+    return matchingOption ? constructedValue : createGridValue(availableGridOptions[0]);
+  };
+
+  // Handle diagram type change - this will also reset to first grid option of that type
+  const handleDiagramTypeChange = (event) => {
+    const newDiagramType = event.target.value;
+    const defaultGridOption = gridOptionsByType[newDiagramType][0];
     
-    // Debug logging to help understand what's happening (remove in production)
-    console.log('Current gridConfig:', gridConfig);
-    console.log('Constructed value:', constructedValue);
-    console.log('Available options:', gridOptions.map(opt => createGridValue(opt)));
+    // Create a synthetic event to trigger grid change with the default option for this type
+    const syntheticEvent = {
+      target: {
+        value: createGridValue(defaultGridOption)
+      }
+    };
     
-    // Verify this value exists in our options
-    const matchingOption = gridOptions.find(opt => createGridValue(opt) === constructedValue);
-    if (!matchingOption) {
-      console.warn('No matching option found for:', constructedValue);
-      // Fallback to first option if no match found
-      return createGridValue(gridOptions[0]);
-    }
-    
-    return constructedValue;
+    onGridChange(syntheticEvent);
   };
 
   return (
     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+      {/* Diagram Type Selector */}
+      <div className="flex items-center gap-2">
+        <Guitar size={20} className="text-gray-600" />
+        <select
+          value={currentDiagramType}
+          onChange={handleDiagramTypeChange}
+          className="px-3 py-2 border rounded-md text-gray-700 text-sm"
+        >
+          <option value="6-fret">6-Fret Diagrams</option>
+          <option value="12-fret">12-Fret Diagrams</option>
+        </select>
+      </div>
+
+      {/* Grid Size Selector - options change based on diagram type */}
       <div className="flex items-center gap-2">
         <Grid size={20} className="text-gray-600" />
         <select
-          value={getCurrentValue()}
+          value={getCurrentGridValue()}
           onChange={onGridChange}
-          className="w-full sm:w-auto px-3 py-2 border rounded-md text-gray-700 text-sm"
+          className="px-3 py-2 border rounded-md text-gray-700 text-sm"
         >
-          {gridOptions.map((option) => (
+          {availableGridOptions.map((option) => (
             <option key={createGridValue(option)} value={createGridValue(option)}>
               {option.label}
             </option>
           ))}
         </select>
       </div>
+
       <button 
         onClick={onPreview}
         className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"

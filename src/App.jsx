@@ -168,7 +168,7 @@ function App() {
       const currentType = gridConfig.diagramType === '12-fret' ? '12' : '6';
       const newType = newConfig.diagramType === '12-fret' ? '12' : '6';
 
-      setError(`Warning: You have ${incompatibleChords.length} chord(s) with ${currentType} frets, but you're switching to a ${newType}-fret grid. These incompatible chords will be hidden in the sheet view but will still appear in preview and PDF.`);
+      setError(`Warning: You have ${incompatibleChords.length} chord(s) saved with ${currentType} frets, but you're switching to a ${newType}-fret grid. These incompatible chords will be hidden in the sheet view but will still appear in preview and PDF. Please delete all ${currentType} fret chords before continuing.`);
       setShowError(true);
 
       setTimeout(() => {

@@ -1,12 +1,11 @@
 import React from 'react';
 
 const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
-  // Constants that can now be dynamic based on chord data
   const NUM_STRINGS = chord.numStrings || 6;
-  const NUM_FRETS = chord.numFrets || 6; // Now reads from chord data instead of being hardcoded
+  const NUM_FRETS = chord.numFrets || 6;
 
-  // Size configurations for different fret counts
-  // We need different configurations for 6-fret vs 12-fret diagrams
+  // Create separate size configurations for 6-fret and 12-fret diagrams
+  // This avoids the Tailwind dynamic class generation problem
   const getSizeConfigs = (fretCount) => {
     const baseConfig = {
       small: {
@@ -41,71 +40,38 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
       }
     };
 
-    // Calculate container dimensions based on fret count
-    // 6 frets gets base dimensions, 12 frets gets proportionally larger
-    const fretRatio = fretCount / 6;
-
+    // Use explicit Tailwind classes that we know exist
     if (fretCount === 6) {
-      // Original 6-fret dimensions
       return {
         small: { ...baseConfig.small, containerClass: 'w-14 h-20', wrapperClass: 'w-16' },
         medium: { ...baseConfig.medium, containerClass: 'w-20 h-28', wrapperClass: 'w-24' },
         large: { ...baseConfig.large, containerClass: 'w-24 h-32', wrapperClass: 'w-28' }
       };
     } else {
-      // 12-fret dimensions (or other counts) - scale proportionally
+      // For 12-fret diagrams, use explicit height classes that exist in Tailwind
       return {
-        small: {
-          ...baseConfig.small,
-          containerClass: `w-14 h-${Math.round(20 * fretRatio)}`,
-          wrapperClass: 'w-16'
-        },
-        medium: {
-          ...baseConfig.medium,
-          containerClass: `w-20 h-${Math.round(28 * fretRatio)}`,
-          wrapperClass: 'w-24'
-        },
-        large: {
-          ...baseConfig.large,
-          containerClass: `w-24 h-${Math.round(32 * fretRatio)}`,
-          wrapperClass: 'w-28'
-        }
+        small: { ...baseConfig.small, containerClass: 'w-14 h-40', wrapperClass: 'w-16' },
+        medium: { ...baseConfig.medium, containerClass: 'w-20 h-56', wrapperClass: 'w-24' },
+        large: { ...baseConfig.large, containerClass: 'w-24 h-64', wrapperClass: 'w-28' }
       };
     }
   };
 
   const getMobileSizeConfigs = (fretCount) => {
     const desktopConfigs = getSizeConfigs(fretCount);
-    const fretRatio = fretCount / 6;
-
+    
     if (fretCount === 6) {
-      // Original mobile 6-fret dimensions
       return {
         small: { ...desktopConfigs.small, containerClass: 'w-12 h-16', wrapperClass: 'w-14', titleClass: 'text-[10px]' },
         medium: { ...desktopConfigs.medium, containerClass: 'w-16 h-24', wrapperClass: 'w-20', titleClass: 'text-xs' },
         large: { ...desktopConfigs.large, containerClass: 'w-20 h-28', wrapperClass: 'w-24', titleClass: 'text-sm' }
       };
     } else {
-      // 12-fret mobile dimensions - scale proportionally
+      // Mobile 12-fret with explicit Tailwind classes
       return {
-        small: {
-          ...desktopConfigs.small,
-          containerClass: `w-12 h-${Math.round(16 * fretRatio)}`,
-          wrapperClass: 'w-14',
-          titleClass: 'text-[10px]'
-        },
-        medium: {
-          ...desktopConfigs.medium,
-          containerClass: `w-16 h-${Math.round(24 * fretRatio)}`,
-          wrapperClass: 'w-20',
-          titleClass: 'text-xs'
-        },
-        large: {
-          ...desktopConfigs.large,
-          containerClass: `w-20 h-${Math.round(28 * fretRatio)}`,
-          wrapperClass: 'w-24',
-          titleClass: 'text-sm'
-        }
+        small: { ...desktopConfigs.small, containerClass: 'w-12 h-32', wrapperClass: 'w-14', titleClass: 'text-[10px]' },
+        medium: { ...desktopConfigs.medium, containerClass: 'w-16 h-48', wrapperClass: 'w-20', titleClass: 'text-xs' },
+        large: { ...desktopConfigs.large, containerClass: 'w-20 h-56', wrapperClass: 'w-24', titleClass: 'text-sm' }
       };
     }
   };
@@ -138,7 +104,7 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
             <div
               key={`open-${stringIndex}`}
               className="absolute w-full flex justify-center"
-              style={{
+              style={{ 
                 left: `${(stringIndex * 100) / (NUM_STRINGS - 1)}%`,
                 transform: 'translateX(-50%)'
               }}
@@ -150,10 +116,10 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
           ))}
         </div>
 
-        {/* Fret Numbers - now uses the dynamic NUM_FRETS */}
-        <div
+        {/* Fret Numbers */}
+        <div 
           className="absolute top-0 bottom-0"
-          style={{
+          style={{ 
             left: sizeConfig.fretNumberOffset,
             width: sizeConfig.fretNumberWidth
           }}
@@ -175,7 +141,7 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
         </div>
 
         <div className={`${sizeConfig.containerClass} border ${isPreview ? 'border-gray-300' : 'border-black'} rounded p-1`}>
-          {/* Fret Lines and Strings - now uses dynamic NUM_FRETS */}
+          {/* Fret Lines and Strings */}
           <div className="absolute inset-0">
             {[...Array(NUM_FRETS + 1)].map((_, index) => (
               <div
@@ -193,7 +159,7 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
             ))}
           </div>
 
-          {/* Note Dots - now uses dynamic NUM_FRETS for positioning */}
+          {/* Note Dots */}
           {[...Array(NUM_STRINGS)].map((_, stringIndex) => (
             <React.Fragment key={`string-notes-${stringIndex}`}>
               {[...Array(NUM_FRETS)].map((_, fretIndex) => (
@@ -213,7 +179,7 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
           ))}
         </div>
       </div>
-    </div>
+    </div>    
   );
 };
 
