@@ -1,7 +1,7 @@
 import React from 'react';
-import { Grid, Eye, Guitar } from 'lucide-react';
+import { Grid, Eye, Guitar, Trash2 } from 'lucide-react';
 
-const ChordSheetControls = ({ gridConfig, onGridChange, onPreview }) => {
+const ChordSheetControls = ({ gridConfig, onGridChange, onPreview, onClearRequest }) => {
   // Organize options by diagram type for better UX
   const gridOptionsByType = {
     '6-fret': [
@@ -19,7 +19,7 @@ const ChordSheetControls = ({ gridConfig, onGridChange, onPreview }) => {
   const availableGridOptions = gridOptionsByType[currentDiagramType] || gridOptionsByType['6-fret'];
 
   const createGridValue = (option) => `${option.cols}x${option.rows}-${option.diagramType}`;
-  
+
   const getCurrentGridValue = () => {
     const constructedValue = `${gridConfig.cols}x${gridConfig.rows}-${currentDiagramType}`;
     const matchingOption = availableGridOptions.find(opt => createGridValue(opt) === constructedValue);
@@ -30,14 +30,14 @@ const ChordSheetControls = ({ gridConfig, onGridChange, onPreview }) => {
   const handleDiagramTypeChange = (event) => {
     const newDiagramType = event.target.value;
     const defaultGridOption = gridOptionsByType[newDiagramType][0];
-    
+
     // Create a synthetic event to trigger grid change with the default option for this type
     const syntheticEvent = {
       target: {
         value: createGridValue(defaultGridOption)
       }
     };
-    
+
     onGridChange(syntheticEvent);
   };
 
@@ -72,7 +72,16 @@ const ChordSheetControls = ({ gridConfig, onGridChange, onPreview }) => {
         </select>
       </div>
 
-      <button 
+      <button
+        onClick={onClearRequest}
+        className="flex items-center justify-center gap-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+        title="Clear all chords from the sheet"
+      >
+        <Trash2 size={16} />
+        Clear Sheet
+      </button>
+
+      <button
         onClick={onPreview}
         className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
       >

@@ -21,6 +21,7 @@ function App() {
   const [sheetTitle, setSheetTitle] = useState("My Chord Sheet");
   const [error, setError] = useState('');
   const [showError, setShowError] = useState(false);
+  const [showClearConfirmation, setShowClearConfirmation] = useState(false);
 
   const getExpectedDiagramType = (config) => {
     return config.diagramType || '6-fret';
@@ -139,6 +140,40 @@ function App() {
   const handleEditChord = (chord, index) => {
     setEditingChord(chord);
     setEditingIndex(index);
+  };
+
+
+  const handleClearSheet = () => {
+    // Reset all the state that accumulates over time
+    setChords([]); // Clear all chords - this is the main goal
+    setEditingChord(null); // Clear any chord currently being edited
+    setEditingIndex(null); // Clear the editing index
+
+  };
+
+  const handleClearSheetRequest = () => {
+    // Only show the modal if there are actually chords to clear
+    // This prevents unnecessary confirmation when the sheet is already empty
+    if (chords.length === 0) {
+      setError('The sheet is already empty - no chords to clear.');
+      setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+        setError('');
+      }, 3000);
+      return;
+    }
+
+    setShowClearConfirmation(true);
+  };
+
+  const handleConfirmClear = () => {
+    handleClearSheet(); // Execute the actual clearing
+    setShowClearConfirmation(false); // Close the modal
+  };
+
+  const handleCancelClear = () => {
+    setShowClearConfirmation(false); // Just close the modal without clearing
   };
 
 
@@ -271,6 +306,7 @@ function App() {
                 onGridChange={handleGridChange}
                 //onExport={handleExport}
                 onPreview={() => setShowPreview(true)}
+                onClearRequest={handleClearSheetRequest}
               />
             </div>
           </div>
@@ -377,6 +413,53 @@ function App() {
         </div>
 
 
+      </Modal>
+
+
+
+      <Modal
+        isOpen={showClearConfirmation}
+        onClose={handleCancelClear}
+        title="Clear Chord Sheet"
+        actions={
+          <>
+            <button
+              onClick={handleCancelClear}
+              className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleConfirmClear}
+              className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            >
+              Clear All Chords
+            </button>
+          </>
+        }
+      >
+        <div className="space-y-4">
+          <p className="text-gray-700">
+            Are you sure you want to clear all chords from this sheet?
+          </p>
+
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <div className="flex items-start">
+              <div className="text-yellow-600 mr-3">⚠️</div>
+              <div>
+                <p className="text-yellow-800 font-medium mb-1">This action cannot be undone</p>
+                <p className="text-yellow-700 text-sm">
+                  You currently have {chords.length} chord{chords.length !== 1 ? 's' : ''} on your sheet.
+                  All of these will be permanently removed.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <p className="text-gray-600 text-sm">
+            Your sheet title and grid settings will be preserved.
+          </p>
+        </div>
       </Modal>
 
 
