@@ -1,8 +1,8 @@
 import React from 'react';
-import { Grid, Eye, Guitar, Trash2, Save } from 'lucide-react';
+import { Grid, Eye, Guitar, Trash2, Save, Plus } from 'lucide-react';
 import { useAuth0 } from '@auth0/auth0-react';
 
-const ChordSheetControls = ({ gridConfig, onGridChange, onPreview, onClearRequest, onSaveSheet }) => {
+const ChordSheetControls = ({ gridConfig, onGridChange, onPreview, onClearRequest, onSaveSheet, onNewSheet }) => {
   const { isAuthenticated } = useAuth0();
   
   
@@ -75,6 +75,18 @@ const ChordSheetControls = ({ gridConfig, onGridChange, onPreview, onClearReques
           ))}
         </select>
       </div>
+
+      {isAuthenticated && (
+        <button
+          onClick={onNewSheet}
+          className="flex items-center justify-center gap-2 px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition-colors"
+          title="Start a new sheet"
+        >
+          <Plus size={16} />
+          New Sheet
+        </button>
+      )}
+
 
       <button
         onClick={onClearRequest}

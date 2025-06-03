@@ -1,24 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { LogIn, LogOut, User } from 'lucide-react';
+import { LogIn, LogOut, User, FolderOpen } from 'lucide-react';
 
-const AuthButton = () => {
-  const { loginWithRedirect, logout, user, isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
+const AuthButton = ({onOpenDashboard}) => {
+  const { loginWithRedirect, logout, user, isAuthenticated, isLoading } = useAuth0();
 
-
-  // Debug function 
-  const testToken = async () => {
-    try {
-      const token = await getAccessTokenSilently({
-        authorizationParams: {
-          audience: import.meta.env.VITE_AUTH0_AUDIENCE,
-        }
-      });
-      console.log('Test token success:', token ? 'Got token' : 'No token');
-    } catch (error) {
-      console.error('Test token error:', error);
-    }
-  };
+  
 
   if (isLoading) {
     return (
@@ -36,10 +23,12 @@ const AuthButton = () => {
           <span>{user?.name || user?.email || 'User'}</span>
         </div>
         <button
-          onClick={testToken}
-          className="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded"
+          onClick={onOpenDashboard}
+          className="px-3 py-1.5 text-sm bg-blue-100 hover:bg-blue-200 
+                     text-blue-700 rounded-md flex items-center gap-2"
         >
-          Test Token
+          <FolderOpen size={16} />
+          My Sheets
         </button>
         <button
           onClick={() => logout({

@@ -4,13 +4,14 @@ import React, { useState } from 'react';
 import GuitarDiagram from './components/GuitarDiagram';
 import ChordSheet from './components/ChordSheet';
 import ChordSheetControls from './components/ChordSheetControls';
+import Dashboard from './components/Dashboard';
 import { Modal } from './components/Modal';
 import AuthButton from './components/AuthButton';
 import { generatePDF } from './utils/pdfUtils';
 import { HelpCircle, AlertTriangle } from 'lucide-react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect } from 'react';
-import { setTokenGetter, createSheet, getCurrentUser } from './services/api';
+import { setTokenGetter, createSheet, getCurrentUser, getSheet, updateSheet } from './services/api';
 
 
 
@@ -29,6 +30,8 @@ function App() {
   const [error, setError] = useState('');
   const [showError, setShowError] = useState(false);
   const [showClearConfirmation, setShowClearConfirmation] = useState(false);
+  const [showDashboard, setShowDashboard] = useState(false);
+  const [currentSheetId, setCurrentSheetId] = useState(null);
 
   // Initialize API service with Auth0 token getter
   useEffect(() => {
@@ -282,19 +285,72 @@ function App() {
         }))
       };
 
-      const response = await createSheet(sheetData); // Updated function call
+      let response;
+      if (currentSheetId) {
+        // Update existing sheet
+        console.log('Updating existing sheet...');
+        response = await updateSheet(currentSheetId, sheetData);
+        setError(`Sheet "${sheetTitle}" updated successfully!`);
+      } else {
+        // Create new sheet
+        console.log('Creating new sheet...');
+        response = await createSheet(sheetData);
+        setCurrentSheetId(response.sheet.id); // Track the new sheet ID
+        setError(`Sheet "${sheetTitle}" saved successfully!`);
+      }
 
-      setError(`Sheet "${sheetTitle}" saved successfully!`);
       setShowError(true);
       setTimeout(() => {
         setShowError(false);
         setError('');
       }, 3000);
 
-      console.log('Sheet saved:', response);
+      console.log('Sheet saved/updated:', response);
     } catch (error) {
       console.error('Error saving sheet:', error);
       setError('Failed to save sheet. Please try again.');
+      setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+        setError('');
+      }, 5000);
+    }
+  };
+
+  const handleLoadSheet = async (sheetData) => {
+    try {
+      // Get the full sheet data including chords
+      const response = await getSheet(sheetData.id);
+      const sheet = response.sheet;
+
+      //set title so we know we're editing a sheet that exists already
+      setCurrentSheetId(sheet.id);
+
+      // Load the sheet data into your current state
+      setSheetTitle(sheet.title);
+      setGridConfig({
+        rows: sheet.gridRows,
+        cols: sheet.gridCols,
+        diagramType: sheet.gridType
+      });
+
+      // Load the chords
+      const loadedChords = sheet.chords.map(chord => ({
+        id: chord.id,
+        title: chord.title,
+        numStrings: chord.numStrings,
+        numFrets: chord.numFrets,
+        fretNumbers: chord.fretNumbers,
+        notes: chord.notes,
+        openStrings: chord.openStrings
+      }));
+
+      setChords(loadedChords);
+
+      console.log('Sheet loaded successfully:', sheet.title);
+    } catch (error) {
+      console.error('Error loading sheet:', error);
+      setError('Failed to load sheet');
       setShowError(true);
       setTimeout(() => {
         setShowError(false);
@@ -327,6 +383,15 @@ function App() {
     } catch (error) {
       console.error('Error exporting PDF:', error);
     }
+  };
+
+  const handleNewSheet = () => {
+    setCurrentSheetId(null);
+    setChords([]);
+    setSheetTitle("My Chord Sheet");
+    setGridConfig({ rows: 4, cols: 4, diagramType: '6-fret' });
+    setEditingChord(null);
+    setEditingIndex(null);
   };
 
   // Generate the preview actions (buttons)
@@ -372,7 +437,7 @@ function App() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <h1 className="text-xl sm:text-2xl font-light text-gray-900">Chord and Scale Builder</h1>
             <div className="flex items-center gap-3">
-              <AuthButton />
+              <AuthButton onOpenDashboard={() => setShowDashboard(true)} />
               <button
                 onClick={() => setShowHelp(true)}
                 className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 
@@ -390,6 +455,7 @@ function App() {
                 onPreview={() => setShowPreview(true)}
                 onClearRequest={handleClearSheetRequest}
                 onSaveSheet={handleSaveSheet}
+                onNewSheet={handleNewSheet}
               />
             </div>
           </div>
@@ -543,6 +609,17 @@ function App() {
             Your sheet title and grid settings will be preserved.
           </p>
         </div>
+      </Modal>
+
+      <Modal
+        isOpen={showDashboard}
+        onClose={() => setShowDashboard(false)}
+        title="My Saved Sheets"
+      >
+        <Dashboard
+          onLoadSheet={handleLoadSheet}
+          onClose={() => setShowDashboard(false)}
+        />
       </Modal>
 
 
