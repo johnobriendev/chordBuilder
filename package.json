@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^2.3.0",
     "@hello-pangea/dnd": "^17.0.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.2",

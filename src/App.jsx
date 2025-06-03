@@ -5,12 +5,19 @@ import GuitarDiagram from './components/GuitarDiagram';
 import ChordSheet from './components/ChordSheet';
 import ChordSheetControls from './components/ChordSheetControls';
 import { Modal } from './components/Modal';
+import AuthButton from './components/AuthButton';
 import { generatePDF } from './utils/pdfUtils';
 import { HelpCircle, AlertTriangle } from 'lucide-react';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useEffect } from 'react';
+import { setTokenGetter, createSheet, getCurrentUser } from './services/api';
+
 
 
 
 function App() {
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0();
+
   // State to manage the collection of chords
   const [chords, setChords] = useState([]);
   const [gridConfig, setGridConfig] = useState({ rows: 4, cols: 4, diagramType: '6-fret' });
@@ -22,6 +29,15 @@ function App() {
   const [error, setError] = useState('');
   const [showError, setShowError] = useState(false);
   const [showClearConfirmation, setShowClearConfirmation] = useState(false);
+
+  // Initialize API service with Auth0 token getter
+  useEffect(() => {
+    if (isAuthenticated) {
+      setTokenGetter(getAccessTokenSilently);
+    }
+  }, [isAuthenticated, getAccessTokenSilently]);
+
+
 
   const getExpectedDiagramType = (config) => {
     return config.diagramType || '6-fret';
@@ -224,6 +240,69 @@ function App() {
     setGridConfig(newConfig);
   };
 
+
+  const handleSaveSheet = async () => {
+    if (!isAuthenticated) {
+      setError('Please sign in to save your sheet.');
+      setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+        setError('');
+      }, 3000);
+      return;
+    }
+
+    if (chords.length === 0) {
+      setError('Cannot save an empty sheet. Please add some chords first.');
+      setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+        setError('');
+      }, 3000);
+      return;
+    }
+
+    try {
+      await getCurrentUser();
+
+      const sheetData = {
+        title: sheetTitle,
+        description: `${chords.length} chords`,
+        gridType: gridConfig.diagramType,
+        gridRows: gridConfig.rows,
+        gridCols: gridConfig.cols,
+        chords: chords.map((chord, index) => ({
+          title: chord.title,
+          positionInSheet: index,
+          numStrings: chord.numStrings,
+          numFrets: chord.numFrets,
+          fretNumbers: chord.fretNumbers,
+          notes: chord.notes,
+          openStrings: chord.openStrings
+        }))
+      };
+
+      const response = await createSheet(sheetData); // Updated function call
+
+      setError(`Sheet "${sheetTitle}" saved successfully!`);
+      setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+        setError('');
+      }, 3000);
+
+      console.log('Sheet saved:', response);
+    } catch (error) {
+      console.error('Error saving sheet:', error);
+      setError('Failed to save sheet. Please try again.');
+      setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+        setError('');
+      }, 5000);
+    }
+  };
+
   const handleExport = async () => {
     try {
       // Find the modal content that contains the preview
@@ -292,14 +371,17 @@ function App() {
         <div className="max-w-[1400px] mx-auto px-4 py-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <h1 className="text-xl sm:text-2xl font-light text-gray-900">Chord and Scale Builder</h1>
-            <button
-              onClick={() => setShowHelp(true)}
-              className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 
-                         text-gray-700 rounded-md flex items-center gap-2"
-            >
-              <HelpCircle size={16} />
-              How to Use
-            </button>
+            <div className="flex items-center gap-3">
+              <AuthButton />
+              <button
+                onClick={() => setShowHelp(true)}
+                className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 
+                     text-gray-700 rounded-md flex items-center gap-2"
+              >
+                <HelpCircle size={16} />
+                How to Use
+              </button>
+            </div>
             <div className="w-full sm:w-auto">
               <ChordSheetControls
                 gridConfig={gridConfig}
@@ -307,6 +389,7 @@ function App() {
                 //onExport={handleExport}
                 onPreview={() => setShowPreview(true)}
                 onClearRequest={handleClearSheetRequest}
+                onSaveSheet={handleSaveSheet}
               />
             </div>
           </div>

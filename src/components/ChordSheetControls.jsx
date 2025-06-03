@@ -1,7 +1,11 @@
 import React from 'react';
-import { Grid, Eye, Guitar, Trash2 } from 'lucide-react';
+import { Grid, Eye, Guitar, Trash2, Save } from 'lucide-react';
+import { useAuth0 } from '@auth0/auth0-react';
 
-const ChordSheetControls = ({ gridConfig, onGridChange, onPreview, onClearRequest }) => {
+const ChordSheetControls = ({ gridConfig, onGridChange, onPreview, onClearRequest, onSaveSheet }) => {
+  const { isAuthenticated } = useAuth0();
+  
+  
   // Organize options by diagram type for better UX
   const gridOptionsByType = {
     '6-fret': [
@@ -80,6 +84,17 @@ const ChordSheetControls = ({ gridConfig, onGridChange, onPreview, onClearReques
         <Trash2 size={16} />
         Clear Sheet
       </button>
+
+       {isAuthenticated && (
+        <button
+          onClick={onSaveSheet}
+          className="flex items-center justify-center gap-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+          title="Save sheet to your account"
+        >
+          <Save size={16} />
+          Save Sheet
+        </button>
+      )}
 
       <button
         onClick={onPreview}
