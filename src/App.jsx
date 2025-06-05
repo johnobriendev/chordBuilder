@@ -8,12 +8,10 @@ import Dashboard from './components/Dashboard';
 import { Modal } from './components/Modal';
 import AuthButton from './components/AuthButton';
 import { generatePDF } from './utils/pdfUtils';
-import { HelpCircle, AlertTriangle } from 'lucide-react';
+import { HelpCircle, AlertTriangle, CheckCircle } from 'lucide-react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect } from 'react';
 import { setTokenGetter, createSheet, getCurrentUser, getSheet, updateSheet } from './services/api';
-
-
 
 
 function App() {
@@ -27,8 +25,9 @@ function App() {
   const [editingIndex, setEditingIndex] = useState(null);
   const [showHelp, setShowHelp] = useState(false);
   const [sheetTitle, setSheetTitle] = useState("My Chord Sheet");
-  const [error, setError] = useState('');
-  const [showError, setShowError] = useState(false);
+  
+  const [notification, setNotification] = useState({ message: '', type: '', show: false });
+  
   const [showClearConfirmation, setShowClearConfirmation] = useState(false);
   const [showDashboard, setShowDashboard] = useState(false);
   const [currentSheetId, setCurrentSheetId] = useState(null);
@@ -40,7 +39,19 @@ function App() {
     }
   }, [isAuthenticated, getAccessTokenSilently]);
 
+  const showSuccessMessage = (message) => {
+    setNotification({ message, type: 'success', show: true });
+    setTimeout(() => {
+      setNotification({ message: '', type: '', show: false });
+    }, 3000);
+  };
 
+  const showErrorMessage = (message) => {
+    setNotification({ message, type: 'error', show: true });
+    setTimeout(() => {
+      setNotification({ message: '', type: '', show: false });
+    }, 5000);
+  };
 
   const getExpectedDiagramType = (config) => {
     return config.diagramType || '6-fret';
@@ -57,7 +68,6 @@ function App() {
 
     return false;
   };
-
 
   const createSafeFilename = (title) => {
     // If title is empty or only whitespace, use default
@@ -92,22 +102,13 @@ function App() {
   // Calculate the maximum number of chords based on grid configuration
   const getMaxChords = (config) => config.rows * config.cols;
 
-
-
   // Handler for adding new chords to the sheet
   const handleAddChord = (chordData) => {
     if (editingIndex !== null) {
       // Editing existing chord - validate compatibility
       if (!isChordCompatibleWithGrid(chordData, gridConfig)) {
         const expectedFrets = gridConfig.diagramType === '12-fret' ? 12 : 6;
-        setError(`This chord has ${chordData.numFrets} frets, but the current grid expects ${expectedFrets}-fret diagrams. Please switch to a compatible grid or adjust the chord's fret count.`);
-        setShowError(true);
-
-        setTimeout(() => {
-          setShowError(false);
-          setError('');
-        }, 5000);
-
+        showErrorMessage(`This chord has ${chordData.numFrets} frets, but the current grid expects ${expectedFrets}-fret diagrams. Please switch to a compatible grid or adjust the chord's fret count.`);
         return;
       }
 
@@ -123,28 +124,14 @@ function App() {
       // Adding new chord - validate compatibility and capacity
       if (!isChordCompatibleWithGrid(chordData, gridConfig)) {
         const expectedFrets = gridConfig.diagramType === '12-fret' ? 12 : 6;
-        setError(`This chord has ${chordData.numFrets} frets, but the current grid expects ${expectedFrets}-fret diagrams. Please switch to a compatible grid or adjust the chord's fret count.`);
-        setShowError(true);
-
-        setTimeout(() => {
-          setShowError(false);
-          setError('');
-        }, 5000);
-
+        showErrorMessage(`This chord has ${chordData.numFrets} frets, but the current grid expects ${expectedFrets}-fret diagrams. Please switch to a compatible grid or adjust the chord's fret count.`);
         return;
       }
 
       const maxChords = getMaxChords(gridConfig);
       if (chords.length >= maxChords) {
         const gridLabel = `${gridConfig.rows}x${gridConfig.cols} ${gridConfig.diagramType}`;
-        setError(`Cannot add more chords. The current ${gridLabel} grid can only display ${maxChords} chords. Please switch to a larger grid size or remove some chords.`);
-        setShowError(true);
-
-        setTimeout(() => {
-          setShowError(false);
-          setError('');
-        }, 5000);
-
+        showErrorMessage(`Cannot add more chords. The current ${gridLabel} grid can only display ${maxChords} chords. Please switch to a larger grid size or remove some chords.`);
         return;
       }
 
@@ -161,25 +148,18 @@ function App() {
     setEditingIndex(index);
   };
 
-
   const handleClearSheet = () => {
     // Reset all the state that accumulates over time
     setChords([]); // Clear all chords - this is the main goal
     setEditingChord(null); // Clear any chord currently being edited
     setEditingIndex(null); // Clear the editing index
-
   };
 
   const handleClearSheetRequest = () => {
     // Only show the modal if there are actually chords to clear
     // This prevents unnecessary confirmation when the sheet is already empty
     if (chords.length === 0) {
-      setError('The sheet is already empty - no chords to clear.');
-      setShowError(true);
-      setTimeout(() => {
-        setShowError(false);
-        setError('');
-      }, 3000);
+      showErrorMessage('The sheet is already empty - no chords to clear.');
       return;
     }
 
@@ -194,8 +174,6 @@ function App() {
   const handleCancelClear = () => {
     setShowClearConfirmation(false); // Just close the modal without clearing
   };
-
-
 
   const handleGridChange = (event) => {
     const value = event.target.value;
@@ -221,47 +199,23 @@ function App() {
     if (incompatibleChords.length > 0) {
       const currentType = gridConfig.diagramType === '12-fret' ? '12' : '6';
       const newType = newConfig.diagramType === '12-fret' ? '12' : '6';
-
-      setError(`Warning: You have ${incompatibleChords.length} chord(s) saved with ${currentType} frets, but you're switching to a ${newType}-fret grid. These incompatible chords will be hidden in the sheet view but will still appear in preview and PDF. Please delete all ${currentType} fret chords before continuing.`);
-      setShowError(true);
-
-      setTimeout(() => {
-        setShowError(false);
-        setError('');
-      }, 7000);
+      showErrorMessage(`Warning: You have ${incompatibleChords.length} chord(s) saved with ${currentType} frets, but you're switching to a ${newType}-fret grid. These incompatible chords will be hidden in the sheet view but will still appear in preview and PDF. Please delete all ${currentType} fret chords before continuing.`);
     } else if (chords.length > maxChords) {
       const gridLabel = `${rows}x${cols} ${newConfig.diagramType}`;
-      setError(`Warning: Switching to a ${gridLabel} grid will hide ${chords.length - maxChords} chord(s). These hidden chords will still appear in the preview and PDF.`);
-      setShowError(true);
-
-      setTimeout(() => {
-        setShowError(false);
-        setError('');
-      }, 7000);
+      showErrorMessage(`Warning: Switching to a ${gridLabel} grid will hide ${chords.length - maxChords} chord(s). These hidden chords will still appear in the preview and PDF.`);
     }
 
     setGridConfig(newConfig);
   };
 
-
   const handleSaveSheet = async () => {
     if (!isAuthenticated) {
-      setError('Please sign in to save your sheet.');
-      setShowError(true);
-      setTimeout(() => {
-        setShowError(false);
-        setError('');
-      }, 3000);
+      showErrorMessage('Please sign in to save your sheet.');
       return;
     }
 
     if (chords.length === 0) {
-      setError('Cannot save an empty sheet. Please add some chords first.');
-      setShowError(true);
-      setTimeout(() => {
-        setShowError(false);
-        setError('');
-      }, 3000);
+      showErrorMessage('Cannot save an empty sheet. Please add some chords first.');
       return;
     }
 
@@ -290,30 +244,19 @@ function App() {
         // Update existing sheet
         console.log('Updating existing sheet...');
         response = await updateSheet(currentSheetId, sheetData);
-        setError(`Sheet "${sheetTitle}" updated successfully!`);
+        showSuccessMessage(`Sheet "${sheetTitle}" updated successfully!`);
       } else {
         // Create new sheet
         console.log('Creating new sheet...');
         response = await createSheet(sheetData);
         setCurrentSheetId(response.sheet.id); // Track the new sheet ID
-        setError(`Sheet "${sheetTitle}" saved successfully!`);
+        showSuccessMessage(`Sheet "${sheetTitle}" saved successfully!`);
       }
-
-      setShowError(true);
-      setTimeout(() => {
-        setShowError(false);
-        setError('');
-      }, 3000);
 
       console.log('Sheet saved/updated:', response);
     } catch (error) {
       console.error('Error saving sheet:', error);
-      setError('Failed to save sheet. Please try again.');
-      setShowError(true);
-      setTimeout(() => {
-        setShowError(false);
-        setError('');
-      }, 5000);
+      showErrorMessage('Failed to save sheet. Please try again.');
     }
   };
 
@@ -350,12 +293,7 @@ function App() {
       console.log('Sheet loaded successfully:', sheet.title);
     } catch (error) {
       console.error('Error loading sheet:', error);
-      setError('Failed to load sheet');
-      setShowError(true);
-      setTimeout(() => {
-        setShowError(false);
-        setError('');
-      }, 5000);
+      showErrorMessage('Failed to load sheet');
     }
   };
 
@@ -375,13 +313,16 @@ function App() {
 
       if (success) {
         console.log('PDF generated successfully');
+        showSuccessMessage(`PDF "${filename}" downloaded successfully!`);
         // Optionally close the preview after successful export
-        //setShowPreview(false);
+        setShowPreview(false);
       } else {
         console.error('Failed to generate PDF');
+        showErrorMessage('Failed to generate PDF. Please try again.');
       }
     } catch (error) {
       console.error('Error exporting PDF:', error);
+      showErrorMessage('Failed to export PDF. Please try again.');
     }
   };
 
@@ -412,21 +353,23 @@ function App() {
     </>
   );
 
-
-
-
-
   return (
-
     <div className="min-h-screen bg-slate-600">
-      {showError && (
-        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 
-                      max-w-md w-full bg-red-50 border border-red-200 rounded-lg 
-                      shadow-lg p-4 text-red-700">
+      {notification.show && (
+        <div className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 
+                        max-w-md w-full rounded-lg shadow-lg p-4 ${
+          notification.type === 'success' 
+            ? 'bg-green-50 border border-green-200 text-green-700'
+            : 'bg-red-50 border border-red-200 text-red-700'
+        }`}>
           <div className="flex items-start">
-            <AlertTriangle className="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" />
+            {notification.type === 'success' ? (
+              <CheckCircle className="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" />
+            ) : (
+              <AlertTriangle className="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" />
+            )}
             <div>
-              {error}
+              {notification.message}
             </div>
           </div>
         </div>
@@ -495,7 +438,6 @@ function App() {
         </div>
       </main>
 
-
       <Modal
         isOpen={showPreview}
         onClose={() => setShowPreview(false)}
@@ -509,7 +451,6 @@ function App() {
           title={sheetTitle}
         />
       </Modal>
-
 
       <Modal
         isOpen={showHelp}
@@ -558,13 +499,8 @@ function App() {
               <li>The PDF will maintain the exact layout you see in the preview</li>
             </ul>
           </section>
-
         </div>
-
-
       </Modal>
-
-
 
       <Modal
         isOpen={showClearConfirmation}
@@ -621,13 +557,8 @@ function App() {
           onClose={() => setShowDashboard(false)}
         />
       </Modal>
-
-
-
     </div>
-
   );
-
 };
 
 export default App
