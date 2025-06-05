@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { getUserSheets, deleteSheet } from '../services/api';
-import { Calendar, Trash2, FileText, Eye, Clock } from 'lucide-react';
+import { getUserSheets, deleteSheet, duplicateSheet } from '../services/api';
+import { Calendar, Trash2, FileText, Eye, Clock, Copy } from 'lucide-react';
 
 const Dashboard = ({ onLoadSheet, onClose }) => {
   const { isAuthenticated } = useAuth0();
@@ -54,6 +54,19 @@ const Dashboard = ({ onLoadSheet, onClose }) => {
     } catch (error) {
       console.error('Error loading sheet:', error);
       setError('Failed to load sheet');
+    }
+  };
+
+  const handleDuplicateSheet = async (sheet) => {
+    try {
+      const newTitle = `Copy of ${sheet.title}`;
+      await duplicateSheet(sheet.id, newTitle);
+
+      // Refresh the sheets list to show the new duplicate
+      await loadUserSheets();
+    } catch (error) {
+      console.error('Error duplicating sheet:', error);
+      setError('Failed to duplicate sheet');
     }
   };
 
@@ -134,6 +147,13 @@ const Dashboard = ({ onLoadSheet, onClose }) => {
                   title="Load this sheet"
                 >
                   <Eye size={16} />
+                </button>
+                <button
+                  onClick={() => handleDuplicateSheet(sheet)}
+                  className="p-2 text-green-600 hover:bg-green-50 rounded-md transition-colors"
+                  title="Duplicate this sheet"
+                >
+                  <Copy size={16} />
                 </button>
                 <button
                   onClick={() => handleDeleteConfirm(sheet)}

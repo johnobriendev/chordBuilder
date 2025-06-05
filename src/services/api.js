@@ -72,3 +72,23 @@ export const updateSheet = (id, sheetData) => request(`/sheets/${id}`, {
 export const deleteSheet = (id) => request(`/sheets/${id}`, {
   method: 'DELETE',
 });
+
+export const duplicateSheet = async (originalSheetId, newTitle) => {
+  const originalSheet = await getSheet(originalSheetId);
+  return createSheet({
+    title: newTitle,
+    description: originalSheet.sheet.description,
+    gridType: originalSheet.sheet.gridType,
+    gridRows: originalSheet.sheet.gridRows,
+    gridCols: originalSheet.sheet.gridCols,
+    chords: originalSheet.sheet.chords.map((chord, index) => ({
+      title: chord.title,
+      positionInSheet: index,
+      numStrings: chord.numStrings,
+      numFrets: chord.numFrets,
+      fretNumbers: chord.fretNumbers,
+      notes: chord.notes,
+      openStrings: chord.openStrings
+    }))
+  });
+};
