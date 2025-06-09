@@ -8,7 +8,7 @@ import Dashboard from './components/Dashboard';
 import { Modal } from './components/Modal';
 import AuthButton from './components/AuthButton';
 import { generatePDF } from './utils/pdfUtils';
-import { HelpCircle, AlertTriangle, CheckCircle } from 'lucide-react';
+import { HelpCircle, AlertTriangle, CheckCircle, Menu, X } from 'lucide-react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect } from 'react';
 import { setTokenGetter, createSheet, getCurrentUser, getSheet, updateSheet } from './services/api';
@@ -25,12 +25,14 @@ function App() {
   const [editingIndex, setEditingIndex] = useState(null);
   const [showHelp, setShowHelp] = useState(false);
   const [sheetTitle, setSheetTitle] = useState("My Chord Sheet");
-  
+
   const [notification, setNotification] = useState({ message: '', type: '', show: false });
-  
+
   const [showClearConfirmation, setShowClearConfirmation] = useState(false);
   const [showDashboard, setShowDashboard] = useState(false);
   const [currentSheetId, setCurrentSheetId] = useState(null);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+
 
   // Initialize API service with Auth0 token getter
   useEffect(() => {
@@ -357,11 +359,10 @@ function App() {
     <div className="min-h-screen bg-slate-600">
       {notification.show && (
         <div className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 
-                        max-w-md w-full rounded-lg shadow-lg p-4 ${
-          notification.type === 'success' 
+                        max-w-md w-full rounded-lg shadow-lg p-4 ${notification.type === 'success'
             ? 'bg-green-50 border border-green-200 text-green-700'
             : 'bg-red-50 border border-red-200 text-red-700'
-        }`}>
+          }`}>
           <div className="flex items-start">
             {notification.type === 'success' ? (
               <CheckCircle className="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" />
@@ -378,8 +379,20 @@ function App() {
       <header className="bg-stone-400 shadow-sm">
         <div className="max-w-[1400px] mx-auto px-4 py-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <h1 className="text-xl sm:text-2xl font-light text-gray-900">Chord and Scale Builder</h1>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center justify-between w-full sm:w-auto">
+              <h1 className="text-2xl sm:text-3xl font-light text-gray-900">chordBuilder</h1>
+              
+          
+              <button
+                onClick={() => setShowMobileMenu(!showMobileMenu)}
+                className="sm:hidden p-2 text-gray-900 hover:bg-stone-300 rounded"
+              >
+                {showMobileMenu ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
+            
+            {/* Desktop navigation - always visible on sm+ screens */}
+            <div className="hidden sm:flex items-center gap-3">
               <AuthButton onOpenDashboard={() => setShowDashboard(true)} />
               <button
                 onClick={() => setShowHelp(true)}
@@ -390,17 +403,50 @@ function App() {
                 How to Use
               </button>
             </div>
-            <div className="w-full sm:w-auto">
+
+            {/* Desktop controls - always visible on sm+ screens */}
+            <div className="hidden sm:block w-full sm:w-auto">
               <ChordSheetControls
                 gridConfig={gridConfig}
                 onGridChange={handleGridChange}
-                //onExport={handleExport}
                 onPreview={() => setShowPreview(true)}
                 onClearRequest={handleClearSheetRequest}
                 onSaveSheet={handleSaveSheet}
                 onNewSheet={handleNewSheet}
               />
             </div>
+          </div>
+
+          
+          {showMobileMenu && (
+            <div className="sm:hidden mt-4 pt-4 border-t border-stone-500">
+              <div className="flex flex-col gap-3">
+                <AuthButton onOpenDashboard={() => setShowDashboard(true)} />
+                <button
+                  onClick={() => {
+                    setShowHelp(true);
+                    setShowMobileMenu(false);
+                  }}
+                  className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 
+                       text-gray-700 rounded-md flex items-center gap-2 w-fit"
+                >
+                  <HelpCircle size={16} />
+                  How to Use
+                </button>
+              </div>
+            </div>
+          )}
+
+          
+          <div className="sm:hidden mt-4 flex justify-center">
+            <ChordSheetControls
+              gridConfig={gridConfig}
+              onGridChange={handleGridChange}
+              onPreview={() => setShowPreview(true)}
+              onClearRequest={handleClearSheetRequest}
+              onSaveSheet={handleSaveSheet}
+              onNewSheet={handleNewSheet}
+            />
           </div>
         </div>
       </header>
@@ -471,7 +517,8 @@ function App() {
           <section>
             <h3 className="text-lg font-semibold mb-2">Creating Chords</h3>
             <ul className="list-disc pl-5 space-y-2">
-              <li>Use the diagram on the left to create your chord</li>
+              <li>Choose between 6-string or 4-string instruments from the dropdown</li>
+              <li>Select 6-fret or 12-fret diagram type</li>
               <li>Click on the fretboard to add or remove notes</li>
               <li>Click above the strings to mark them as open strings</li>
               <li>Add fret numbers using the inputs on the left side if needed</li>
@@ -483,20 +530,46 @@ function App() {
           <section>
             <h3 className="text-lg font-semibold mb-2">Managing Your Chord Sheet</h3>
             <ul className="list-disc pl-5 space-y-2">
-              <li>Choose your grid size (4x4, 6x6, or 8x8) from the dropdown menu</li>
-              <li>Click the Chord Sheet name to edit or erase it.</li>
+              <li>Select diagram type (6-fret or 12-fret) - this determines available grid sizes</li>
+              <li>Choose grid size: 4x4, 6x6, 8x8 for 6-fret diagrams; 2x1, 2x2 for 12-fret diagrams</li>
+              <li>Click the sheet title to edit it</li>
               <li>Hover over any chord to reveal edit and delete buttons</li>
               <li>Click the edit button (pencil icon) to modify an existing chord</li>
               <li>Click the delete button (trash icon) to remove a chord</li>
+              <li>Use "Clear Sheet" to remove all chords at once</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3 className="text-lg font-semibold mb-2">User Account Features</h3>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>Click "Sign In" to create an account and unlock saving features</li>
+              <li>Use "Save Sheet" to save your work to your account</li>
+              <li>Click "My Sheets" to view all your saved chord sheets</li>
+              <li>Use "New Sheet" to start fresh while keeping your saved work</li>
+              <li>In your dashboard, click the eye icon to load a sheet</li>
+              <li>Click the copy icon to duplicate an existing sheet</li>
+              <li>Click the trash icon to delete sheets you no longer need</li>
             </ul>
           </section>
 
           <section>
             <h3 className="text-lg font-semibold mb-2">Exporting Your Chord Sheet</h3>
             <ul className="list-disc pl-5 space-y-2">
-              <li>Click "Preview & Export" to see how your sheet will look</li>
+              <li>Click "Preview & Download PDF" to see how your sheet will look</li>
               <li>In the preview modal, click "Download PDF" to save your chord sheet</li>
-              <li>The PDF will maintain the exact layout you see in the preview</li>
+              <li>The PDF filename will match your sheet title</li>
+              <li>PDFs work for both signed-in and anonymous users</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3 className="text-lg font-semibold mb-2">Tips</h3>
+            <ul className="list-disc pl-5 space-y-2">
+              <li>Anonymous users can use all features except saving</li>
+              <li>6-fret diagrams work best for standard chords</li>
+              <li>12-fret diagrams are perfect for scales and extended chord shapes</li>
+              <li>Your work is automatically updated when you save existing sheets</li>
             </ul>
           </section>
         </div>

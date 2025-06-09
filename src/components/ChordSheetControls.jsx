@@ -1,11 +1,27 @@
-import React from 'react';
-import { Grid, Eye, Guitar, Trash2, Save, Plus } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Grid, Eye, Guitar, Trash2, Save, Plus, ChevronDown } from 'lucide-react';
 import { useAuth0 } from '@auth0/auth0-react';
 
 const ChordSheetControls = ({ gridConfig, onGridChange, onPreview, onClearRequest, onSaveSheet, onNewSheet }) => {
   const { isAuthenticated } = useAuth0();
-  
-  
+  const [showActions, setShowActions] = useState(false);
+
+
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowActions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   // Organize options by diagram type for better UX
   const gridOptionsByType = {
     '6-fret': [
@@ -30,12 +46,10 @@ const ChordSheetControls = ({ gridConfig, onGridChange, onPreview, onClearReques
     return matchingOption ? constructedValue : createGridValue(availableGridOptions[0]);
   };
 
-  // Handle diagram type change - this will also reset to first grid option of that type
   const handleDiagramTypeChange = (event) => {
     const newDiagramType = event.target.value;
     const defaultGridOption = gridOptionsByType[newDiagramType][0];
 
-    // Create a synthetic event to trigger grid change with the default option for this type
     const syntheticEvent = {
       target: {
         value: createGridValue(defaultGridOption)
@@ -46,75 +60,116 @@ const ChordSheetControls = ({ gridConfig, onGridChange, onPreview, onClearReques
   };
 
   return (
-    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-      {/* Diagram Type Selector */}
-      <div className="flex items-center gap-2">
-        <Guitar size={20} className="text-gray-600" />
-        <select
-          value={currentDiagramType}
-          onChange={handleDiagramTypeChange}
-          className="px-3 py-2 border rounded-md text-gray-700 text-sm"
-        >
-          <option value="6-fret">6-Fret Diagrams</option>
-          <option value="12-fret">12-Fret Diagrams</option>
-        </select>
+    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-8">
+      <div className='flex gap-8'>
+        {/* Diagram Type Selector */}
+        <div className="flex items-center gap-2">
+          <Guitar size={20} className="text-gray-600" />
+          <select
+            value={currentDiagramType}
+            onChange={handleDiagramTypeChange}
+            className="px-3 py-2 border rounded-md text-gray-700 text-sm min-w-[140px]"
+          >
+            <option value="6-fret">6-Fret Diagrams</option>
+            <option value="12-fret">12-Fret Diagrams</option>
+          </select>
+        </div>
+
+        {/* Grid Size Selector */}
+        <div className="flex items-center gap-2">
+          <Grid size={20} className="text-gray-600" />
+          <select
+            value={getCurrentGridValue()}
+            onChange={onGridChange}
+            className="px-3 py-2 border rounded-md text-gray-700 text-sm min-w-[100px]"
+          >
+            {availableGridOptions.map((option) => (
+              <option key={createGridValue(option)} value={createGridValue(option)}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
-      {/* Grid Size Selector - options change based on diagram type */}
-      <div className="flex items-center gap-2">
-        <Grid size={20} className="text-gray-600" />
-        <select
-          value={getCurrentGridValue()}
-          onChange={onGridChange}
-          className="px-3 py-2 border rounded-md text-gray-700 text-sm"
+
+
+      {/* Button Group - Fixed widths for consistency */}
+      <div className="hidden md:block relative" ref={dropdownRef}>
+        <button
+          onClick={() => setShowActions(!showActions)}
+          className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md"
         >
-          {availableGridOptions.map((option) => (
-            <option key={createGridValue(option)} value={createGridValue(option)}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+          Actions
+          <ChevronDown size={16} className={showActions ? 'rotate-180' : ''} />
+        </button>
+
+        {showActions && (
+          <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg z-50">
+            <div className="py-2">
+              {isAuthenticated && (
+                <button
+                  onClick={() => {
+                    onNewSheet();
+                    setShowActions(false); 
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-purple-50 text-purple-600"
+                >
+                  <Plus size={16} /> New Sheet
+                </button>
+              )}
+              <button
+                onClick={() => {
+                  onClearRequest();
+                  setShowActions(false); 
+                }}
+                className="w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-red-50 text-red-600"
+              >
+                <Trash2 size={16} /> Clear Sheet
+              </button>
+              {isAuthenticated && (
+                <button
+                  onClick={() => {
+                    onSaveSheet();
+                    setShowActions(false); 
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-green-50 text-green-600"
+                >
+                  <Save size={16} /> Save Sheet
+                </button>
+              )}
+              <button
+                onClick={() => {
+                  onPreview();
+                  setShowActions(false); 
+                }}
+                className="w-full flex items-center gap-3 px-4 py-2 text-left hover:bg-blue-50 text-blue-600"
+              >
+                <Eye size={16} /> Preview & Download
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
-      {isAuthenticated && (
-        <button
-          onClick={onNewSheet}
-          className="flex items-center justify-center gap-2 px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition-colors"
-          title="Start a new sheet"
-        >
-          <Plus size={16} />
-          New Sheet
+      <div className="md:hidden flex gap-8 justify-center">
+        {isAuthenticated && (
+          <button onClick={onNewSheet} className="p-2 bg-purple-500 text-white rounded" title="New Sheet">
+            <Plus size={18} />
+          </button>
+        )}
+        <button onClick={onClearRequest} className="p-2 bg-red-500 text-white rounded" title="Clear">
+          <Trash2 size={18} />
         </button>
-      )}
-
-
-      <button
-        onClick={onClearRequest}
-        className="flex items-center justify-center gap-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
-        title="Clear all chords from the sheet"
-      >
-        <Trash2 size={16} />
-        Clear Sheet
-      </button>
-
-       {isAuthenticated && (
-        <button
-          onClick={onSaveSheet}
-          className="flex items-center justify-center gap-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
-          title="Save sheet to your account"
-        >
-          <Save size={16} />
-          Save Sheet
+        {isAuthenticated && (
+          <button onClick={onSaveSheet} className="p-2 bg-green-500 text-white rounded" title="Save">
+            <Save size={18} />
+          </button>
+        )}
+        <button onClick={onPreview} className="p-2 bg-blue-500 text-white rounded" title="Preview">
+          <Eye size={18} />
         </button>
-      )}
-
-      <button
-        onClick={onPreview}
-        className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      >
-        <Eye size={16} />
-        Preview & Download PDF
-      </button>
+      </div>
     </div>
   );
 };
