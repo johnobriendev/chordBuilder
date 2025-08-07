@@ -154,6 +154,7 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
                   top: `${((index * 100) / NUM_FRETS) + (100 / (NUM_FRETS * 2))}%`,
                   transform: 'translateY(-50%)'
                 }}
+                data-fret-number="true"
               >
                 {number}
               </div>

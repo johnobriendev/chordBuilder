@@ -162,7 +162,7 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
   };
 
   // Calculate the height dynamically based on fret count
-  // 6 frets = 20rem, 12 frets should be proportionally taller
+  // 6 frets = 20rem, 12 frets should be proportionally taller was 28rem
   const diagramHeight = `${(20 * numFrets) / 6}rem`;
 
   return (

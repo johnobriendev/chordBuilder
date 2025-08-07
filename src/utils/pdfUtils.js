@@ -9,6 +9,17 @@ export const generatePDF = async (modalContent, filename = 'chord-sheet.pdf') =>
       throw new Error('Chord sheet content not found');
     }
 
+    //  CSS FIX: Adjust fret number positioning for PDF capture
+    const styleElement = document.createElement('style');
+    styleElement.id = 'pdf-positioning-fix';
+    styleElement.innerHTML = `
+      [data-fret-number="true"] {
+        transform: translateY(-50%) !important;
+      }
+    `;
+    document.head.appendChild(styleElement);
+
+
     // Create canvas with precise dimensions
     const canvas = await html2canvas(sheetContent, {
       scale: 2, // Higher scale for better quality
@@ -25,6 +36,9 @@ export const generatePDF = async (modalContent, filename = 'chord-sheet.pdf') =>
       windowWidth: 8.5 * 96,
       windowHeight: 11 * 96
     });
+
+     // CLEANUP: Remove the temporary CSS fix
+    document.head.removeChild(styleElement);
 
     // Create PDF with exact US Letter dimensions
     const pdf = new jsPDF({
@@ -50,6 +64,10 @@ export const generatePDF = async (modalContent, filename = 'chord-sheet.pdf') =>
     return true;
   } catch (error) {
     console.error('Error generating PDF:', error);
+    const existingStyle = document.getElementById('pdf-positioning-fix');
+    if (existingStyle) {
+      document.head.removeChild(existingStyle);
+    }
     return false;
   }
 };
