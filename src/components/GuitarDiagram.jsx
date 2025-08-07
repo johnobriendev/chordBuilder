@@ -199,7 +199,7 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
           onClick={() => setIsRootMode(!isRootMode)}
           className={`px-2.5 py-1.5 rounded-md text-sm transition-colors ${
             isRootMode 
-              ? 'bg-green-700 text-white' 
+              ? 'bg-blue-500 text-white' 
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
@@ -232,9 +232,9 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
                 {openStrings.has(createOpenStringId(stringIndex)) && (
                   <>
                     {isRootNote(stringIndex, null, true) ? (
-                      <div className="w-4 h-4 bg-green-700 rounded-full" />
+                      <div className="w-4 h-4 bg-blue-500 rounded-full" />
                     ) : (
-                      <div className="w-4 h-4 border-2 border-blue-500 rounded-full" />
+                      <div className="w-4 h-4 border-2 border-black rounded-full" />
                     )}
                   </>
                 )}
@@ -291,7 +291,7 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
                   {/* Show root notes in darker blue */}
                   {(notes.has(createNoteId(stringIndex, fretIndex)) || isRootNote(stringIndex, fretIndex)) && (
                     <div className={`w-4 h-4 rounded-full ${
-                      isRootNote(stringIndex, fretIndex) ? 'bg-green-700' : 'bg-blue-500'
+                      isRootNote(stringIndex, fretIndex) ? 'bg-blue-500' : 'bg-black'
                     }`} />
                   )}
                 </div>

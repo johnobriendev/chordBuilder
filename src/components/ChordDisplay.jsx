@@ -96,9 +96,9 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
   //Function to get the appropriate color class for notes
   const getNoteColor = (string, fret, isOpen = false) => {
     if (isRootNote(string, fret, isOpen)) {
-      return 'bg-green-700'; // Darker blue for root notes
+      return 'bg-blue-500'; // Darker blue for root notes
     }
-    return 'bg-blue-500'; // Regular blue for normal notes
+    return 'bg-black'; // Regular blue for normal notes
   };
 
   return (
