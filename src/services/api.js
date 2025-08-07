@@ -89,7 +89,7 @@ export const duplicateSheet = async (originalSheetId, newTitle) => {
       fretNumbers: chord.fretNumbers,
       notes: chord.notes,
       openStrings: chord.openStrings,
-      rootNote: chord.rootNote || null
+      rootNotes: chord.rootNotes || []
     }))
   });
 };

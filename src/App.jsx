@@ -238,7 +238,7 @@ function App() {
           fretNumbers: chord.fretNumbers,
           notes: chord.notes,
           openStrings: chord.openStrings,
-          rootNote: chord.rootNote || null
+          rootNotes: chord.rootNotes || []
         }))
       };
 
@@ -289,7 +289,7 @@ function App() {
         fretNumbers: chord.fretNumbers,
         notes: chord.notes,
         openStrings: chord.openStrings,
-        rootNote: chord.rootNote || null
+        rootNotes: chord.rootNotes || []
       }));
 
       setChords(loadedChords);
