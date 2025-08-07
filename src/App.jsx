@@ -237,7 +237,8 @@ function App() {
           numFrets: chord.numFrets,
           fretNumbers: chord.fretNumbers,
           notes: chord.notes,
-          openStrings: chord.openStrings
+          openStrings: chord.openStrings,
+          rootNote: chord.rootNote || null
         }))
       };
 
@@ -287,7 +288,8 @@ function App() {
         numFrets: chord.numFrets,
         fretNumbers: chord.fretNumbers,
         notes: chord.notes,
-        openStrings: chord.openStrings
+        openStrings: chord.openStrings,
+        rootNote: chord.rootNote || null
       }));
 
       setChords(loadedChords);
@@ -523,6 +525,8 @@ function App() {
               <li>Click above the strings to mark them as open strings</li>
               <li>Add fret numbers using the inputs on the left side if needed</li>
               <li>Give your chord a name in the input field above the diagram</li>
+              <li>Use the "Root/Normal" toggle to switch between adding regular notes and root notes</li>
+              <li>Root notes appear green and can only be one per chord</li>
               <li>Click "Add to Sheet" to add it to your chord sheet</li>
             </ul>
           </section>

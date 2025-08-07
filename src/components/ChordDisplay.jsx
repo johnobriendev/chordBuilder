@@ -106,7 +106,7 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
       {/* Title container with fixed height */}
       <div className={`w-full ${sizeConfig.titleSpacing} flex items-center justify-center`}>
         <h3 className={`font-medium ${sizeConfig.titleClass} text-center px-1 leading-tight`}>
-          {chord.title || 'Untitled Chord'}
+          {chord.title}
         </h3>
       </div>
 
