@@ -10,7 +10,7 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
   const [notes, setNotes] = useState(new Set());
   const [openStrings, setOpenStrings] = useState(new Set());
   const [isRootMode, setIsRootMode] = useState(false);
-  const [rootNote, setRootNote] = useState(null);
+  const [rootNotes, setRootNotes] = useState(new Set());
   const [title, setTitle] = useState('');
   const [fretNumbers, setFretNumbers] = useState(Array(6).fill('')); // Will be dynamic
 
@@ -22,7 +22,7 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
     setTitle('');
     // Create new fret numbers array based on current fret count
     setFretNumbers(Array(numFrets).fill(''));
-    setRootNote(null);
+    setRootNotes(new Set());
   }, [numStrings, numFrets]); // Added numFrets to dependency array
 
   // Update fret numbers array when numFrets changes
@@ -50,7 +50,7 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
       setNumStrings(initialChord.numStrings || 6);
 
       // INITIALIZE ROOT NOTE
-      setRootNote(initialChord.rootNote || null);
+      setRootNotes(new Set(initialChord.rootNotes || []));
       setIsRootMode(false);
     }
   }, [initialChord]);
@@ -60,68 +60,83 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
   const createOpenStringId = (string) => `open-${string}`;
 
   // Toggle note at the clicked position
-  const toggleNote = (string, fret) => {
+    const toggleNote = (string, fret) => {
     const noteId = createNoteId(string, fret);
-
+    
     if (isRootMode) {
-      // Root mode: Set/remove root note
-      if (rootNote === noteId) {
+      // Root mode: Add/remove root note
+      const newRootNotes = new Set(rootNotes);
+      if (newRootNotes.has(noteId)) {
         // Clicking existing root note removes it
-        setRootNote(null);
+        newRootNotes.delete(noteId);
       } else {
-        // Set new root note (removes any existing regular note at this position)
+        // Add new root note and remove any regular note at this position
         const newNotes = new Set(notes);
         newNotes.delete(noteId); // Remove regular note if it exists
         setNotes(newNotes);
-        setRootNote(noteId); // Set as root
+        newRootNotes.add(noteId); // Add as root
       }
+      setRootNotes(newRootNotes);
     } else {
-      // Normal mode: Add/remove regular notes (but not if there's a root here)
-      if (rootNote === noteId) {
-        return; // Don't allow regular note placement on root note
-      }
-
-      // Current toggle logic for regular notes
-      const newNotes = new Set(notes);
-      if (newNotes.has(noteId)) {
-        newNotes.delete(noteId);
+      // Normal mode: Add/remove regular notes
+      if (rootNotes.has(noteId)) {
+        // Clicking on a root note in normal mode: convert to regular note
+        const newRootNotes = new Set(rootNotes);
+        newRootNotes.delete(noteId); // Remove from root notes
+        setRootNotes(newRootNotes);
+        
+        const newNotes = new Set(notes);
+        newNotes.add(noteId); // Add as regular note
+        setNotes(newNotes);
       } else {
-        newNotes.add(noteId);
+        // Regular toggle for normal notes
+        const newNotes = new Set(notes);
+        if (newNotes.has(noteId)) {
+          newNotes.delete(noteId);
+        } else {
+          newNotes.add(noteId);
+        }
+        setNotes(newNotes);
       }
-      setNotes(newNotes);
     }
   };
 
+  // UPDATED: Toggle open string with multiple root notes logic
   const toggleOpenString = (string) => {
     const openStringId = createOpenStringId(string);
-
+    
     if (isRootMode) {
-      // Root mode: Set/remove root note for open string
-      if (rootNote === openStringId) {
+      // Root mode: Add/remove root note for open string
+      const newRootNotes = new Set(rootNotes);
+      if (newRootNotes.has(openStringId)) {
         // Clicking existing root note removes it
-        setRootNote(null);
+        newRootNotes.delete(openStringId);
       } else {
-        // Set new root note - keep the open string in openStrings set since it's still open
-        setRootNote(openStringId);
-        // Ensure the open string is also in the openStrings set
+        // Add new root note - ensure the open string is also in openStrings set
+        newRootNotes.add(openStringId);
         const newOpenStrings = new Set(openStrings);
         newOpenStrings.add(openStringId);
         setOpenStrings(newOpenStrings);
       }
+      setRootNotes(newRootNotes);
     } else {
-      // Normal mode: Add/remove open strings (but not if there's a root here)
-      if (rootNote === openStringId) {
-        return; // Don't allow toggling off an open string that's the root
-      }
-
-      // Current toggle logic for open strings
-      const newOpenStrings = new Set(openStrings);
-      if (newOpenStrings.has(openStringId)) {
-        newOpenStrings.delete(openStringId);
+      // Normal mode: Add/remove open strings
+      if (rootNotes.has(openStringId)) {
+        // Clicking on a root open string in normal mode: convert to regular open string
+        const newRootNotes = new Set(rootNotes);
+        newRootNotes.delete(openStringId); // Remove from root notes
+        setRootNotes(newRootNotes);
+        // Keep it as an open string (don't remove from openStrings)
       } else {
-        newOpenStrings.add(openStringId);
+        // Regular toggle for open strings
+        const newOpenStrings = new Set(openStrings);
+        if (newOpenStrings.has(openStringId)) {
+          newOpenStrings.delete(openStringId);
+        } else {
+          newOpenStrings.add(openStringId);
+        }
+        setOpenStrings(newOpenStrings);
       }
-      setOpenStrings(newOpenStrings);
     }
   };
 
@@ -130,7 +145,7 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
     setOpenStrings(new Set());
     setTitle('');
     setFretNumbers(Array(numFrets).fill(''));
-    setRootNote(null);
+    setRootNotes(new Set());
     setIsRootMode(false);
   };
 
@@ -147,7 +162,7 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
       fretNumbers,
       notes: Array.from(notes),
       openStrings: Array.from(openStrings),
-      rootNote: rootNote,
+      rootNotes: Array.from(rootNotes),
       id: initialChord ? initialChord.id : Date.now(),
       numStrings,
       numFrets // Include the fret count in the chord data
@@ -158,7 +173,7 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
   // Helper function to check if a position is the root note
   const isRootNote = (string, fret, isOpen = false) => {
     const noteId = isOpen ? createOpenStringId(string) : createNoteId(string, fret);
-    return rootNote === noteId;
+    return rootNotes.has(noteId);
   };
 
   // Calculate the height dynamically based on fret count
@@ -166,9 +181,9 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
   const diagramHeight = `${(20 * numFrets) / 6}rem`;
 
   return (
-    <div className="w-full max-w-lg mx-auto p-2">
+    <div className="w-full max-w-lg mx-auto p-3">
       {/* Controls section with both string and fret selection AND ROOT MODE TOGGLE */}
-      <div className="mb-3 flex items-center gap-3 ">
+      <div className="mb-3 flex items-center gap-3">
         <div className="flex items-center gap-2">
           <Guitar size={18} className="text-gray-600" />
           <select
@@ -194,7 +209,7 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
           </select>
         </div>
         
-        {/* ROOT MODE TOGGLE */}
+        {/* NEW: ROOT MODE TOGGLE */}
         <button
           onClick={() => setIsRootMode(!isRootMode)}
           className={`px-2.5 py-1.5 rounded-md text-sm transition-colors ${
@@ -228,13 +243,13 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
                 style={{ left: `${(stringIndex * 100) / (numStrings - 1)}%` }}
                 onClick={() => toggleOpenString(stringIndex)}
               >
-                {/* Show root notes as filled dots, regular opens as hollow */}
+                {/* UPDATED: Show root notes as filled dots, regular opens as hollow */}
                 {openStrings.has(createOpenStringId(stringIndex)) && (
                   <>
                     {isRootNote(stringIndex, null, true) ? (
                       <div className="w-4 h-4 bg-blue-500 rounded-full" />
                     ) : (
-                      <div className="w-4 h-4 border-2 border-black rounded-full" />
+                      <div className="w-4 h-4 border-2 border-blue-500 rounded-full" />
                     )}
                   </>
                 )}
@@ -288,7 +303,7 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
                   }}
                   onClick={() => toggleNote(stringIndex, fretIndex)}
                 >
-                  {/* Show root notes in darker blue */}
+                  {/* UPDATED: Show root notes in darker blue */}
                   {(notes.has(createNoteId(stringIndex, fretIndex)) || isRootNote(stringIndex, fretIndex)) && (
                     <div className={`w-4 h-4 rounded-full ${
                       isRootNote(stringIndex, fretIndex) ? 'bg-blue-500' : 'bg-black'

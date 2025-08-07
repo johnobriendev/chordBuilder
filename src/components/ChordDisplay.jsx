@@ -90,7 +90,7 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
   //Function to check if a position is the root note
   const isRootNote = (string, fret, isOpen = false) => {
     const noteId = isOpen ? `open-${string}` : `${string}-${fret}`;
-    return chord.rootNote === noteId;
+    return chord.rootNotes?.includes(noteId) || false;
   };
 
   //Function to get the appropriate color class for notes
@@ -129,7 +129,7 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
                   {isRootNote(stringIndex, null, true) ? (
                     <div className={`${sizeConfig.dotSize} ${getNoteColor(stringIndex, null, true)} rounded-full`} />
                   ) : (
-                    <div className={`${sizeConfig.dotSize} border border-blue-500 rounded-full`} />
+                    <div className={`${sizeConfig.dotSize} border border-black rounded-full`} />
                   )}
                 </>
               )}
