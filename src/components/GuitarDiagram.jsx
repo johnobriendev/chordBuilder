@@ -162,19 +162,19 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
   };
 
   // Calculate the height dynamically based on fret count
-  // 6 frets = 28rem, 12 frets should be proportionally taller
-  const diagramHeight = `${(28 * numFrets) / 6}rem`;
+  // 6 frets = 20rem, 12 frets should be proportionally taller
+  const diagramHeight = `${(20 * numFrets) / 6}rem`;
 
   return (
-    <div className="w-full max-w-lg mx-auto p-4">
+    <div className="w-full max-w-lg mx-auto p-2">
       {/* Controls section with both string and fret selection AND ROOT MODE TOGGLE */}
-      <div className="mb-4 flex items-center gap-4 flex-wrap">
+      <div className="mb-3 flex items-center gap-3 ">
         <div className="flex items-center gap-2">
-          <Guitar size={20} className="text-gray-600" />
+          <Guitar size={18} className="text-gray-600" />
           <select
             value={numStrings}
             onChange={(e) => setNumStrings(Number(e.target.value))}
-            className="px-3 py-2 border rounded-md text-gray-700 text-sm"
+            className="px-2.5 py-1.5 border rounded-md text-gray-700 text-sm"
           >
             <option value={6}>6 Strings</option>
             <option value={4}>4 Strings</option>
@@ -187,7 +187,7 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
           <select
             value={numFrets}
             onChange={(e) => setNumFrets(Number(e.target.value))}
-            className="px-3 py-2 border rounded-md text-gray-700 text-sm"
+            className="px-2.5 py-1.5 border rounded-md text-gray-700 text-sm"
           >
             <option value={6}>6 Frets</option>
             <option value={12}>12 Frets</option>
@@ -197,7 +197,7 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
         {/* ROOT MODE TOGGLE */}
         <button
           onClick={() => setIsRootMode(!isRootMode)}
-          className={`px-3 py-2 rounded-md text-sm transition-colors ${
+          className={`px-2.5 py-1.5 rounded-md text-sm transition-colors ${
             isRootMode 
               ? 'bg-green-700 text-white' 
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -207,7 +207,7 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
         </button>
       </div>
 
-      <div className="mb-4">
+      <div className="mb-3">
         <input
           type="text"
           placeholder="Enter Chord or Scale name"
@@ -301,7 +301,7 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
         </div>
       </div>
 
-      <div className="mt-4 flex gap-2">
+      <div className="mt-3 flex gap-2">
         <button
           onClick={clearDiagram}
           className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"

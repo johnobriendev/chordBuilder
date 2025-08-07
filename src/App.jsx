@@ -379,29 +379,29 @@ function App() {
       )}
 
       <header className="bg-stone-400 shadow-sm">
-        <div className="max-w-[1400px] mx-auto px-4 py-4">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="max-w-[1400px] mx-auto px-4 py-1">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
             <div className="flex items-center justify-between w-full sm:w-auto">
-              <h1 className="text-2xl sm:text-3xl font-light text-gray-900">chordBuilder</h1>
+              <h1 className="text-xl sm:text-2xl font-light text-gray-900">chordBuilder</h1>
               
           
               <button
                 onClick={() => setShowMobileMenu(!showMobileMenu)}
-                className="sm:hidden p-2 text-gray-900 hover:bg-stone-300 rounded"
+                className="sm:hidden p-1.5 text-gray-900 hover:bg-stone-300 rounded"
               >
-                {showMobileMenu ? <X size={24} /> : <Menu size={24} />}
+                {showMobileMenu ? <X size={20} /> : <Menu size={20} />}
               </button>
             </div>
             
             {/* Desktop navigation - always visible on sm+ screens */}
-            <div className="hidden sm:flex items-center gap-3">
+            <div className="hidden sm:flex items-center gap-2">
               <AuthButton onOpenDashboard={() => setShowDashboard(true)} />
               <button
                 onClick={() => setShowHelp(true)}
-                className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 
-                     text-gray-700 rounded-md flex items-center gap-2"
+                className="px-2 py-1 text-sm bg-gray-100 hover:bg-gray-200 
+                     text-gray-700 rounded-md flex items-center gap-1"
               >
-                <HelpCircle size={16} />
+                <HelpCircle size={14} />
                 How to Use
               </button>
             </div>
@@ -440,7 +440,7 @@ function App() {
           )}
 
           
-          <div className="sm:hidden mt-4 flex justify-center">
+          <div className="sm:hidden mt-2 flex justify-center">
             <ChordSheetControls
               gridConfig={gridConfig}
               onGridChange={handleGridChange}
@@ -453,13 +453,13 @@ function App() {
         </div>
       </header>
 
-      <main className="max-w-[1400px] mx-auto px-4 py-6">
+      <main className="max-w-[1400px] mx-auto px-4 pt-3">
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Left column - Chord Creator */}
           <div className="w-full lg:w-[400px] flex-shrink-0">
             <section className="bg-stone-300 rounded-lg shadow">
-              <div className="p-4 sm:p-6">
-                <h2 className="text-lg sm:text-xl font-light mb-4">
+              <div className="p-4">
+                <h2 className="text-lg  font-light mb-4">
                   {editingChord ? 'Edit Chord' : 'Create New Chord or Scale'}
                 </h2>
                 <GuitarDiagram
