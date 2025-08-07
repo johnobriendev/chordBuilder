@@ -87,6 +87,20 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
 
   const hasOpenString = (string) => chord.openStrings?.includes(`open-${string}`);
 
+  //Function to check if a position is the root note
+  const isRootNote = (string, fret, isOpen = false) => {
+    const noteId = isOpen ? `open-${string}` : `${string}-${fret}`;
+    return chord.rootNote === noteId;
+  };
+
+  //Function to get the appropriate color class for notes
+  const getNoteColor = (string, fret, isOpen = false) => {
+    if (isRootNote(string, fret, isOpen)) {
+      return 'bg-green-700'; // Darker blue for root notes
+    }
+    return 'bg-blue-500'; // Regular blue for normal notes
+  };
+
   return (
     <div className="flex flex-col items-center w-full">
       {/* Title container with fixed height */}
@@ -110,7 +124,14 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
               }}
             >
               {hasOpenString(stringIndex) && (
-                <div className={`${sizeConfig.dotSize} border border-blue-500 rounded-full`} />
+                <>
+                  {/* Root open strings show as filled dots, regular as hollow circles */}
+                  {isRootNote(stringIndex, null, true) ? (
+                    <div className={`${sizeConfig.dotSize} ${getNoteColor(stringIndex, null, true)} rounded-full`} />
+                  ) : (
+                    <div className={`${sizeConfig.dotSize} border border-blue-500 rounded-full`} />
+                  )}
+                </>
               )}
             </div>
           ))}
@@ -159,14 +180,15 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
             ))}
           </div>
 
-          {/* Note Dots */}
+          {/* Note Dots - UPDATED with root note coloring */}
           {[...Array(NUM_STRINGS)].map((_, stringIndex) => (
             <React.Fragment key={`string-notes-${stringIndex}`}>
               {[...Array(NUM_FRETS)].map((_, fretIndex) => (
-                hasNote(stringIndex, fretIndex) && (
+                // Show note if it's in the notes array OR if it's the root note
+                (hasNote(stringIndex, fretIndex) || isRootNote(stringIndex, fretIndex)) && (
                   <div
                     key={`note-${stringIndex}-${fretIndex}`}
-                    className={`absolute ${sizeConfig.dotSize} rounded-full bg-blue-500`}
+                    className={`absolute ${sizeConfig.dotSize} rounded-full ${getNoteColor(stringIndex, fretIndex)}`}
                     style={{
                       left: `${(stringIndex * 100) / (NUM_STRINGS - 1)}%`,
                       top: `${((fretIndex * 100) / NUM_FRETS) + (100 / (NUM_FRETS * 2))}%`,
