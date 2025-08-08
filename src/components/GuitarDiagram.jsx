@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trash2, Plus, Save, Guitar } from 'lucide-react';
+import { Trash2, Plus, Save, Guitar, X, Triangle, Square } from 'lucide-react';
 
 const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
   // Dynamic fret count - this is the key change that enables 12-fret diagrams
@@ -9,10 +9,18 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
   // State for tracking note positions and chord name and fret number
   const [notes, setNotes] = useState(new Set());
   const [openStrings, setOpenStrings] = useState(new Set());
-  const [isRootMode, setIsRootMode] = useState(false);
   const [rootNotes, setRootNotes] = useState(new Set());
   const [title, setTitle] = useState('');
-  const [fretNumbers, setFretNumbers] = useState(Array(6).fill('')); // Will be dynamic
+  const [fretNumbers, setFretNumbers] = useState(Array(6).fill(''));
+
+
+  const [xMarks, setXMarks] = useState(new Set());
+  const [triangles, setTriangles] = useState(new Set());
+  const [squares, setSquares] = useState(new Set());
+
+  // NEW: Mode state - expanded to include symbol modes
+  const [currentMode, setCurrentMode] = useState('normal'); // normal, root, x, triangle, square
+
 
   // Reset states when changing number of strings OR frets
   useEffect(() => {
@@ -23,6 +31,11 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
     // Create new fret numbers array based on current fret count
     setFretNumbers(Array(numFrets).fill(''));
     setRootNotes(new Set());
+
+    setXMarks(new Set());
+    setTriangles(new Set());
+    setSquares(new Set());
+    setCurrentMode('normal');
   }, [numStrings, numFrets]); // Added numFrets to dependency array
 
   // Update fret numbers array when numFrets changes
@@ -51,7 +64,11 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
 
       // INITIALIZE ROOT NOTE
       setRootNotes(new Set(initialChord.rootNotes || []));
-      setIsRootMode(false);
+      setXMarks(new Set(initialChord.xMarks || []));
+      setTriangles(new Set(initialChord.triangles || []));
+      setSquares(new Set(initialChord.squares || []));
+
+      setCurrentMode('normal');
     }
   }, [initialChord]);
 
@@ -60,83 +77,157 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
   const createOpenStringId = (string) => `open-${string}`;
 
   // Toggle note at the clicked position
-    const toggleNote = (string, fret) => {
+  const toggleNote = (string, fret) => {
     const noteId = createNoteId(string, fret);
-    
-    if (isRootMode) {
-      // Root mode: Add/remove root note
-      const newRootNotes = new Set(rootNotes);
-      if (newRootNotes.has(noteId)) {
-        // Clicking existing root note removes it
-        newRootNotes.delete(noteId);
-      } else {
-        // Add new root note and remove any regular note at this position
-        const newNotes = new Set(notes);
-        newNotes.delete(noteId); // Remove regular note if it exists
-        setNotes(newNotes);
-        newRootNotes.add(noteId); // Add as root
-      }
-      setRootNotes(newRootNotes);
-    } else {
-      // Normal mode: Add/remove regular notes
-      if (rootNotes.has(noteId)) {
-        // Clicking on a root note in normal mode: convert to regular note
-        const newRootNotes = new Set(rootNotes);
-        newRootNotes.delete(noteId); // Remove from root notes
-        setRootNotes(newRootNotes);
-        
-        const newNotes = new Set(notes);
-        newNotes.add(noteId); // Add as regular note
-        setNotes(newNotes);
-      } else {
-        // Regular toggle for normal notes
-        const newNotes = new Set(notes);
-        if (newNotes.has(noteId)) {
-          newNotes.delete(noteId);
+
+    switch (currentMode) {
+      case 'normal':
+        // Normal mode: Add/remove regular notes
+        if (rootNotes.has(noteId)) {
+          // Clicking on a root note in normal mode: convert to regular note
+          const newRootNotes = new Set(rootNotes);
+          newRootNotes.delete(noteId); // Remove from root notes
+          setRootNotes(newRootNotes);
+
+          const newNotes = new Set(notes);
+          newNotes.add(noteId); // Add as regular note
+          setNotes(newNotes);
         } else {
-          newNotes.add(noteId);
+          // Regular toggle for normal notes
+          const newNotes = new Set(notes);
+          if (newNotes.has(noteId)) {
+            newNotes.delete(noteId);
+          } else {
+            newNotes.add(noteId);
+          }
+          setNotes(newNotes);
         }
-        setNotes(newNotes);
-      }
+        break;
+
+      case 'root':
+        // Root mode: Add/remove root note
+        const newRootNotes = new Set(rootNotes);
+        if (newRootNotes.has(noteId)) {
+          // Clicking existing root note removes it
+          newRootNotes.delete(noteId);
+        } else {
+          // Add new root note and remove any regular note at this position
+          const newNotes = new Set(notes);
+          newNotes.delete(noteId); // Remove regular note if it exists
+          setNotes(newNotes);
+          newRootNotes.add(noteId); // Add as root
+        }
+        setRootNotes(newRootNotes);
+        break;
+
+      case 'x':
+        // X mode: Add/remove X marks
+        const newXMarks = new Set(xMarks);
+        if (newXMarks.has(noteId)) {
+          newXMarks.delete(noteId);
+        } else {
+          newXMarks.add(noteId);
+        }
+        setXMarks(newXMarks);
+        break;
+
+      case 'triangle':
+        // Triangle mode: Add/remove triangles
+        const newTriangles = new Set(triangles);
+        if (newTriangles.has(noteId)) {
+          newTriangles.delete(noteId);
+        } else {
+          newTriangles.add(noteId);
+        }
+        setTriangles(newTriangles);
+        break;
+
+      case 'square':
+        // Square mode: Add/remove squares
+        const newSquares = new Set(squares);
+        if (newSquares.has(noteId)) {
+          newSquares.delete(noteId);
+        } else {
+          newSquares.add(noteId);
+        }
+        setSquares(newSquares);
+        break;
     }
   };
 
-  // UPDATED: Toggle open string with multiple root notes logic
+  // Updated toggle open string function to handle all modes
   const toggleOpenString = (string) => {
     const openStringId = createOpenStringId(string);
-    
-    if (isRootMode) {
-      // Root mode: Add/remove root note for open string
-      const newRootNotes = new Set(rootNotes);
-      if (newRootNotes.has(openStringId)) {
-        // Clicking existing root note removes it
-        newRootNotes.delete(openStringId);
-      } else {
-        // Add new root note - ensure the open string is also in openStrings set
-        newRootNotes.add(openStringId);
-        const newOpenStrings = new Set(openStrings);
-        newOpenStrings.add(openStringId);
-        setOpenStrings(newOpenStrings);
-      }
-      setRootNotes(newRootNotes);
-    } else {
-      // Normal mode: Add/remove open strings
-      if (rootNotes.has(openStringId)) {
-        // Clicking on a root open string in normal mode: convert to regular open string
-        const newRootNotes = new Set(rootNotes);
-        newRootNotes.delete(openStringId); // Remove from root notes
-        setRootNotes(newRootNotes);
-        // Keep it as an open string (don't remove from openStrings)
-      } else {
-        // Regular toggle for open strings
-        const newOpenStrings = new Set(openStrings);
-        if (newOpenStrings.has(openStringId)) {
-          newOpenStrings.delete(openStringId);
+
+    switch (currentMode) {
+      case 'normal':
+        // Normal mode: Add/remove open strings
+        if (rootNotes.has(openStringId)) {
+          // Clicking on a root open string in normal mode: convert to regular open string
+          const newRootNotes = new Set(rootNotes);
+          newRootNotes.delete(openStringId); // Remove from root notes
+          setRootNotes(newRootNotes);
+          // Keep it as an open string (don't remove from openStrings)
         } else {
-          newOpenStrings.add(openStringId);
+          // Regular toggle for open strings
+          const newOpenStrings = new Set(openStrings);
+          if (newOpenStrings.has(openStringId)) {
+            newOpenStrings.delete(openStringId);
+          } else {
+            newOpenStrings.add(openStringId);
+          }
+          setOpenStrings(newOpenStrings);
         }
-        setOpenStrings(newOpenStrings);
-      }
+        break;
+
+      case 'root':
+        // Root mode: Add/remove root note for open string
+        const newRootNotes = new Set(rootNotes);
+        if (newRootNotes.has(openStringId)) {
+          // Clicking existing root note removes it
+          newRootNotes.delete(openStringId);
+        } else {
+          // Add new root note - ensure the open string is also in openStrings set
+          newRootNotes.add(openStringId);
+          const newOpenStrings = new Set(openStrings);
+          newOpenStrings.add(openStringId);
+          setOpenStrings(newOpenStrings);
+        }
+        setRootNotes(newRootNotes);
+        break;
+
+      case 'x':
+        // X mode: Add/remove X marks on open strings
+        const newXMarks = new Set(xMarks);
+        if (newXMarks.has(openStringId)) {
+          newXMarks.delete(openStringId);
+        } else {
+          newXMarks.add(openStringId);
+        }
+        setXMarks(newXMarks);
+        break;
+
+      case 'triangle':
+        // Triangle mode: Add/remove triangles on open strings
+        const newTriangles = new Set(triangles);
+        if (newTriangles.has(openStringId)) {
+          newTriangles.delete(openStringId);
+        } else {
+          newTriangles.add(openStringId);
+        }
+        setTriangles(newTriangles);
+        break;
+
+      case 'square':
+        // Square mode: Add/remove squares on open strings
+        const newSquares = new Set(squares);
+        if (newSquares.has(openStringId)) {
+          newSquares.delete(openStringId);
+        } else {
+          newSquares.add(openStringId);
+        }
+        setSquares(newSquares);
+        break;
     }
   };
 
@@ -146,7 +237,10 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
     setTitle('');
     setFretNumbers(Array(numFrets).fill(''));
     setRootNotes(new Set());
-    setIsRootMode(false);
+    setXMarks(new Set());
+    setTriangles(new Set());
+    setSquares(new Set());
+    setCurrentMode('normal');
   };
 
   const handleFretNumberChange = (index, value) => {
@@ -163,6 +257,9 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
       notes: Array.from(notes),
       openStrings: Array.from(openStrings),
       rootNotes: Array.from(rootNotes),
+      xMarks: Array.from(xMarks),
+      triangles: Array.from(triangles),
+      squares: Array.from(squares),
       id: initialChord ? initialChord.id : Date.now(),
       numStrings,
       numFrets // Include the fret count in the chord data
@@ -176,13 +273,28 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
     return rootNotes.has(noteId);
   };
 
+  const hasXMark = (string, fret, isOpen = false) => {
+    const noteId = isOpen ? createOpenStringId(string) : createNoteId(string, fret);
+    return xMarks.has(noteId);
+  };
+
+  const hasTriangle = (string, fret, isOpen = false) => {
+    const noteId = isOpen ? createOpenStringId(string) : createNoteId(string, fret);
+    return triangles.has(noteId);
+  };
+
+  const hasSquare = (string, fret, isOpen = false) => {
+    const noteId = isOpen ? createOpenStringId(string) : createNoteId(string, fret);
+    return squares.has(noteId);
+  };
+
   // Calculate the height dynamically based on fret count
   // 6 frets = 20rem, 12 frets should be proportionally taller was 28rem
   const diagramHeight = `${(20 * numFrets) / 6}rem`;
 
   return (
     <div className="w-full max-w-lg mx-auto p-3">
-      {/* Controls section with both string and fret selection AND ROOT MODE TOGGLE */}
+      {/* Controls section with both string and fret selection */}
       <div className="mb-3 flex items-center gap-3">
         <div className="flex items-center gap-2">
           <Guitar size={18} className="text-gray-600" />
@@ -208,17 +320,62 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
             <option value={12}>12 Frets</option>
           </select>
         </div>
-        
-        {/* NEW: ROOT MODE TOGGLE */}
+      </div>
+
+      {/* NEW: Mode selection buttons */}
+      <div className="mb-3 flex flex-wrap gap-2">
         <button
-          onClick={() => setIsRootMode(!isRootMode)}
+          onClick={() => setCurrentMode('normal')}
           className={`px-2.5 py-1.5 rounded-md text-sm transition-colors ${
-            isRootMode 
+            currentMode === 'normal' 
+              ? 'bg-gray-700 text-white' 
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          }`}
+        >
+          Normal
+        </button>
+        <button
+          onClick={() => setCurrentMode('root')}
+          className={`px-2.5 py-1.5 rounded-md text-sm transition-colors ${
+            currentMode === 'root' 
               ? 'bg-blue-500 text-white' 
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
-          {isRootMode ? 'Root' : 'Normal'}
+          Root
+        </button>
+        <button
+          onClick={() => setCurrentMode('x')}
+          className={`px-2.5 py-1.5 rounded-md text-sm transition-colors flex items-center gap-1 ${
+            currentMode === 'x' 
+              ? 'bg-red-500 text-white' 
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          }`}
+        >
+          <X size={14} />
+          X Mark
+        </button>
+        <button
+          onClick={() => setCurrentMode('triangle')}
+          className={`px-2.5 py-1.5 rounded-md text-sm transition-colors flex items-center gap-1 ${
+            currentMode === 'triangle' 
+              ? 'bg-green-500 text-white' 
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          }`}
+        >
+          <Triangle size={14} />
+          Triangle
+        </button>
+        <button
+          onClick={() => setCurrentMode('square')}
+          className={`px-2.5 py-1.5 rounded-md text-sm transition-colors flex items-center gap-1 ${
+            currentMode === 'square' 
+              ? 'bg-purple-500 text-white' 
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          }`}
+        >
+          <Square size={14} />
+          Square
         </button>
       </div>
 
@@ -232,7 +389,7 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
         />
       </div>
 
-      <div className="relative border-2 border-slate-500 rounded p-6">
+      <div className="relative border-2 border-slate-500 rounded p-12">
         <div className="relative w-64 mx-auto" style={{ height: diagramHeight }}>
           {/* Open string positions */}
           <div className="absolute w-full" style={{ top: '-24px' }}>
@@ -243,15 +400,47 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
                 style={{ left: `${(stringIndex * 100) / (numStrings - 1)}%` }}
                 onClick={() => toggleOpenString(stringIndex)}
               >
-                {/* UPDATED: Show root notes as filled dots, regular opens as hollow */}
+                {/* Base note/open string */}
                 {openStrings.has(createOpenStringId(stringIndex)) && (
                   <>
                     {isRootNote(stringIndex, null, true) ? (
-                      <div className="w-4 h-4 bg-blue-500 rounded-full" />
-                    ) : (
                       <div className="w-4 h-4 border-2 border-blue-500 rounded-full" />
+                    ) : (
+                      <div className="w-4 h-4 border-2 border-black rounded-full" />
                     )}
                   </>
+                )}
+                
+                {/* NEW: Symbols for open strings */}
+                {hasTriangle(stringIndex, null, true) && (
+                  <div className="absolute"
+                       style={{ 
+                         transform: 'translate(-50%, -55%)',
+                         top: '50%',
+                         left: '50%'
+                       }}>
+                    <Triangle size={36} className="text-black" fill="none" stroke="currentColor" strokeWidth="1" />
+                  </div>
+                )}
+                
+                {hasSquare(stringIndex, null, true) && (
+                  <div className="absolute w-9 h-9 border-2 border-black"
+                       style={{ 
+                         transform: 'translate(-50%, -50%)',
+                         top: '50%',
+                         left: '50%'
+                       }} />
+                )}
+                
+                {hasXMark(stringIndex, null, true) && (
+                  <div className="absolute text-black font-thin text-5xl"
+                       style={{ 
+                         transform: 'translate(-50%, -55%)',
+                         top: '50%',
+                         left: '50%'
+                       }}>
+                    ×
+                  </div>
                 )}
               </div>
             ))}
@@ -290,7 +479,7 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
             />
           ))}
 
-          {/* Note positions - now dynamically calculated based on numFrets with root note coloring */}
+          {/* Note positions - now dynamically calculated based on numFrets with symbols */}
           {[...Array(numStrings)].map((_, stringIndex) => (
             <React.Fragment key={`string-positions-${stringIndex}`}>
               {[...Array(numFrets)].map((_, fretIndex) => (
@@ -303,11 +492,43 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
                   }}
                   onClick={() => toggleNote(stringIndex, fretIndex)}
                 >
-                  {/* UPDATED: Show root notes in darker blue */}
+                  {/* Base note */}
                   {(notes.has(createNoteId(stringIndex, fretIndex)) || isRootNote(stringIndex, fretIndex)) && (
                     <div className={`w-4 h-4 rounded-full ${
                       isRootNote(stringIndex, fretIndex) ? 'bg-blue-500' : 'bg-black'
                     }`} />
+                  )}
+                  
+                  {/* NEW: Symbols */}
+                  {hasTriangle(stringIndex, fretIndex) && (
+                    <div className="absolute"
+                         style={{ 
+                           transform: 'translate(-50%, -55%)',
+                           top: '50%',
+                           left: '50%'
+                         }}>
+                      <Triangle size={36} className="text-black" fill="none" stroke="currentColor" strokeWidth="1" />
+                    </div>
+                  )}
+
+                  {hasSquare(stringIndex, fretIndex) && (
+                    <div className="absolute w-9 h-9 border-2 border-black"
+                         style={{ 
+                           transform: 'translate(-50%, -50%)',
+                           top: '50%',
+                           left: '50%'
+                         }} />
+                  )}
+                  
+                  {hasXMark(stringIndex, fretIndex) && (
+                    <div className="absolute text-black font-thin text-6xl"
+                         style={{ 
+                           transform: 'translate(-50%, -55%)',
+                           top: '50%',
+                           left: '50%'
+                         }}>
+                      ×
+                    </div>
                   )}
                 </div>
               ))}
