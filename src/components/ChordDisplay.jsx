@@ -1,4 +1,5 @@
 import React from 'react';
+import { Triangle } from 'lucide-react';
 
 const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
   const NUM_STRINGS = chord.numStrings || 6;
@@ -6,46 +7,60 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
 
   // Create separate size configurations for 6-fret and 12-fret diagrams
   // This avoids the Tailwind dynamic class generation problem
-  const getSizeConfigs = (fretCount) => {
+
+  //these numbers control what is seen in preview mode and the pdf download
+   const getSizeConfigs = (fretCount) => {
     const baseConfig = {
       small: {
         dotSize: 'w-1 h-1',
+        triangleSize: 8,
+        squareSize: 'w-2 h-2',
         titleClass: 'text-xs',
         fretNumberClass: 'text-[8px]',
         openStringTop: '-8px',
         titleSpacing: 'h-8',
         containerSpacing: 'mt-2',
         fretNumberOffset: '-18px',
-        fretNumberWidth: '14px'
+        fretNumberWidth: '14px',
+        xSize: 'text-xs',
+        xWeight: 'font-thin'
       },
       medium: {
         dotSize: 'w-2 h-2',
+        triangleSize: 12,
+        squareSize: 'w-3 h-3',
         titleClass: 'text-sm',
         fretNumberClass: 'text-xs',
         openStringTop: '-12px',
         titleSpacing: 'h-8',
         containerSpacing: 'mt-3',
         fretNumberOffset: '-24px',
-        fretNumberWidth: '16px'
+        fretNumberWidth: '16px',
+        xSize: 'text-sm',
+        xWeight: 'font-thin'
       },
       large: {
         dotSize: 'w-2.5 h-2.5',
+        triangleSize: 22,
+        squareSize: 'w-6 h-6',
         titleClass: 'text-base',
         fretNumberClass: 'text-sm',
         openStringTop: '-12px',
         titleSpacing: 'h-10',
         containerSpacing: 'mt-4',
         fretNumberOffset: '-30px',
-        fretNumberWidth: '20px'
+        fretNumberWidth: '20px',
+        xSize: 'text-5xl',
+        xWeight: 'font-thin'
       }
     };
 
-    // Use explicit Tailwind classes that we know exist
+    //these change the size of the chord grids in preview and download mode
     if (fretCount === 6) {
       return {
         small: { ...baseConfig.small, containerClass: 'w-14 h-20', wrapperClass: 'w-16' },
         medium: { ...baseConfig.medium, containerClass: 'w-20 h-28', wrapperClass: 'w-24' },
-        large: { ...baseConfig.large, containerClass: 'w-24 h-32', wrapperClass: 'w-28' }
+        large: { ...baseConfig.large, containerClass: 'w-40 h-40', wrapperClass: 'w-28' }
       };
     } else {
       // For 12-fret diagrams, use explicit height classes that exist in Tailwind
@@ -57,21 +72,77 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
     }
   };
 
+
+  //these numbers control the sizes in the chordSheet display (not the preview)
   const getMobileSizeConfigs = (fretCount) => {
     const desktopConfigs = getSizeConfigs(fretCount);
     
     if (fretCount === 6) {
       return {
-        small: { ...desktopConfigs.small, containerClass: 'w-12 h-16', wrapperClass: 'w-14', titleClass: 'text-[10px]' },
-        medium: { ...desktopConfigs.medium, containerClass: 'w-16 h-24', wrapperClass: 'w-20', titleClass: 'text-xs' },
-        large: { ...desktopConfigs.large, containerClass: 'w-20 h-28', wrapperClass: 'w-24', titleClass: 'text-sm' }
+        small: { 
+          ...desktopConfigs.small, 
+          containerClass: 'w-12 h-16', 
+          wrapperClass: 'w-14', 
+          titleClass: 'text-[10px]', 
+          triangleSize: 14,
+          squareSize: 'w-3.5 h-3.5',
+          xSize: 'text-sm',
+          xWeight: 'font-thin'
+        },
+        medium: { 
+          ...desktopConfigs.medium, 
+          containerClass: 'w-16 h-24', 
+          wrapperClass: 'w-20', 
+          titleClass: 'text-xs',
+          triangleSize: 18,
+          squareSize: 'w-4 h-4',
+          xSize: 'text-lg',
+          xWeight: 'font-thin'
+        },
+        large: { 
+          ...desktopConfigs.large, 
+          containerClass: 'w-48 h-48', 
+          wrapperClass: 'w-24', 
+          titleClass: 'text-sm',
+          triangleSize: 22,
+          squareSize: 'w-6 h-6',
+          xSize: 'text-5xl',
+          xWeight: 'font-thin'
+        }
       };
     } else {
       // Mobile 12-fret with explicit Tailwind classes
       return {
-        small: { ...desktopConfigs.small, containerClass: 'w-12 h-32', wrapperClass: 'w-14', titleClass: 'text-[10px]' },
-        medium: { ...desktopConfigs.medium, containerClass: 'w-16 h-48', wrapperClass: 'w-20', titleClass: 'text-xs' },
-        large: { ...desktopConfigs.large, containerClass: 'w-20 h-56', wrapperClass: 'w-24', titleClass: 'text-sm' }
+        small: { 
+          ...desktopConfigs.small, 
+          containerClass: 'w-12 h-32', 
+          wrapperClass: 'w-14', 
+          titleClass: 'text-[10px]',
+          triangleSize: 14,
+          squareSize: 'w-3.5 h-3.5',
+          xSize: 'text-sm',
+          xWeight: 'font-thin'
+        },
+        medium: { 
+          ...desktopConfigs.medium, 
+          containerClass: 'w-16 h-48', 
+          wrapperClass: 'w-20', 
+          titleClass: 'text-xs',
+          triangleSize: 18,
+          squareSize: 'w-4 h-4',
+          xSize: 'text-lg',
+          xWeight: 'font-thin'
+        },
+        large: { 
+          ...desktopConfigs.large, 
+          containerClass: 'w-20 h-56', 
+          wrapperClass: 'w-24', 
+          titleClass: 'text-sm',
+          triangleSize: 22,
+          squareSize: 'w-6 h-6',
+          xSize: 'text-xl',
+          xWeight: 'font-thin'
+        }
       };
     }
   };
@@ -93,12 +164,27 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
     return chord.rootNotes?.includes(noteId) || false;
   };
 
+  const hasXMark = (string, fret, isOpen = false) => {
+    const noteId = isOpen ? `open-${string}` : `${string}-${fret}`;
+    return chord.xMarks?.includes(noteId) || false;
+  };
+
+  const hasTriangle = (string, fret, isOpen = false) => {
+    const noteId = isOpen ? `open-${string}` : `${string}-${fret}`;
+    return chord.triangles?.includes(noteId) || false;
+  };
+
+  const hasSquare = (string, fret, isOpen = false) => {
+    const noteId = isOpen ? `open-${string}` : `${string}-${fret}`;
+    return chord.squares?.includes(noteId) || false;
+  };
+
   //Function to get the appropriate color class for notes
   const getNoteColor = (string, fret, isOpen = false) => {
     if (isRootNote(string, fret, isOpen)) {
-      return 'bg-blue-500'; // Darker blue for root notes
+      return 'bg-blue-500'; // Blue for root notes
     }
-    return 'bg-black'; // Regular blue for normal notes
+    return 'bg-black'; // Black for normal notes
   };
 
   return (
@@ -123,6 +209,7 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
                 transform: 'translateX(-50%)'
               }}
             >
+              {/* Base open string note */}
               {hasOpenString(stringIndex) && (
                 <>
                   {/* Root open strings show as filled dots, regular as hollow circles */}
@@ -132,6 +219,50 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
                     <div className={`${sizeConfig.dotSize} border border-black rounded-full`} />
                   )}
                 </>
+              )}
+              
+              {/* NEW: Symbols for open strings */}
+              {hasTriangle(stringIndex, null, true) && (
+                <div 
+                  className="absolute"
+                  style={{ 
+                    transform: 'translate(-50%, -55%)',
+                    top: '50%',
+                    left: '50%'
+                  }}
+                >
+                  <Triangle 
+                    size={sizeConfig.triangleSize} 
+                    className="text-black" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="1" 
+                  />
+                </div>
+              )}
+              
+              {hasSquare(stringIndex, null, true) && (
+                <div 
+                  className={`absolute ${sizeConfig.squareSize} border-2 border-black`}
+                  style={{ 
+                    transform: 'translate(-50%, -50%)',
+                    top: '50%',
+                    left: '50%'
+                  }} 
+                />
+              )}
+              
+              {hasXMark(stringIndex, null, true) && (
+                <div 
+                  className={`absolute text-black ${sizeConfig.xWeight} ${sizeConfig.xSize} pdf-x-mark`}
+                  style={{ 
+                    transform: 'translate(-50%, -55%)',
+                    top: '50%',
+                    left: '50%'
+                  }}
+                >
+                  ×
+                </div>
               )}
             </div>
           ))}
@@ -168,35 +299,81 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
             {[...Array(NUM_FRETS + 1)].map((_, index) => (
               <div
                 key={`fret-${index}`}
-                className={`absolute w-full h-px ${isPreview ? 'bg-gray-300' : 'bg-black'}`}
+                className={`absolute w-full h-px bg-black`}
                 style={{ top: `${(index * 100) / NUM_FRETS}%` }}
               />
             ))}
             {[...Array(NUM_STRINGS)].map((_, stringIndex) => (
               <div
                 key={`string-${stringIndex}`}
-                className={`absolute top-0 bottom-0 w-px ${isPreview ? 'bg-gray-300' : 'bg-black'}`}
+                className={`absolute top-0 bottom-0 w-px bg-black`}
                 style={{ left: `${(stringIndex * 100) / (NUM_STRINGS - 1)}%` }}
               />
             ))}
           </div>
 
-          {/* Note Dots - UPDATED with root note coloring */}
+          {/* Note Dots and Symbols */}
           {[...Array(NUM_STRINGS)].map((_, stringIndex) => (
             <React.Fragment key={`string-notes-${stringIndex}`}>
               {[...Array(NUM_FRETS)].map((_, fretIndex) => (
-                // Show note if it's in the notes array OR if it's the root note
-                (hasNote(stringIndex, fretIndex) || isRootNote(stringIndex, fretIndex)) && (
-                  <div
-                    key={`note-${stringIndex}-${fretIndex}`}
-                    className={`absolute ${sizeConfig.dotSize} rounded-full ${getNoteColor(stringIndex, fretIndex)}`}
-                    style={{
-                      left: `${(stringIndex * 100) / (NUM_STRINGS - 1)}%`,
-                      top: `${((fretIndex * 100) / NUM_FRETS) + (100 / (NUM_FRETS * 2))}%`,
-                      transform: 'translate(-50%, -50%)'
-                    }}
-                  />
-                )
+                <div
+                  key={`note-container-${stringIndex}-${fretIndex}`}
+                  className="absolute"
+                  style={{
+                    left: `${(stringIndex * 100) / (NUM_STRINGS - 1)}%`,
+                    top: `${((fretIndex * 100) / NUM_FRETS) + (100 / (NUM_FRETS * 2))}%`,
+                    transform: 'translate(-50%, -50%)'
+                  }}
+                >
+                  {/* Base note - show if it's in the notes array OR if it's the root note */}
+                  {(hasNote(stringIndex, fretIndex) || isRootNote(stringIndex, fretIndex)) && (
+                    <div className={`${sizeConfig.dotSize} rounded-full ${getNoteColor(stringIndex, fretIndex)}`} />
+                  )}
+                  
+                  {/* NEW: Symbols */}
+                  {hasTriangle(stringIndex, fretIndex) && (
+                    <div 
+                      className="absolute"
+                      style={{ 
+                        transform: 'translate(-50%, -55%)',
+                        top: '50%',
+                        left: '50%'
+                      }}
+                    >
+                      <Triangle 
+                        size={sizeConfig.triangleSize} 
+                        className="text-black" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        strokeWidth="1" 
+                      />
+                    </div>
+                  )}
+                  
+                  {hasSquare(stringIndex, fretIndex) && (
+                    <div 
+                      className={`absolute ${sizeConfig.squareSize} border-2 border-black`}
+                      style={{ 
+                        transform: 'translate(-50%, -50%)',
+                        top: '50%',
+                        left: '50%'
+                      }} 
+                    />
+                  )}
+                  
+                  {hasXMark(stringIndex, fretIndex) && (
+                    <div 
+                      className={`absolute text-black ${sizeConfig.xWeight} ${sizeConfig.xSize} pdf-x-mark`}
+                      style={{ 
+                        transform: 'translate(-50%, -55%)',
+                        top: '50%',
+                        left: '50%'
+                      }}
+                    >
+                      ×
+                    </div>
+                  )}
+                </div>
               ))}
             </React.Fragment>
           ))}

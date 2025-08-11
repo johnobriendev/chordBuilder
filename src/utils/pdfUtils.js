@@ -16,6 +16,9 @@ export const generatePDF = async (modalContent, filename = 'chord-sheet.pdf') =>
       [data-fret-number="true"] {
         transform: translateY(-50%) !important;
       }
+      .pdf-x-mark {
+        transform: translate(-25%, -50%) !important;
+      }
     `;
     document.head.appendChild(styleElement);
 
@@ -37,7 +40,7 @@ export const generatePDF = async (modalContent, filename = 'chord-sheet.pdf') =>
       windowHeight: 11 * 96
     });
 
-     // CLEANUP: Remove the temporary CSS fix
+    // CLEANUP: Remove the temporary CSS fix
     document.head.removeChild(styleElement);
 
     // Create PDF with exact US Letter dimensions

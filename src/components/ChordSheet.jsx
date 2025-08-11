@@ -3,34 +3,67 @@ import React, { forwardRef } from 'react'
 import ChordDisplay from './ChordDisplay';
 import { Trash2, Edit2 } from 'lucide-react';
 
-// Enhanced spacing for different diagram types
-const getSpacingConfig = (cols, diagramType) => {
+// ====================================================================
+// SPACING CONFIGURATION - Controls space BETWEEN chord diagrams
+// ====================================================================
+const getSpacingConfig = (cols, diagramType, isPreview = false) => {
   const is12Fret = diagramType === '12-fret';
   
+  // 1x1 and 2x2 grids (very few chords = lots of space)
   if (cols <= 2) {
     return {
-      gridGap: is12Fret ? '3rem' : '2rem',
+      // Different spacing for preview vs chord sheet
+      rowGap: isPreview 
+        ? (is12Fret ? '3rem' : '2rem')      // ← PREVIEW: Vertical space
+        : (is12Fret ? '2rem' : '1.5rem'),   // ← CHORD SHEET: Vertical space
+      columnGap: isPreview 
+        ? (is12Fret ? '4rem' : '3rem')      // ← PREVIEW: Horizontal space
+        : (is12Fret ? '3rem' : '2rem'),     // ← CHORD SHEET: Horizontal space
       displaySize: 'large'
     };
-  } else if (cols <= 4) {
+  } 
+  // 3x3 and 4x4 grids ← YOUR 4x4 GRIDS USE THIS!
+  else if (cols <= 4) {
     return {
-      gridGap: is12Fret ? '2.5rem' : '2rem',
+      // Different spacing for preview vs chord sheet
+      rowGap: isPreview 
+        ? (is12Fret ? '2rem' : '1.5rem')    // ← PREVIEW: Vertical space (smaller!)
+        : (is12Fret ? '1.5rem' : '1rem'),   // ← CHORD SHEET: Vertical space
+      columnGap: isPreview 
+        ? (is12Fret ? '3.5rem' : '6rem')    // ← PREVIEW: Horizontal space
+        : (is12Fret ? '2.5rem' : '2rem'),   // ← CHORD SHEET: Horizontal space
       displaySize: is12Fret ? 'medium' : 'large'
     };
-  } else if (cols <= 6) {
+  } 
+  // 5x5 and 6x6 grids
+  else if (cols <= 6) {
     return {
-      gridGap: is12Fret ? '2rem' : '1.5rem',
+      rowGap: isPreview 
+        ? (is12Fret ? '1.5rem' : '1rem')    // ← PREVIEW: Vertical space
+        : (is12Fret ? '1rem' : '0.75rem'),  // ← CHORD SHEET: Vertical space
+      columnGap: isPreview 
+        ? (is12Fret ? '2.5rem' : '2rem')    // ← PREVIEW: Horizontal space
+        : (is12Fret ? '2rem' : '1.5rem'),   // ← CHORD SHEET: Horizontal space
       displaySize: is12Fret ? 'small' : 'medium'
     };
-  } else {
+  } 
+  // 7x7, 8x8+ grids (many chords = tight spacing)
+  else {
     return {
-      gridGap: is12Fret ? '1.5rem' : '1rem',
+      rowGap: isPreview 
+        ? (is12Fret ? '1rem' : '0.75rem')   // ← PREVIEW: Vertical space
+        : (is12Fret ? '0.75rem' : '0.5rem'), // ← CHORD SHEET: Vertical space
+      columnGap: isPreview 
+        ? (is12Fret ? '2rem' : '1.5rem')    // ← PREVIEW: Horizontal space
+        : (is12Fret ? '1.5rem' : '1rem'),   // ← CHORD SHEET: Horizontal space
       displaySize: 'small'
     };
   }
 };
 
-// Helper for chord compatibility checking
+// ====================================================================
+// HELPER FUNCTION - Check if chord matches current grid type
+// ====================================================================
 const isChordCompatibleWithGrid = (chord, gridConfig) => {
   if (!chord) return true;
   
@@ -43,41 +76,50 @@ const isChordCompatibleWithGrid = (chord, gridConfig) => {
   return false;
 };
 
+// ====================================================================
+// MAIN CHORD SHEET COMPONENT
+// ====================================================================
 const ChordSheet = forwardRef(({ 
   id = 'chord-sheet',
   chords = [], 
-  gridConfig, 
-  isPreview = false,
+  gridConfig,           // Contains: {rows, cols, diagramType}
+  isPreview = false,    // true = preview/PDF, false = regular sheet
   isPrinting = false, 
-  isInteractive = false,
+  isInteractive = false, // true = can edit/delete chords
   setChords,
   onEditChord,
   title = "",
   onTitleChange
 }, ref) => {
+  
+  // GET SPACING CONFIG based on your grid size AND preview mode
+  const spacing = getSpacingConfig(gridConfig.cols, gridConfig.diagramType, isPreview);
 
-  const spacing = getSpacingConfig(gridConfig.cols, gridConfig.diagramType);
-
+  
+  // ====================================================================
+  // CHORD MANAGEMENT FUNCTIONS
+  // ====================================================================
   const handleDeleteChord = (index) => {
     if (!isInteractive) return;
     const newChords = chords.filter((_, idx) => idx !== index);
     setChords(newChords);
   };
 
-  // Filter chords based on compatibility
+  // Filter chords based on compatibility with current grid type
   const getFilteredChords = () => {
     if (isPreview) {
-      return chords; // Show all in preview
+      return chords; // Show all chords in preview
     } else {
       return chords.filter(chord => isChordCompatibleWithGrid(chord, gridConfig));
     }
   };
 
-  // Create slots with original indices for editing
+  // Create grid slots with chord data
   const createSlots = () => {
     const filteredChords = getFilteredChords();
     
     if (isInteractive) {
+      // Interactive mode: create exact number of slots for grid
       const totalSlots = gridConfig.rows * gridConfig.cols;
       return Array(totalSlots).fill(null).map((_, index) => {
         const chord = filteredChords[index] || null;
@@ -88,6 +130,7 @@ const ChordSheet = forwardRef(({
         };
       });
     } else {
+      // Non-interactive mode: just show the chords we have
       return filteredChords.map((chord, index) => ({
         chord,
         originalIndex: index,
@@ -98,8 +141,11 @@ const ChordSheet = forwardRef(({
 
   const slots = createSlots();
 
+  // ====================================================================
+  // MOBILE SCALING (for small screens)
+  // ====================================================================
   const getMobileStyles = () => {
-    if (isPreview) return {};
+    if (isPreview) return {}; // No mobile scaling in preview
     
     const is12Fret = gridConfig.diagramType === '12-fret';
     const baseScale = window.innerWidth < 640 ? 0.9 : 1.0;
@@ -112,8 +158,12 @@ const ChordSheet = forwardRef(({
     };
   };
 
+  // ====================================================================
+  // TITLE RENDERING
+  // ====================================================================
   const renderTitle = () => {
     if (isInteractive) {
+      // Editable title input
       return (
         <input
           type="text"
@@ -127,19 +177,25 @@ const ChordSheet = forwardRef(({
       );
     }
     
+    // Static title display
     return (
-      <h2 className="text-2xl font-bold text-gray-900 text-center mb-8">
+      <h2 className={`text-2xl font-bold text-gray-900 text-center ${isPreview ? 'mb-1' : 'mb-4'}`}>
         {title}
       </h2>
     );
   };
 
+  // ====================================================================
+  // MAIN GRID CONTENT RENDERING
+  // ====================================================================
   const renderContent = () => (
     <div
       style={{
+        // MAIN GRID LAYOUT with separate row and column gaps
         display: 'grid',
-        gridTemplateColumns: `repeat(${gridConfig.cols}, minmax(0, 1fr))`,
-        gap: spacing.gridGap,
+        gridTemplateColumns: `repeat(${gridConfig.cols}, minmax(0, 1fr))`, // Number of columns
+        rowGap: spacing.rowGap,          // ← VERTICAL SPACE BETWEEN diagrams
+        columnGap: spacing.columnGap,    // ← HORIZONTAL SPACE BETWEEN diagrams
         width: '100%',
         padding: isPreview ? '0.75in' : '0.5rem',
         boxSizing: 'border-box',
@@ -150,8 +206,9 @@ const ChordSheet = forwardRef(({
       {slots.map((slot, index) => {
         const { chord, originalIndex, isCompatible } = slot;
         
+        // In preview mode, skip empty slots
         if (!chord && isPreview) return null;
-
+        
         return (
           <div 
             key={chord ? chord.id : `empty-${index}`}
@@ -164,17 +221,20 @@ const ChordSheet = forwardRef(({
           >
             {chord && (
               <div style={{ width: '100%', position: 'relative' }} className="group">
+                {/* THE ACTUAL CHORD DIAGRAM */}
                 <ChordDisplay 
                   chord={chord} 
-                  size={spacing.displaySize} 
-                  isPreview={isPreview} 
+                  size={spacing.displaySize}  // ← This determines which size config to use
+                  isPreview={isPreview}      // ← This determines getSizeConfigs vs getMobileSizeConfigs
                 />
                 
+                {/* Warning indicator for incompatible chords */}
                 {isPreview && !isCompatible && (
                   <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full border border-yellow-600" 
                        title={`This ${chord.numFrets || 6}-fret chord may not display properly in ${gridConfig.diagramType} grid`} />
                 )}
                 
+                {/* Edit/Delete buttons (only in interactive mode) */}
                 {isInteractive && (
                   <div className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 
                                 transition-opacity flex gap-1 p-1 z-10">
@@ -195,6 +255,7 @@ const ChordSheet = forwardRef(({
               </div>
             )}
             
+            {/* Empty slot placeholder */}
             {!chord && isInteractive && (
               <div className="text-gray-600 text-sm flex flex-col items-center">
                 <span>Empty</span>
@@ -206,14 +267,18 @@ const ChordSheet = forwardRef(({
     </div>
   );
 
+  // ====================================================================
+  // MAIN RENDER
+  // ====================================================================
   return (
     <div 
       ref={ref}
       id={id}
       className={!isPreview ? 'max-w-full overflow-x-auto' : ''}
       style={{
-        width: isPreview ? '8.5in' : '100%',  
-        minHeight: isPreview ? '11in' : 'auto', 
+        // OVERALL SHEET CONTAINER
+        width: isPreview ? '8.5in' : '100%',   // PDF vs screen width
+        minHeight: isPreview ? '11in' : 'auto', // PDF vs screen height
         margin: '0',
         padding: '0',
         backgroundColor: isPreview ? 'white' : '#d6d3d1',
@@ -228,5 +293,4 @@ const ChordSheet = forwardRef(({
 });
 
 ChordSheet.displayName = 'ChordSheet';
-
 export default ChordSheet;
