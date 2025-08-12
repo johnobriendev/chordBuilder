@@ -8,36 +8,36 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
   // Create separate size configurations for 6-fret and 12-fret diagrams
   // This avoids the Tailwind dynamic class generation problem
 
-  //these numbers control what is seen in preview mode and the pdf download
+  // preview mode and the pdf download
    const getSizeConfigs = (fretCount) => {
     const baseConfig = {
       small: {
-        dotSize: 'w-1 h-1',
-        triangleSize: 8,
-        squareSize: 'w-2 h-2',
-        titleClass: 'text-xs',
-        fretNumberClass: 'text-[8px]',
+        dotSize: 'w-2 h-2',
+        triangleSize: 18,
+        squareSize: 'w-4 h-4',
+        titleClass: 'text-sm',
+        fretNumberClass: 'text-[12px]',
         openStringTop: '-8px',
         titleSpacing: 'h-8',
         containerSpacing: 'mt-2',
         fretNumberOffset: '-18px',
         fretNumberWidth: '14px',
-        xSize: 'text-xs',
-        xWeight: 'font-thin'
+        xSize: 'text-3xl',
+        xWeight: 'font-normal'
       },
       medium: {
-        dotSize: 'w-2 h-2',
-        triangleSize: 12,
-        squareSize: 'w-3 h-3',
+        dotSize: 'w-2.5 h-2.5',
+        triangleSize: 18,
+        squareSize: 'w-5 h-5',
         titleClass: 'text-sm',
         fretNumberClass: 'text-xs',
         openStringTop: '-12px',
-        titleSpacing: 'h-8',
+        titleSpacing: 'h-12',
         containerSpacing: 'mt-3',
         fretNumberOffset: '-24px',
         fretNumberWidth: '16px',
-        xSize: 'text-sm',
-        xWeight: 'font-thin'
+        xSize: 'text-4xl',
+        xWeight: 'font-normal'
       },
       large: {
         dotSize: 'w-2.5 h-2.5',
@@ -58,8 +58,8 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
     //these change the size of the chord grids in preview and download mode
     if (fretCount === 6) {
       return {
-        small: { ...baseConfig.small, containerClass: 'w-14 h-20', wrapperClass: 'w-16' },
-        medium: { ...baseConfig.medium, containerClass: 'w-20 h-28', wrapperClass: 'w-24' },
+        small: { ...baseConfig.small, containerClass: 'w-20 h-20', wrapperClass: 'w-16' },
+        medium: { ...baseConfig.medium, containerClass: 'w-28 h-28', wrapperClass: 'w-24' },
         large: { ...baseConfig.large, containerClass: 'w-40 h-40', wrapperClass: 'w-28' }
       };
     } else {
@@ -81,23 +81,23 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
       return {
         small: { 
           ...desktopConfigs.small, 
-          containerClass: 'w-12 h-16', 
+          containerClass: 'w-24 h-24', 
           wrapperClass: 'w-14', 
-          titleClass: 'text-[10px]', 
-          triangleSize: 14,
-          squareSize: 'w-3.5 h-3.5',
-          xSize: 'text-sm',
-          xWeight: 'font-thin'
+          titleClass: 'text-[12px]', 
+          triangleSize: 18,
+          squareSize: 'w-4 h-4',
+          xSize: 'text-2xl',
+          xWeight: 'font-normal'
         },
         medium: { 
           ...desktopConfigs.medium, 
-          containerClass: 'w-16 h-24', 
+          containerClass: 'w-28 h-28', 
           wrapperClass: 'w-20', 
           titleClass: 'text-xs',
-          triangleSize: 18,
-          squareSize: 'w-4 h-4',
-          xSize: 'text-lg',
-          xWeight: 'font-thin'
+          triangleSize: 20,
+          squareSize: 'w-5 h-5',
+          xSize: 'text-4xl',
+          xWeight: 'font-normal'
         },
         large: { 
           ...desktopConfigs.large, 
@@ -128,7 +128,7 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
           containerClass: 'w-16 h-48', 
           wrapperClass: 'w-20', 
           titleClass: 'text-xs',
-          triangleSize: 18,
+          triangleSize: 20,
           squareSize: 'w-4 h-4',
           xSize: 'text-lg',
           xWeight: 'font-thin'
@@ -191,7 +191,7 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
     <div className="flex flex-col items-center w-full">
       {/* Title container with fixed height */}
       <div className={`w-full ${sizeConfig.titleSpacing} flex items-center justify-center`}>
-        <h3 className={`font-medium ${sizeConfig.titleClass} text-center px-1 leading-tight`}>
+        <h3 className={`font-medium ${sizeConfig.titleClass} text-center px-1 leading-tight whitespace-nowrap mb-2`}>
           {chord.title}
         </h3>
       </div>
@@ -245,7 +245,7 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
                 <div 
                   className={`absolute ${sizeConfig.squareSize} border-2 border-black`}
                   style={{ 
-                    transform: 'translate(-50%, -50%)',
+                    transform: 'translate(-50%, -70%)',
                     top: '50%',
                     left: '50%'
                   }} 
@@ -254,7 +254,7 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
               
               {hasXMark(stringIndex, null, true) && (
                 <div 
-                  className={`absolute text-black ${sizeConfig.xWeight} ${sizeConfig.xSize} pdf-x-mark`}
+                  className={`absolute text-black ${sizeConfig.xWeight} ${sizeConfig.xSize} pdf-x-mark-${size}`}
                   style={{ 
                     transform: 'translate(-50%, -55%)',
                     top: '50%',
@@ -345,7 +345,7 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
                         className="text-black" 
                         fill="none" 
                         stroke="currentColor" 
-                        strokeWidth="1" 
+                        strokeWidth="2" 
                       />
                     </div>
                   )}
@@ -363,9 +363,9 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
                   
                   {hasXMark(stringIndex, fretIndex) && (
                     <div 
-                      className={`absolute text-black ${sizeConfig.xWeight} ${sizeConfig.xSize} pdf-x-mark`}
+                      className={`absolute text-black ${sizeConfig.xWeight} ${sizeConfig.xSize} pdf-x-mark-${size}`}
                       style={{ 
-                        transform: 'translate(-50%, -55%)',
+                        transform: 'translate(-45%, -50%)',
                         top: '50%',
                         left: '50%'
                       }}

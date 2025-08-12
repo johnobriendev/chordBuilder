@@ -39,10 +39,10 @@ const getSpacingConfig = (cols, diagramType, isPreview = false) => {
   else if (cols <= 6) {
     return {
       rowGap: isPreview
-        ? (is12Fret ? '1.5rem' : '1rem')    // ← PREVIEW: Vertical space
+        ? (is12Fret ? '1.5rem' : '0rem')    // ← PREVIEW: Vertical space
         : (is12Fret ? '1rem' : '0.75rem'),  // ← CHORD SHEET: Vertical space
       columnGap: isPreview
-        ? (is12Fret ? '2.5rem' : '2rem')    // ← PREVIEW: Horizontal space
+        ? (is12Fret ? '2.5rem' : '8rem')    // ← PREVIEW: Horizontal space
         : (is12Fret ? '2rem' : '1.5rem'),   // ← CHORD SHEET: Horizontal space
       displaySize: is12Fret ? 'small' : 'medium'
     };
@@ -51,7 +51,7 @@ const getSpacingConfig = (cols, diagramType, isPreview = false) => {
   else {
     return {
       rowGap: isPreview
-        ? (is12Fret ? '1rem' : '0.75rem')   // ← PREVIEW: Vertical space
+        ? (is12Fret ? '1rem' : '0rem')   // ← PREVIEW: Vertical space
         : (is12Fret ? '0.75rem' : '0.5rem'), // ← CHORD SHEET: Vertical space
       columnGap: isPreview
         ? (is12Fret ? '2rem' : '1.5rem')    // ← PREVIEW: Horizontal space
@@ -193,14 +193,23 @@ const ChordSheet = forwardRef(({
       style={{
         // MAIN GRID LAYOUT with separate row and column gaps
         display: 'grid',
-        gridTemplateColumns: `repeat(${gridConfig.cols}, minmax(0, 1fr))`, // Number of columns
-        rowGap: spacing.rowGap,          // ← VERTICAL SPACE BETWEEN diagrams
-        columnGap: spacing.columnGap,    // ← HORIZONTAL SPACE BETWEEN diagrams
+        gridTemplateColumns: `repeat(${gridConfig.cols}, minmax(0, 1fr))`,
+        rowGap: spacing.rowGap,
+        columnGap: spacing.columnGap,
         width: '100%',
-        paddingTop: isPreview ? '0.25in' : '0.5rem',        // Less top padding for PDF
-        paddingLeft: isPreview ? '0.75in' : '0.5rem',      // Keep side padding for PDF  
-        paddingRight: isPreview ? '0.75in' : '0.5rem',     // Keep side padding for PDF
-        paddingBottom: isPreview ? '0.25in' : '0.5rem',    // Some bottom padding for PDF
+        // GRID-SPECIFIC PADDING FOR PDF
+        paddingTop: isPreview
+          ? (gridConfig.cols <= 4 ? '0.25in' : gridConfig.cols <= 6 ? '0.1in' : '0.05in')
+          : '0.5rem',
+        paddingLeft: isPreview
+          ? (gridConfig.cols <= 4 ? '0.75in' : gridConfig.cols <= 6 ? '0.75in' : '0.25in')
+          : '0.5rem',
+        paddingRight: isPreview
+          ? (gridConfig.cols <= 4 ? '0.75in' : gridConfig.cols <= 6 ? '0.75in' : '0.25in')
+          : '0.5rem',
+        paddingBottom: isPreview
+          ? (gridConfig.cols <= 4 ? '0.25in' : gridConfig.cols <= 6 ? '0.1in' : '0.05in')
+          : '0.5rem',
         boxSizing: 'border-box',
         backgroundColor: isPreview ? 'white' : '#d6d3d1',
         ...getMobileStyles()
