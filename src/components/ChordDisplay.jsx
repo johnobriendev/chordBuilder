@@ -46,7 +46,7 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
         titleClass: 'text-base',
         fretNumberClass: 'text-sm',
         openStringTop: '-12px',
-        titleSpacing: 'h-10',
+        titleSpacing: 'h-12',
         containerSpacing: 'mt-4',
         fretNumberOffset: '-30px',
         fretNumberWidth: '20px',
@@ -67,7 +67,7 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
       return {
         small: { ...baseConfig.small, containerClass: 'w-14 h-40', wrapperClass: 'w-16' },
         medium: { ...baseConfig.medium, containerClass: 'w-20 h-56', wrapperClass: 'w-24' },
-        large: { ...baseConfig.large, containerClass: 'w-24 h-64', wrapperClass: 'w-28' }
+        large: { ...baseConfig.large, containerClass: 'w-64 h-96', wrapperClass: 'w-28' }
       };
     }
   };
@@ -135,13 +135,13 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
         },
         large: { 
           ...desktopConfigs.large, 
-          containerClass: 'w-20 h-56', 
+          containerClass: 'w-64 h-96', 
           wrapperClass: 'w-24', 
-          titleClass: 'text-sm',
-          triangleSize: 22,
-          squareSize: 'w-6 h-6',
-          xSize: 'text-xl',
-          xWeight: 'font-thin'
+          titleClass: 'text-xl',
+          triangleSize: 24,
+          squareSize: 'w-7 h-7',
+          xSize: 'text-5xl',
+          xWeight: 'font-normal'
         }
       };
     }
