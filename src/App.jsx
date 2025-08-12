@@ -8,7 +8,7 @@ import Dashboard from './components/Dashboard';
 import { Modal } from './components/Modal';
 import AuthButton from './components/AuthButton';
 import { generatePDF } from './utils/pdfUtils';
-import { HelpCircle, AlertTriangle, CheckCircle, Menu, X } from 'lucide-react';
+import { HelpCircle, AlertTriangle, CheckCircle, Menu, X, User, Instagram, Facebook, Youtube, Linkedin, Music, Code } from 'lucide-react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect } from 'react';
 import { setTokenGetter, createSheet, getCurrentUser, getSheet, updateSheet } from './services/api';
@@ -24,6 +24,7 @@ function App() {
   const [editingChord, setEditingChord] = useState(null);
   const [editingIndex, setEditingIndex] = useState(null);
   const [showHelp, setShowHelp] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
   const [sheetTitle, setSheetTitle] = useState("My Chord Sheet");
 
   const [notification, setNotification] = useState({ message: '', type: '', show: false });
@@ -383,8 +384,8 @@ function App() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
             <div className="flex items-center justify-between w-full sm:w-auto">
               <h1 className="text-xl sm:text-2xl font-light text-gray-900">chordBuilder</h1>
-              
-          
+
+
               <button
                 onClick={() => setShowMobileMenu(!showMobileMenu)}
                 className="sm:hidden p-1.5 text-gray-900 hover:bg-stone-300 rounded"
@@ -392,7 +393,7 @@ function App() {
                 {showMobileMenu ? <X size={20} /> : <Menu size={20} />}
               </button>
             </div>
-            
+
             {/* Desktop navigation - always visible on sm+ screens */}
             <div className="hidden sm:flex items-center gap-2">
               <AuthButton onOpenDashboard={() => setShowDashboard(true)} />
@@ -403,6 +404,14 @@ function App() {
               >
                 <HelpCircle size={14} />
                 How to Use
+              </button>
+              <button
+                onClick={() => setShowAbout(true)}
+                className="px-2 py-1 text-sm bg-gray-100 hover:bg-gray-200 
+                     text-gray-700 rounded-md flex items-center gap-1"
+              >
+                <User size={14} />  {/* You'll need to import User from lucide-react */}
+                About
               </button>
             </div>
 
@@ -419,7 +428,7 @@ function App() {
             </div>
           </div>
 
-          
+
           {showMobileMenu && (
             <div className="sm:hidden mt-4 pt-4 border-t border-stone-500">
               <div className="flex flex-col gap-3">
@@ -435,11 +444,21 @@ function App() {
                   <HelpCircle size={16} />
                   How to Use
                 </button>
+                <button
+                  onClick={() => {
+                    setShowAbout(true);
+                    setShowMobileMenu(false);
+                  }}
+                  className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md flex items-center gap-2 w-fit"
+                >
+                  <User size={16} />
+                  About Creator
+                </button>
               </div>
             </div>
           )}
 
-          
+
           <div className="sm:hidden mt-2 flex justify-center">
             <ChordSheetControls
               gridConfig={gridConfig}
@@ -633,6 +652,55 @@ function App() {
           onLoadSheet={handleLoadSheet}
           onClose={() => setShowDashboard(false)}
         />
+      </Modal>
+
+      <Modal
+        isOpen={showAbout}
+        onClose={() => setShowAbout(false)}
+        title="About the Creator"
+      >
+        <div className="space-y-6 text-gray-700">
+          <div className="text-center">
+            <h3 className="text-xl font-semibold mb-2">John O'Brien</h3>
+          </div>
+
+          <div>
+            <p className="mb-4">
+              John O'Brien is a guitarist and software developer from Bethlehem, Pennsylvania. He holds a degree in Jazz Studies fron the Univeristy of Pittsburgh where he studied under the legendary bebop guitarist Joe Negri and internationally acclaimed pianist Geri Allen. 
+            </p>
+            <p className="mb-4">
+              This app was built as an inspiration from the chord charts and arrangements of master guitarist, Ted Greene. His teachings can be found at <span className='text-blue-700 hover:text-blue-500'><a href="https://tedgreene.com/" target="_blank" rel="noopener noreferrer">tedgreene.com</a></span>
+            </p>
+          </div>
+
+          {/* Social Media Links */}
+          <div className="flex justify-center space-x-6">
+            <a href="https://www.instagram.com/johnobrienmusic/" target="_blank" rel="noopener noreferrer"
+              className="text-gray-600 hover:text-pink-500 transition-colors" title="Follow me on Instagram">
+              <Instagram size={24} />
+            </a>
+            <a href="https://www.facebook.com/john.o.brien.78561/" target="_blank" rel="noopener noreferrer"
+              className="text-gray-600 hover:text-blue-500 transition-colors"  title="Connect on Facebook">
+              <Facebook size={24} />
+            </a>
+            <a href="https://www.youtube.com/@johnobrienguitar" target="_blank" rel="noopener noreferrer"
+              className="text-gray-600 hover:text-red-500 transition-colors" title="Watch my YouTube videos">
+              <Youtube size={24} />
+            </a>
+            <a href="https://www.linkedin.com/in/johnobriendev/" target="_blank" rel="noopener noreferrer"
+              className="text-gray-600 hover:text-blue-600 transition-colors" title="Connect on LinkedIn">
+              <Linkedin size={24} />
+            </a>
+            <a href="https://johnobrienguitar.com/" target="_blank" rel="noopener noreferrer"
+              className="text-gray-600 hover:text-blue-600 transition-colors" title="Visit my Music Site">
+              <Music size={24} />
+            </a>
+            <a href="https://johnobriendev.com/" target="_blank" rel="noopener noreferrer"
+              className="text-gray-600 hover:text-green-600 transition-colors" title="Visit my Dev Portfolio">
+              <Code size={24} />
+            </a>
+          </div>
+        </div>
       </Modal>
     </div>
   );
