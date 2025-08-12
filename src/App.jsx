@@ -666,7 +666,7 @@ function App() {
 
           <div>
             <p className="mb-4">
-              John O'Brien is a guitarist and software developer from Bethlehem, Pennsylvania. He holds a degree in Jazz Studies fron the Univeristy of Pittsburgh where he studied under the legendary bebop guitarist Joe Negri and internationally acclaimed pianist Geri Allen. 
+              John O'Brien is a guitarist and software developer from Bethlehem, Pennsylvania. He holds a degree in Jazz Studies from the Univeristy of Pittsburgh where he studied under the legendary bebop guitarist, Joe Negri, and internationally acclaimed pianist, Geri Allen. 
             </p>
             <p className="mb-4">
               This app was built as an inspiration from the chord charts and arrangements of master guitarist, Ted Greene. His teachings can be found at <span className='text-blue-700 hover:text-blue-500'><a href="https://tedgreene.com/" target="_blank" rel="noopener noreferrer">tedgreene.com</a></span>
