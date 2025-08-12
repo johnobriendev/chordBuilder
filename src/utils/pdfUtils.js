@@ -20,7 +20,7 @@ export const generatePDF = async (modalContent, filename = 'chord-sheet.pdf') =>
         transform: translate(-25%, -50%) !important;  
       }
       .pdf-x-mark-medium {
-        transform: translate(-35%, -45%) !important;  
+        transform: translate(-22.5%, -47.5%) !important;  
       }
       .pdf-x-mark-small {
         transform: translate(-22.5%, -47.5%) !important;  

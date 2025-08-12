@@ -28,11 +28,11 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
       medium: {
         dotSize: 'w-2.5 h-2.5',
         triangleSize: 18,
-        squareSize: 'w-5 h-5',
+        squareSize: 'w-4 h-4',
         titleClass: 'text-sm',
         fretNumberClass: 'text-xs',
         openStringTop: '-12px',
-        titleSpacing: 'h-12',
+        titleSpacing: 'h-8',
         containerSpacing: 'mt-3',
         fretNumberOffset: '-24px',
         fretNumberWidth: '16px',
@@ -59,7 +59,7 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
     if (fretCount === 6) {
       return {
         small: { ...baseConfig.small, containerClass: 'w-20 h-20', wrapperClass: 'w-16' },
-        medium: { ...baseConfig.medium, containerClass: 'w-28 h-28', wrapperClass: 'w-24' },
+        medium: { ...baseConfig.medium, containerClass: 'w-24 h-24', wrapperClass: 'w-24' },
         large: { ...baseConfig.large, containerClass: 'w-40 h-40', wrapperClass: 'w-28' }
       };
     } else {
@@ -91,7 +91,7 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
         },
         medium: { 
           ...desktopConfigs.medium, 
-          containerClass: 'w-28 h-28', 
+          containerClass: 'w-24 h-24', 
           wrapperClass: 'w-20', 
           titleClass: 'text-xs',
           triangleSize: 20,

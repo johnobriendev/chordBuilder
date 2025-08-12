@@ -43,7 +43,7 @@ const getSpacingConfig = (cols, diagramType, isPreview = false) => {
         : (is12Fret ? '1rem' : '0.75rem'),  // ← CHORD SHEET: Vertical space
       columnGap: isPreview
         ? (is12Fret ? '2.5rem' : '8rem')    // ← PREVIEW: Horizontal space
-        : (is12Fret ? '2rem' : '1.5rem'),   // ← CHORD SHEET: Horizontal space
+        : (is12Fret ? '2rem' : '0rem'),   // ← CHORD SHEET: Horizontal space
       displaySize: is12Fret ? 'small' : 'medium'
     };
   }
@@ -200,16 +200,16 @@ const ChordSheet = forwardRef(({
         // GRID-SPECIFIC PADDING FOR PDF
         paddingTop: isPreview
           ? (gridConfig.cols <= 4 ? '0.25in' : gridConfig.cols <= 6 ? '0.1in' : '0.05in')
-          : '0.5rem',
+          : '1rem',
         paddingLeft: isPreview
           ? (gridConfig.cols <= 4 ? '0.75in' : gridConfig.cols <= 6 ? '0.75in' : '0.25in')
-          : '0.5rem',
+          : (gridConfig.cols <= 4 ? '1rem' : gridConfig.cols <= 6 ? '1.5rem' : '0.75rem'),
         paddingRight: isPreview
           ? (gridConfig.cols <= 4 ? '0.75in' : gridConfig.cols <= 6 ? '0.75in' : '0.25in')
-          : '0.5rem',
+          : (gridConfig.cols <= 4 ? '1rem' : gridConfig.cols <= 6 ? '1.5rem' : '0.75rem'),
         paddingBottom: isPreview
           ? (gridConfig.cols <= 4 ? '0.25in' : gridConfig.cols <= 6 ? '0.1in' : '0.05in')
-          : '0.5rem',
+          : '1rem',
         boxSizing: 'border-box',
         backgroundColor: isPreview ? 'white' : '#d6d3d1',
         ...getMobileStyles()
