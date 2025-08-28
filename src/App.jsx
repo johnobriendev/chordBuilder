@@ -239,7 +239,10 @@ function App() {
           fretNumbers: chord.fretNumbers,
           notes: chord.notes,
           openStrings: chord.openStrings,
-          rootNotes: chord.rootNotes || []
+          rootNotes: chord.rootNotes || [],
+          xMarks: chord.xMarks || [],
+          triangles: chord.triangles || [],
+          squares: chord.squares || []
         }))
       };
 
@@ -290,7 +293,10 @@ function App() {
         fretNumbers: chord.fretNumbers,
         notes: chord.notes,
         openStrings: chord.openStrings,
-        rootNotes: chord.rootNotes || []
+        rootNotes: chord.rootNotes || [],
+        xMarks: chord.xMarks || [],      
+        triangles: chord.triangles || [], 
+        squares: chord.squares || []      
       }));
 
       setChords(loadedChords);
@@ -666,7 +672,7 @@ function App() {
 
           <div>
             <p className="mb-4">
-              John O'Brien is a guitarist and software developer from Bethlehem, Pennsylvania. He holds a degree in Jazz Studies from the Univeristy of Pittsburgh where he studied under the legendary bebop guitarist, Joe Negri, and internationally acclaimed pianist, Geri Allen. 
+              John O'Brien is a guitarist and software developer from Bethlehem, Pennsylvania. He holds a degree in Jazz Studies from the Univeristy of Pittsburgh where he studied under the legendary bebop guitarist, Joe Negri, and internationally acclaimed pianist, Geri Allen.
             </p>
             <p className="mb-4">
               This app was built as an inspiration from the chord charts and arrangements of master guitarist, Ted Greene. His teachings can be found at <span className='text-blue-700 hover:text-blue-500'><a href="https://tedgreene.com/" target="_blank" rel="noopener noreferrer">tedgreene.com</a></span>
@@ -680,7 +686,7 @@ function App() {
               <Instagram size={24} />
             </a>
             <a href="https://www.facebook.com/john.o.brien.78561/" target="_blank" rel="noopener noreferrer"
-              className="text-gray-600 hover:text-blue-500 transition-colors"  title="Connect on Facebook">
+              className="text-gray-600 hover:text-blue-500 transition-colors" title="Connect on Facebook">
               <Facebook size={24} />
             </a>
             <a href="https://www.youtube.com/@johnobrienguitar" target="_blank" rel="noopener noreferrer"
