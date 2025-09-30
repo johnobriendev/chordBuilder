@@ -9,7 +9,7 @@ const AuthButton = ({onOpenDashboard}) => {
 
   if (isLoading) {
     return (
-      <div className="px-3 py-1.5 text-sm bg-gray-100 text-gray-700 rounded-md">
+      <div className="px-3 py-1.5 text-sm bg-surface-alt text-text-secondary rounded-lg">
         Loading...
       </div>
     );
@@ -18,14 +18,14 @@ const AuthButton = ({onOpenDashboard}) => {
   if (isAuthenticated) {
     return (
       <div className="flex items-center gap-2">
-        <div className="flex items-center gap-2 px-3 py-1.5 text-sm bg-green-100 text-green-700 rounded-md">
+        <div className="flex items-center gap-2 px-3 py-1.5 text-sm bg-green-50 text-green-700 rounded-lg border border-green-200">
           <User size={16} />
-          <span >{user?.name || user?.email || 'User'}</span>
+          <span>{user?.name || user?.email || 'User'}</span>
         </div>
         <button
           onClick={onOpenDashboard}
-          className="px-3 py-1.5 text-sm bg-blue-100 hover:bg-blue-200 
-                     text-blue-700 rounded-md flex items-center gap-2"
+          className="px-3 py-1.5 text-sm bg-primary bg-opacity-10 hover:bg-opacity-20
+                     text-primary rounded-lg flex items-center gap-2 transition-colors"
         >
           <FolderOpen size={16} />
           My Sheets
@@ -36,8 +36,8 @@ const AuthButton = ({onOpenDashboard}) => {
               returnTo: window.location.origin
             }
           })}
-          className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 
-                     text-gray-700 rounded-md flex items-center gap-2"
+          className="px-3 py-1.5 text-sm bg-surface-alt hover:bg-gray-100
+                     text-text-secondary rounded-lg flex items-center gap-2 transition-colors"
         >
           <LogOut size={16} />
           Sign Out
@@ -49,8 +49,8 @@ const AuthButton = ({onOpenDashboard}) => {
   return (
     <button
       onClick={() => loginWithRedirect()}
-      className="px-3 py-1.5 text-sm bg-blue-100 hover:bg-blue-200 
-                 text-blue-700 rounded-md flex items-center gap-2"
+      className="px-3 py-1.5 text-sm bg-primary bg-opacity-10 hover:bg-opacity-20
+                 text-primary rounded-lg flex items-center gap-2 transition-colors"
     >
       <LogIn size={16} />
       Sign In

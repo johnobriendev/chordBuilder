@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chordBuilder Color Scheme Preview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 2rem;
+            background: #f3f4f6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #1f2937;
+        }
+
+        .schemes {
+            display: grid;
+            gap: 3rem;
+        }
+
+        .scheme {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .scheme-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #1f2937;
+        }
+
+        .mockup {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Modern Music Studio */
+        .modern-studio .app-bg {
+            background: linear-gradient(135deg, #4338ca 0%, #3730a3 100%);
+            padding: 1rem;
+        }
+
+        .modern-studio .header {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modern-studio .header h2 {
+            font-size: 1.5rem;
+            color: #4338ca;
+            font-weight: 300;
+        }
+
+        .modern-studio .btn-primary {
+            background: #f59e0b;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .modern-studio .btn-secondary {
+            background: #14b8a6;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            margin-left: 0.5rem;
+        }
+
+        .modern-studio .content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1rem;
+        }
+
+        .modern-studio .sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .modern-studio .sidebar h3 {
+            color: #4338ca;
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+
+        .modern-studio .diagram-preview {
+            background: #fafafa;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            color: #6b7280;
+        }
+
+        .modern-studio .sheet {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .modern-studio .sheet-title {
+            color: #1f2937;
+            font-size: 1.25rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .modern-studio .chord-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .modern-studio .chord-card {
+            background: #fafafa;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .modern-studio .chord-card:hover {
+            border-color: #14b8a6;
+            box-shadow: 0 4px 12px rgba(20, 184, 166, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .modern-studio .chord-name {
+            color: #4338ca;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Contemporary Minimalist */
+        .minimalist .app-bg {
+            background: #f3f4f6;
+            padding: 1rem;
+        }
+
+        .minimalist .header {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .minimalist .header h2 {
+            font-size: 1.5rem;
+            color: #1f2937;
+            font-weight: 300;
+        }
+
+        .minimalist .btn-primary {
+            background: #3b82f6;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .minimalist .btn-secondary {
+            background: #84cc16;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            margin-left: 0.5rem;
+        }
+
+        .minimalist .content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1rem;
+        }
+
+        .minimalist .sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .minimalist .sidebar h3 {
+            color: #1f2937;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .minimalist .diagram-preview {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            color: #6b7280;
+        }
+
+        .minimalist .sheet {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .minimalist .sheet-title {
+            color: #1f2937;
+            font-size: 1.25rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .minimalist .chord-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .minimalist .chord-card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .minimalist .chord-card:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .minimalist .chord-name {
+            color: #3b82f6;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Dark Mode Inspired */
+        .dark-mode .app-bg {
+            background: #0f172a;
+            padding: 1rem;
+        }
+
+        .dark-mode .header {
+            background: #1e293b;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #334155;
+        }
+
+        .dark-mode .header h2 {
+            font-size: 1.5rem;
+            color: #f1f5f9;
+            font-weight: 300;
+        }
+
+        .dark-mode .btn-primary {
+            background: #a855f7;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .dark-mode .btn-secondary {
+            background: #06b6d4;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            margin-left: 0.5rem;
+        }
+
+        .dark-mode .content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1rem;
+        }
+
+        .dark-mode .sidebar {
+            background: #1e293b;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+
+        .dark-mode .sidebar h3 {
+            color: #f1f5f9;
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+
+        .dark-mode .diagram-preview {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            color: #94a3b8;
+        }
+
+        .dark-mode .sheet {
+            background: #1e293b;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+
+        .dark-mode .sheet-title {
+            color: #f1f5f9;
+            font-size: 1.25rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #334155;
+        }
+
+        .dark-mode .chord-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .dark-mode .chord-card {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .dark-mode .chord-card:hover {
+            border-color: #06b6d4;
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .dark-mode .chord-name {
+            color: #a855f7;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .color-palette {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .color-swatch {
+            text-align: center;
+        }
+
+        .color-box {
+            width: 100px;
+            height: 80px;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .color-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .color-code {
+            font-size: 0.7rem;
+            color: #9ca3af;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>chordBuilder Color Scheme Options</h1>
+
+        <!-- Modern Music Studio -->
+        <div class="scheme modern-studio">
+            <div class="scheme-title">Option 1: Modern Music Studio (Recommended)</div>
+
+            <div class="color-palette">
+                <div class="color-swatch">
+                    <div class="color-box" style="background: linear-gradient(135deg, #4338ca 0%, #3730a3 100%);"></div>
+                    <div class="color-label">Primary Background</div>
+                    <div class="color-code">#4338ca</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #f59e0b;"></div>
+                    <div class="color-label">Accent Orange</div>
+                    <div class="color-code">#f59e0b</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #14b8a6;"></div>
+                    <div class="color-label">Accent Teal</div>
+                    <div class="color-code">#14b8a6</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #fafafa; border: 1px solid #e5e7eb;"></div>
+                    <div class="color-label">Surface</div>
+                    <div class="color-code">#fafafa</div>
+                </div>
+            </div>
+
+            <div class="mockup">
+                <div class="app-bg">
+                    <div class="header">
+                        <h2>chordBuilder</h2>
+                        <div>
+                            <button class="btn-primary">Save Sheet</button>
+                            <button class="btn-secondary">Preview PDF</button>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="sidebar">
+                            <h3>Create New Chord</h3>
+                            <div class="diagram-preview">Guitar Diagram</div>
+                        </div>
+                        <div class="sheet">
+                            <div class="sheet-title">My Chord Sheet</div>
+                            <div class="chord-grid">
+                                <div class="chord-card">
+                                    <div class="chord-name">C Major</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                                <div class="chord-card">
+                                    <div class="chord-name">G Major</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                                <div class="chord-card">
+                                    <div class="chord-name">Am</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                                <div class="chord-card">
+                                    <div class="chord-name">F Major</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contemporary Minimalist -->
+        <div class="scheme minimalist">
+            <div class="scheme-title">Option 2: Contemporary Minimalist</div>
+
+            <div class="color-palette">
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #f3f4f6;"></div>
+                    <div class="color-label">Background</div>
+                    <div class="color-code">#f3f4f6</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #3b82f6;"></div>
+                    <div class="color-label">Primary Blue</div>
+                    <div class="color-code">#3b82f6</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #84cc16;"></div>
+                    <div class="color-label">Accent Green</div>
+                    <div class="color-code">#84cc16</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: white; border: 1px solid #e5e7eb;"></div>
+                    <div class="color-label">Surface</div>
+                    <div class="color-code">#ffffff</div>
+                </div>
+            </div>
+
+            <div class="mockup">
+                <div class="app-bg">
+                    <div class="header">
+                        <h2>chordBuilder</h2>
+                        <div>
+                            <button class="btn-primary">Save Sheet</button>
+                            <button class="btn-secondary">Preview PDF</button>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="sidebar">
+                            <h3>Create New Chord</h3>
+                            <div class="diagram-preview">Guitar Diagram</div>
+                        </div>
+                        <div class="sheet">
+                            <div class="sheet-title">My Chord Sheet</div>
+                            <div class="chord-grid">
+                                <div class="chord-card">
+                                    <div class="chord-name">C Major</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                                <div class="chord-card">
+                                    <div class="chord-name">G Major</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                                <div class="chord-card">
+                                    <div class="chord-name">Am</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                                <div class="chord-card">
+                                    <div class="chord-name">F Major</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dark Mode -->
+        <div class="scheme dark-mode">
+            <div class="scheme-title">Option 3: Dark Mode Inspired</div>
+
+            <div class="color-palette">
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #0f172a;"></div>
+                    <div class="color-label">Background</div>
+                    <div class="color-code">#0f172a</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #a855f7;"></div>
+                    <div class="color-label">Primary Purple</div>
+                    <div class="color-code">#a855f7</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #06b6d4;"></div>
+                    <div class="color-label">Accent Cyan</div>
+                    <div class="color-code">#06b6d4</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #1e293b;"></div>
+                    <div class="color-label">Surface</div>
+                    <div class="color-code">#1e293b</div>
+                </div>
+            </div>
+
+            <div class="mockup">
+                <div class="app-bg">
+                    <div class="header">
+                        <h2>chordBuilder</h2>
+                        <div>
+                            <button class="btn-primary">Save Sheet</button>
+                            <button class="btn-secondary">Preview PDF</button>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="sidebar">
+                            <h3>Create New Chord</h3>
+                            <div class="diagram-preview">Guitar Diagram</div>
+                        </div>
+                        <div class="sheet">
+                            <div class="sheet-title">My Chord Sheet</div>
+                            <div class="chord-grid">
+                                <div class="chord-card">
+                                    <div class="chord-name">C Major</div>
+                                    <div style="color: #94a3b8; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                                <div class="chord-card">
+                                    <div class="chord-name">G Major</div>
+                                    <div style="color: #94a3b8; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                                <div class="chord-card">
+                                    <div class="chord-name">Am</div>
+                                    <div style="color: #94a3b8; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                                <div class="chord-card">
+                                    <div class="chord-name">F Major</div>
+                                    <div style="color: #94a3b8; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contemporary Minimalist Color Schemes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 2rem;
+            background: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #1f2937;
+            font-weight: 300;
+            font-size: 2.5rem;
+        }
+
+        .schemes {
+            display: grid;
+            gap: 3rem;
+        }
+
+        .scheme {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .scheme-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+        }
+
+        .scheme-description {
+            font-size: 0.95rem;
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .mockup {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Slate & Sky */
+        .slate-sky .app-bg {
+            background: #f1f5f9;
+            padding: 1rem;
+        }
+
+        .slate-sky .header {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .slate-sky .header h2 {
+            font-size: 1.5rem;
+            color: #0f172a;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+        }
+
+        .slate-sky .btn-primary {
+            background: #0ea5e9;
+            color: white;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .slate-sky .btn-primary:hover {
+            background: #0284c7;
+            transform: translateY(-1px);
+        }
+
+        .slate-sky .btn-secondary {
+            background: #64748b;
+            color: white;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            margin-left: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .slate-sky .content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1rem;
+        }
+
+        .slate-sky .sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .slate-sky .sidebar h3 {
+            color: #0f172a;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .slate-sky .diagram-preview {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            color: #64748b;
+        }
+
+        .slate-sky .sheet {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .slate-sky .sheet-title {
+            color: #0f172a;
+            font-size: 1.25rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .slate-sky .chord-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .slate-sky .chord-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .slate-sky .chord-card:hover {
+            border-color: #0ea5e9;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .slate-sky .chord-name {
+            color: #0ea5e9;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Emerald & Teal */
+        .emerald-teal .app-bg {
+            background: #f0fdf4;
+            padding: 1rem;
+        }
+
+        .emerald-teal .header {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .emerald-teal .header h2 {
+            font-size: 1.5rem;
+            color: #064e3b;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+        }
+
+        .emerald-teal .btn-primary {
+            background: #10b981;
+            color: white;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .emerald-teal .btn-secondary {
+            background: #14b8a6;
+            color: white;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            margin-left: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .emerald-teal .content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1rem;
+        }
+
+        .emerald-teal .sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .emerald-teal .sidebar h3 {
+            color: #064e3b;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .emerald-teal .diagram-preview {
+            background: #f0fdf4;
+            border: 1px solid #d1fae5;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            color: #6b7280;
+        }
+
+        .emerald-teal .sheet {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .emerald-teal .sheet-title {
+            color: #064e3b;
+            font-size: 1.25rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #d1fae5;
+        }
+
+        .emerald-teal .chord-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .emerald-teal .chord-card {
+            background: #f0fdf4;
+            border: 1px solid #d1fae5;
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .emerald-teal .chord-card:hover {
+            border-color: #10b981;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .emerald-teal .chord-name {
+            color: #10b981;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Violet & Fuchsia */
+        .violet-fuchsia .app-bg {
+            background: #faf5ff;
+            padding: 1rem;
+        }
+
+        .violet-fuchsia .header {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .violet-fuchsia .header h2 {
+            font-size: 1.5rem;
+            color: #4c1d95;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+        }
+
+        .violet-fuchsia .btn-primary {
+            background: #8b5cf6;
+            color: white;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .violet-fuchsia .btn-secondary {
+            background: #d946ef;
+            color: white;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            margin-left: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .violet-fuchsia .content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1rem;
+        }
+
+        .violet-fuchsia .sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .violet-fuchsia .sidebar h3 {
+            color: #4c1d95;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .violet-fuchsia .diagram-preview {
+            background: #faf5ff;
+            border: 1px solid #e9d5ff;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            color: #6b7280;
+        }
+
+        .violet-fuchsia .sheet {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .violet-fuchsia .sheet-title {
+            color: #4c1d95;
+            font-size: 1.25rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e9d5ff;
+        }
+
+        .violet-fuchsia .chord-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .violet-fuchsia .chord-card {
+            background: #faf5ff;
+            border: 1px solid #e9d5ff;
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .violet-fuchsia .chord-card:hover {
+            border-color: #8b5cf6;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .violet-fuchsia .chord-name {
+            color: #8b5cf6;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Rose & Pink */
+        .rose-pink .app-bg {
+            background: #fff1f2;
+            padding: 1rem;
+        }
+
+        .rose-pink .header {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .rose-pink .header h2 {
+            font-size: 1.5rem;
+            color: #881337;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+        }
+
+        .rose-pink .btn-primary {
+            background: #f43f5e;
+            color: white;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .rose-pink .btn-secondary {
+            background: #ec4899;
+            color: white;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            margin-left: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .rose-pink .content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1rem;
+        }
+
+        .rose-pink .sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .rose-pink .sidebar h3 {
+            color: #881337;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .rose-pink .diagram-preview {
+            background: #fff1f2;
+            border: 1px solid #fecdd3;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            color: #6b7280;
+        }
+
+        .rose-pink .sheet {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .rose-pink .sheet-title {
+            color: #881337;
+            font-size: 1.25rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #fecdd3;
+        }
+
+        .rose-pink .chord-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .rose-pink .chord-card {
+            background: #fff1f2;
+            border: 1px solid #fecdd3;
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .rose-pink .chord-card:hover {
+            border-color: #f43f5e;
+            box-shadow: 0 4px 12px rgba(244, 63, 94, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .rose-pink .chord-name {
+            color: #f43f5e;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Amber & Orange */
+        .amber-orange .app-bg {
+            background: #fffbeb;
+            padding: 1rem;
+        }
+
+        .amber-orange .header {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .amber-orange .header h2 {
+            font-size: 1.5rem;
+            color: #78350f;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+        }
+
+        .amber-orange .btn-primary {
+            background: #f59e0b;
+            color: white;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .amber-orange .btn-secondary {
+            background: #f97316;
+            color: white;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            margin-left: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .amber-orange .content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1rem;
+        }
+
+        .amber-orange .sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .amber-orange .sidebar h3 {
+            color: #78350f;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .amber-orange .diagram-preview {
+            background: #fffbeb;
+            border: 1px solid #fed7aa;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            color: #6b7280;
+        }
+
+        .amber-orange .sheet {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+
+        .amber-orange .sheet-title {
+            color: #78350f;
+            font-size: 1.25rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #fed7aa;
+        }
+
+        .amber-orange .chord-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .amber-orange .chord-card {
+            background: #fffbeb;
+            border: 1px solid #fed7aa;
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .amber-orange .chord-card:hover {
+            border-color: #f59e0b;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .amber-orange .chord-name {
+            color: #f59e0b;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .color-palette {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .color-swatch {
+            text-align: center;
+        }
+
+        .color-box {
+            width: 100px;
+            height: 80px;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .color-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .color-code {
+            font-size: 0.7rem;
+            color: #9ca3af;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Contemporary Minimalist Options</h1>
+
+        <!-- Slate & Sky -->
+        <div class="scheme slate-sky">
+            <div class="scheme-title">Option 1: Slate & Sky</div>
+            <div class="scheme-description">Clean, professional look with cool tones. Perfect for a modern, trustworthy feel.</div>
+
+            <div class="color-palette">
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #f1f5f9;"></div>
+                    <div class="color-label">Background</div>
+                    <div class="color-code">#f1f5f9</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #0ea5e9;"></div>
+                    <div class="color-label">Primary Sky</div>
+                    <div class="color-code">#0ea5e9</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #64748b;"></div>
+                    <div class="color-label">Secondary Slate</div>
+                    <div class="color-code">#64748b</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: white; border: 1px solid #e2e8f0;"></div>
+                    <div class="color-label">Surface</div>
+                    <div class="color-code">#ffffff</div>
+                </div>
+            </div>
+
+            <div class="mockup">
+                <div class="app-bg">
+                    <div class="header">
+                        <h2>chordBuilder</h2>
+                        <div>
+                            <button class="btn-primary">Save Sheet</button>
+                            <button class="btn-secondary">Preview PDF</button>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="sidebar">
+                            <h3>Create New Chord</h3>
+                            <div class="diagram-preview">Guitar Diagram</div>
+                        </div>
+                        <div class="sheet">
+                            <div class="sheet-title">My Chord Sheet</div>
+                            <div class="chord-grid">
+                                <div class="chord-card">
+                                    <div class="chord-name">C Major</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                                <div class="chord-card">
+                                    <div class="chord-name">G Major</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                                <div class="chord-card">
+                                    <div class="chord-name">Am</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                                <div class="chord-card">
+                                    <div class="chord-name">F Major</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Emerald & Teal -->
+        <div class="scheme emerald-teal">
+            <div class="scheme-title">Option 2: Emerald & Teal</div>
+            <div class="scheme-description">Fresh, natural aesthetic with calming green tones. Great for creativity and focus.</div>
+
+            <div class="color-palette">
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #f0fdf4;"></div>
+                    <div class="color-label">Background</div>
+                    <div class="color-code">#f0fdf4</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #10b981;"></div>
+                    <div class="color-label">Primary Emerald</div>
+                    <div class="color-code">#10b981</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #14b8a6;"></div>
+                    <div class="color-label">Secondary Teal</div>
+                    <div class="color-code">#14b8a6</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: white; border: 1px solid #d1fae5;"></div>
+                    <div class="color-label">Surface</div>
+                    <div class="color-code">#ffffff</div>
+                </div>
+            </div>
+
+            <div class="mockup">
+                <div class="app-bg">
+                    <div class="header">
+                        <h2>chordBuilder</h2>
+                        <div>
+                            <button class="btn-primary">Save Sheet</button>
+                            <button class="btn-secondary">Preview PDF</button>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="sidebar">
+                            <h3>Create New Chord</h3>
+                            <div class="diagram-preview">Guitar Diagram</div>
+                        </div>
+                        <div class="sheet">
+                            <div class="sheet-title">My Chord Sheet</div>
+                            <div class="chord-grid">
+                                <div class="chord-card">
+                                    <div class="chord-name">C Major</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                                <div class="chord-card">
+                                    <div class="chord-name">G Major</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                                <div class="chord-card">
+                                    <div class="chord-name">Am</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                                <div class="chord-card">
+                                    <div class="chord-name">F Major</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Violet & Fuchsia -->
+        <div class="scheme violet-fuchsia">
+            <div class="scheme-title">Option 3: Violet & Fuchsia</div>
+            <div class="scheme-description">Creative and artistic vibe with vibrant purple tones. Perfect for standing out.</div>
+
+            <div class="color-palette">
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #faf5ff;"></div>
+                    <div class="color-label">Background</div>
+                    <div class="color-code">#faf5ff</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #8b5cf6;"></div>
+                    <div class="color-label">Primary Violet</div>
+                    <div class="color-code">#8b5cf6</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #d946ef;"></div>
+                    <div class="color-label">Secondary Fuchsia</div>
+                    <div class="color-code">#d946ef</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: white; border: 1px solid #e9d5ff;"></div>
+                    <div class="color-label">Surface</div>
+                    <div class="color-code">#ffffff</div>
+                </div>
+            </div>
+
+            <div class="mockup">
+                <div class="app-bg">
+                    <div class="header">
+                        <h2>chordBuilder</h2>
+                        <div>
+                            <button class="btn-primary">Save Sheet</button>
+                            <button class="btn-secondary">Preview PDF</button>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="sidebar">
+                            <h3>Create New Chord</h3>
+                            <div class="diagram-preview">Guitar Diagram</div>
+                        </div>
+                        <div class="sheet">
+                            <div class="sheet-title">My Chord Sheet</div>
+                            <div class="chord-grid">
+                                <div class="chord-card">
+                                    <div class="chord-name">C Major</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                                <div class="chord-card">
+                                    <div class="chord-name">G Major</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                                <div class="chord-card">
+                                    <div class="chord-name">Am</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                                <div class="chord-card">
+                                    <div class="chord-name">F Major</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rose & Pink -->
+        <div class="scheme rose-pink">
+            <div class="scheme-title">Option 4: Rose & Pink</div>
+            <div class="scheme-description">Warm and inviting with soft pink accents. Friendly and approachable feel.</div>
+
+            <div class="color-palette">
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #fff1f2;"></div>
+                    <div class="color-label">Background</div>
+                    <div class="color-code">#fff1f2</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #f43f5e;"></div>
+                    <div class="color-label">Primary Rose</div>
+                    <div class="color-code">#f43f5e</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #ec4899;"></div>
+                    <div class="color-label">Secondary Pink</div>
+                    <div class="color-code">#ec4899</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: white; border: 1px solid #fecdd3;"></div>
+                    <div class="color-label">Surface</div>
+                    <div class="color-code">#ffffff</div>
+                </div>
+            </div>
+
+            <div class="mockup">
+                <div class="app-bg">
+                    <div class="header">
+                        <h2>chordBuilder</h2>
+                        <div>
+                            <button class="btn-primary">Save Sheet</button>
+                            <button class="btn-secondary">Preview PDF</button>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="sidebar">
+                            <h3>Create New Chord</h3>
+                            <div class="diagram-preview">Guitar Diagram</div>
+                        </div>
+                        <div class="sheet">
+                            <div class="sheet-title">My Chord Sheet</div>
+                            <div class="chord-grid">
+                                <div class="chord-card">
+                                    <div class="chord-name">C Major</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                                <div class="chord-card">
+                                    <div class="chord-name">G Major</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                                <div class="chord-card">
+                                    <div class="chord-name">Am</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                                <div class="chord-card">
+                                    <div class="chord-name">F Major</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Amber & Orange -->
+        <div class="scheme amber-orange">
+            <div class="scheme-title">Option 5: Amber & Orange (Recommended)</div>
+            <div class="scheme-description">Energetic and warm with golden tones. Great for music and creativity.</div>
+
+            <div class="color-palette">
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #fffbeb;"></div>
+                    <div class="color-label">Background</div>
+                    <div class="color-code">#fffbeb</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #f59e0b;"></div>
+                    <div class="color-label">Primary Amber</div>
+                    <div class="color-code">#f59e0b</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: #f97316;"></div>
+                    <div class="color-label">Secondary Orange</div>
+                    <div class="color-code">#f97316</div>
+                </div>
+                <div class="color-swatch">
+                    <div class="color-box" style="background: white; border: 1px solid #fed7aa;"></div>
+                    <div class="color-label">Surface</div>
+                    <div class="color-code">#ffffff</div>
+                </div>
+            </div>
+
+            <div class="mockup">
+                <div class="app-bg">
+                    <div class="header">
+                        <h2>chordBuilder</h2>
+                        <div>
+                            <button class="btn-primary">Save Sheet</button>
+                            <button class="btn-secondary">Preview PDF</button>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="sidebar">
+                            <h3>Create New Chord</h3>
+                            <div class="diagram-preview">Guitar Diagram</div>
+                        </div>
+                        <div class="sheet">
+                            <div class="sheet-title">My Chord Sheet</div>
+                            <div class="chord-grid">
+                                <div class="chord-card">
+                                    <div class="chord-name">C Major</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                                <div class="chord-card">
+                                    <div class="chord-name">G Major</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                                <div class="chord-card">
+                                    <div class="chord-name">Am</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                                <div class="chord-card">
+                                    <div class="chord-name">F Major</div>
+                                    <div style="color: #6b7280; font-size: 0.875rem;">Diagram</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

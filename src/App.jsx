@@ -351,13 +351,13 @@ function App() {
     <>
       <button
         onClick={() => setShowPreview(false)}
-        className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded"
+        className="px-4 py-2 text-text-secondary hover:bg-surface-alt rounded-lg transition-colors"
       >
         Close
       </button>
       <button
         onClick={handleExport}
-        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors"
       >
         Download PDF
       </button>
@@ -365,7 +365,7 @@ function App() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-600">
+    <div className="min-h-screen bg-app-bg">
       {notification.show && (
         <div className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 
                         max-w-md w-full rounded-lg shadow-lg p-4 ${notification.type === 'success'
@@ -385,16 +385,16 @@ function App() {
         </div>
       )}
 
-      <header className="bg-stone-400 shadow-sm">
-        <div className="max-w-[1400px] mx-auto px-4 py-1">
+      <header className="bg-surface shadow-sm">
+        <div className="max-w-[1400px] mx-auto px-4 py-3">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
             <div className="flex items-center justify-between w-full sm:w-auto">
-              <h1 className="text-xl sm:text-2xl font-light text-gray-900">chordBuilder</h1>
+              <h1 className="text-xl sm:text-2xl font-light text-text-primary">chordBuilder</h1>
 
 
               <button
                 onClick={() => setShowMobileMenu(!showMobileMenu)}
-                className="sm:hidden p-1.5 text-gray-900 hover:bg-stone-300 rounded"
+                className="sm:hidden p-1.5 text-text-primary hover:bg-surface-alt rounded-lg"
               >
                 {showMobileMenu ? <X size={20} /> : <Menu size={20} />}
               </button>
@@ -405,18 +405,18 @@ function App() {
               <AuthButton onOpenDashboard={() => setShowDashboard(true)} />
               <button
                 onClick={() => setShowHelp(true)}
-                className="px-2 py-1 text-sm bg-gray-100 hover:bg-gray-200 
-                     text-gray-700 rounded-md flex items-center gap-1"
+                className="px-3 py-1.5 text-sm bg-surface-alt hover:bg-gray-100
+                     text-text-secondary rounded-lg flex items-center gap-1 transition-colors"
               >
                 <HelpCircle size={14} />
                 How to Use
               </button>
               <button
                 onClick={() => setShowAbout(true)}
-                className="px-2 py-1 text-sm bg-gray-100 hover:bg-gray-200 
-                     text-gray-700 rounded-md flex items-center gap-1"
+                className="px-3 py-1.5 text-sm bg-surface-alt hover:bg-gray-100
+                     text-text-secondary rounded-lg flex items-center gap-1 transition-colors"
               >
-                <User size={14} />  {/* You'll need to import User from lucide-react */}
+                <User size={14} />
                 About
               </button>
             </div>
@@ -436,7 +436,7 @@ function App() {
 
 
           {showMobileMenu && (
-            <div className="sm:hidden mt-4 pt-4 border-t border-stone-500">
+            <div className="sm:hidden mt-4 pt-4 border-t border-border">
               <div className="flex flex-col gap-3">
                 <AuthButton onOpenDashboard={() => setShowDashboard(true)} />
                 <button
@@ -444,8 +444,8 @@ function App() {
                     setShowHelp(true);
                     setShowMobileMenu(false);
                   }}
-                  className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 
-                       text-gray-700 rounded-md flex items-center gap-2 w-fit"
+                  className="px-3 py-1.5 text-sm bg-surface-alt hover:bg-gray-100
+                       text-text-secondary rounded-lg flex items-center gap-2 w-fit transition-colors"
                 >
                   <HelpCircle size={16} />
                   How to Use
@@ -455,7 +455,7 @@ function App() {
                     setShowAbout(true);
                     setShowMobileMenu(false);
                   }}
-                  className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md flex items-center gap-2 w-fit"
+                  className="px-3 py-1.5 text-sm bg-surface-alt hover:bg-gray-100 text-text-secondary rounded-lg flex items-center gap-2 w-fit transition-colors"
                 >
                   <User size={16} />
                   About Creator
@@ -478,13 +478,13 @@ function App() {
         </div>
       </header>
 
-      <main className="max-w-[1400px] mx-auto px-4 pt-3">
+      <main className="max-w-[1400px] mx-auto px-4 pt-6">
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Left column - Chord Creator */}
           <div className="w-full lg:w-[400px] flex-shrink-0">
-            <section className="bg-stone-300 rounded-lg shadow">
-              <div className="p-4">
-                <h2 className="text-lg  font-light mb-4">
+            <section className="bg-surface rounded-xl shadow-sm border border-border">
+              <div className="p-6">
+                <h2 className="text-lg font-medium mb-4 text-text-primary">
                   {editingChord ? 'Edit Chord' : 'Create New Chord or Scale'}
                 </h2>
                 <GuitarDiagram

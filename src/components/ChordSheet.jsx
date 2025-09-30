@@ -169,9 +169,9 @@ const ChordSheet = forwardRef(({
           type="text"
           value={title}
           onChange={(e) => onTitleChange(e.target.value)}
-          className="w-full text-2xl font-light text-gray-900 px-4 py-2 mb-4
-                     border-b border-transparent hover:border-gray-200 hover:text-blue-500 focus:border-gray-300
-                     focus:outline-none bg-transparent placeholder-black"
+          className="w-full text-2xl font-light text-text-primary px-4 py-2 mb-4
+                     border-b border-transparent hover:border-border hover:text-primary focus:border-border
+                     focus:outline-none bg-transparent placeholder-text-secondary placeholder-opacity-50 transition-colors"
           placeholder="Enter Sheet Title"
         />
       );
@@ -211,7 +211,7 @@ const ChordSheet = forwardRef(({
           ? (gridConfig.cols <= 4 ? '0.25in' : gridConfig.cols <= 6 ? '0.1in' : '0.05in')
           : '1rem',
         boxSizing: 'border-box',
-        backgroundColor: isPreview ? 'white' : '#d6d3d1',
+        backgroundColor: isPreview ? 'white' : '#f8fafc',
         ...getMobileStyles()
       }}
     >
@@ -236,8 +236,8 @@ const ChordSheet = forwardRef(({
                 {/* THE ACTUAL CHORD DIAGRAM */}
                 <ChordDisplay
                   chord={chord}
-                  size={spacing.displaySize}  // ← This determines which size config to use
-                  isPreview={isPreview}      // ← This determines getSizeConfigs vs getMobileSizeConfigs
+                  size={spacing.displaySize}
+                  isPreview={isPreview}
                 />
 
                 {/* Warning indicator for incompatible chords */}
@@ -248,17 +248,17 @@ const ChordSheet = forwardRef(({
 
                 {/* Edit/Delete buttons (only in interactive mode) */}
                 {isInteractive && (
-                  <div className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 
+                  <div className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100
                                 transition-opacity flex gap-1 p-1 z-10">
                     <button
                       onClick={() => onEditChord(chord, originalIndex)}
-                      className="p-1.5 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none"
+                      className="p-1.5 bg-primary text-white rounded-lg hover:bg-primary-hover focus:outline-none transition-colors shadow-sm"
                     >
                       <Edit2 size={16} />
                     </button>
                     <button
                       onClick={() => handleDeleteChord(originalIndex)}
-                      className="p-1.5 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none"
+                      className="p-1.5 bg-red-500 text-white rounded-lg hover:bg-red-600 focus:outline-none transition-colors shadow-sm"
                     >
                       <Trash2 size={16} />
                     </button>
@@ -269,8 +269,8 @@ const ChordSheet = forwardRef(({
 
             {/* Empty slot placeholder */}
             {!chord && isInteractive && (
-              <div className="text-gray-600 text-sm flex flex-col items-center">
-                <span>Empty</span>
+              <div style={{ textAlign: 'center', padding: '1rem' }}>
+                <span style={{ color: '#64748b', fontSize: '0.875rem' }}>Empty</span>
               </div>
             )}
           </div>
@@ -292,10 +292,13 @@ const ChordSheet = forwardRef(({
         width: isPreview ? '8.5in' : '100%',   // PDF vs screen width
         minHeight: isPreview ? '11in' : 'auto', // PDF vs screen height
         margin: '0',
-        padding: '0',
-        backgroundColor: isPreview ? 'white' : '#d6d3d1',
+        padding: isPreview ? '0' : '1.5rem',
+        backgroundColor: isPreview ? 'white' : '#f8fafc',
         overflow: isPreview ? 'hidden' : 'auto',
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        borderRadius: isPreview ? '0' : '0.75rem',
+        border: isPreview ? 'none' : '1px solid #e2e8f0',
+        boxShadow: isPreview ? 'none' : '0 1px 3px rgba(0, 0, 0, 0.06)'
       }}
     >
       {renderTitle()}

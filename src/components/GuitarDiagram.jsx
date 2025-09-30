@@ -326,30 +326,30 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
       <div className="mb-3 flex flex-wrap gap-2">
         <button
           onClick={() => setCurrentMode('normal')}
-          className={`px-2.5 py-1.5 rounded-md text-sm transition-colors ${
-            currentMode === 'normal' 
-              ? 'bg-gray-700 text-white' 
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          className={`px-2.5 py-1.5 rounded-lg text-sm transition-colors ${
+            currentMode === 'normal'
+              ? 'bg-secondary text-white'
+              : 'bg-surface-alt text-text-secondary hover:bg-gray-200'
           }`}
         >
           Normal
         </button>
         <button
           onClick={() => setCurrentMode('root')}
-          className={`px-2.5 py-1.5 rounded-md text-sm transition-colors ${
-            currentMode === 'root' 
-              ? 'bg-blue-500 text-white' 
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          className={`px-2.5 py-1.5 rounded-lg text-sm transition-colors ${
+            currentMode === 'root'
+              ? 'bg-primary text-white'
+              : 'bg-surface-alt text-text-secondary hover:bg-gray-200'
           }`}
         >
           Root
         </button>
         <button
           onClick={() => setCurrentMode('x')}
-          className={`px-2.5 py-1.5 rounded-md text-sm transition-colors flex items-center gap-1 ${
-            currentMode === 'x' 
-              ? 'bg-red-500 text-white' 
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          className={`px-2.5 py-1.5 rounded-lg text-sm transition-colors flex items-center gap-1 ${
+            currentMode === 'x'
+              ? 'bg-red-500 text-white'
+              : 'bg-surface-alt text-text-secondary hover:bg-gray-200'
           }`}
         >
           <X size={14} />
@@ -357,10 +357,10 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
         </button>
         <button
           onClick={() => setCurrentMode('triangle')}
-          className={`px-2.5 py-1.5 rounded-md text-sm transition-colors flex items-center gap-1 ${
-            currentMode === 'triangle' 
-              ? 'bg-green-500 text-white' 
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          className={`px-2.5 py-1.5 rounded-lg text-sm transition-colors flex items-center gap-1 ${
+            currentMode === 'triangle'
+              ? 'bg-green-500 text-white'
+              : 'bg-surface-alt text-text-secondary hover:bg-gray-200'
           }`}
         >
           <Triangle size={14} />
@@ -368,10 +368,10 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
         </button>
         <button
           onClick={() => setCurrentMode('square')}
-          className={`px-2.5 py-1.5 rounded-md text-sm transition-colors flex items-center gap-1 ${
-            currentMode === 'square' 
-              ? 'bg-purple-500 text-white' 
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          className={`px-2.5 py-1.5 rounded-lg text-sm transition-colors flex items-center gap-1 ${
+            currentMode === 'square'
+              ? 'bg-purple-500 text-white'
+              : 'bg-surface-alt text-text-secondary hover:bg-gray-200'
           }`}
         >
           <Square size={14} />
@@ -385,7 +385,7 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
           placeholder="Enter Chord or Scale name"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-2 border rounded bg-slate-300 placeholder-black"
+          className="w-full p-2 border-2 border-secondary rounded-lg bg-white placeholder-text-secondary placeholder-opacity-50 focus:border-primary focus:outline-none transition-colors"
         />
       </div>
 
@@ -396,7 +396,7 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
             {[...Array(numStrings)].map((_, stringIndex) => (
               <div
                 key={`open-${stringIndex}`}
-                className="absolute w-6 h-6 -ml-3 flex items-center justify-center cursor-pointer hover:bg-gray-100 rounded-full"
+                className="absolute w-6 h-6 -ml-3 flex items-center justify-center cursor-pointer hover:bg-blue-100 rounded-full"
                 style={{ left: `${(stringIndex * 100) / (numStrings - 1)}%` }}
                 onClick={() => toggleOpenString(stringIndex)}
               >
@@ -485,7 +485,7 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
               {[...Array(numFrets)].map((_, fretIndex) => (
                 <div
                   key={`position-${stringIndex}-${fretIndex}`}
-                  className="absolute w-6 h-6 -ml-3 -mt-3 flex items-center justify-center cursor-pointer hover:bg-gray-100 rounded-full"
+                  className="absolute w-6 h-6 -ml-3 -mt-3 flex items-center justify-center cursor-pointer hover:bg-blue-100 rounded-full"
                   style={{
                     left: `${(stringIndex * 100) / (numStrings - 1)}%`,
                     top: `${((fretIndex * 100) / numFrets) + (100 / (numFrets * 2))}%`

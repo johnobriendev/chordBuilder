@@ -85,14 +85,14 @@ const Dashboard = ({ onLoadSheet, onClose }) => {
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="text-gray-600">Loading your sheets...</div>
+        <div className="text-text-secondary">Loading your sheets...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="p-4 bg-red-50 border border-red-200 rounded text-red-700">
+      <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
         {error}
       </div>
     );
@@ -101,16 +101,16 @@ const Dashboard = ({ onLoadSheet, onClose }) => {
   if (sheets.length === 0) {
     return (
       <div className="text-center p-8">
-        <FileText size={48} className="mx-auto text-gray-400 mb-4" />
-        <h3 className="text-lg font-medium text-gray-900 mb-2">No saved sheets yet</h3>
-        <p className="text-gray-600">Create and save your first chord sheet to see it here!</p>
+        <FileText size={48} className="mx-auto text-text-secondary mb-4" />
+        <h3 className="text-lg font-medium text-text-primary mb-2">No saved sheets yet</h3>
+        <p className="text-text-secondary">Create and save your first chord sheet to see it here!</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium text-gray-900 mb-4">
+      <h3 className="text-lg font-medium text-text-primary mb-4">
         Your Saved Sheets ({sheets.length})
       </h3>
 
@@ -118,17 +118,17 @@ const Dashboard = ({ onLoadSheet, onClose }) => {
         {sheets.map((sheet) => (
           <div
             key={sheet.id}
-            className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+            className="bg-surface-alt border border-border rounded-xl p-4 hover:shadow-md hover:border-primary transition-all"
           >
             <div className="flex items-start justify-between">
               <div className="flex-1 min-w-0">
-                <h4 className="text-base font-medium text-gray-900 truncate">
+                <h4 className="text-base font-medium text-text-primary truncate">
                   {sheet.title}
                 </h4>
-                <p className="text-sm text-gray-600 mt-1">
+                <p className="text-sm text-text-secondary mt-1">
                   {sheet._count?.chords || 0} chords • {sheet.gridType} • {sheet.gridRows}x{sheet.gridCols}
                 </p>
-                <div className="flex items-center gap-4 text-xs text-gray-500 mt-2">
+                <div className="flex items-center gap-4 text-xs text-text-secondary mt-2">
                   <div className="flex items-center">
                     <Calendar size={12} className="mr-1" />
                     Created: {new Date(sheet.createdAt).toLocaleDateString()}
@@ -143,21 +143,21 @@ const Dashboard = ({ onLoadSheet, onClose }) => {
               <div className="flex items-center gap-2 ml-4">
                 <button
                   onClick={() => handleLoadSheet(sheet)}
-                  className="p-2 text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
+                  className="p-2 text-primary hover:bg-primary hover:bg-opacity-10 rounded-lg transition-colors"
                   title="Load this sheet"
                 >
                   <Eye size={16} />
                 </button>
                 <button
                   onClick={() => handleDuplicateSheet(sheet)}
-                  className="p-2 text-green-600 hover:bg-green-50 rounded-md transition-colors"
+                  className="p-2 text-secondary hover:bg-secondary hover:bg-opacity-10 rounded-lg transition-colors"
                   title="Duplicate this sheet"
                 >
                   <Copy size={16} />
                 </button>
                 <button
                   onClick={() => handleDeleteConfirm(sheet)}
-                  className="p-2 text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                  className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                   title="Delete this sheet"
                 >
                   <Trash2 size={16} />
@@ -170,21 +170,21 @@ const Dashboard = ({ onLoadSheet, onClose }) => {
 
       {deleteConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Delete Sheet</h3>
-            <p className="text-gray-600 mb-6">
+          <div className="bg-surface rounded-xl shadow-xl max-w-md w-full p-6">
+            <h3 className="text-lg font-semibold text-text-primary mb-4">Delete Sheet</h3>
+            <p className="text-text-secondary mb-6">
               Are you sure you want to delete "{deleteConfirm.title}"? This action cannot be undone.
             </p>
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setDeleteConfirm(null)}
-                className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded"
+                className="px-4 py-2 text-text-secondary hover:bg-surface-alt rounded-lg transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteSheet}
-                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
               >
                 Delete Sheet
               </button>
