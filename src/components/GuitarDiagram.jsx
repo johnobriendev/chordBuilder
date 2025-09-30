@@ -389,10 +389,10 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
         />
       </div>
 
-      <div className="relative border-2 border-slate-500 rounded p-12">
-        <div className="relative w-64 mx-auto" style={{ height: diagramHeight }}>
+      <div className="relative border-2 border-slate-500 rounded p-8 sm:p-12 overflow-visible">
+        <div className="relative w-56 sm:w-64 mx-auto" style={{ height: diagramHeight }}>
           {/* Open string positions */}
-          <div className="absolute w-full" style={{ top: '-24px' }}>
+          <div className="absolute w-full" style={{ top: '-28px' }}>
             {[...Array(numStrings)].map((_, stringIndex) => (
               <div
                 key={`open-${stringIndex}`}
@@ -447,14 +447,14 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
           </div>
 
           {/* Fret numbers on the left - now dynamically generated */}
-          <div className="absolute -left-12 top-0 bottom-0 w-8 flex flex-col justify-between">
+          <div className="absolute -left-11 sm:-left-14 top-0 bottom-0 w-9 sm:w-10 flex flex-col justify-between py-1">
             {[...Array(numFrets)].map((_, index) => (
               <div key={`fret-number-${index}`} className="relative flex-1 flex items-center">
                 <input
                   type="number"
                   value={fretNumbers[index]}
                   onChange={(e) => handleFretNumberChange(index, e.target.value)}
-                  className="w-10 p-1 text-sm border rounded bg-slate-300 placeholder-black"
+                  className="w-8 sm:w-9 px-1 py-0.5 text-xs sm:text-sm border-2 border-secondary rounded bg-white text-text-primary placeholder-text-secondary font-medium focus:border-primary focus:outline-none transition-colors"
                   placeholder="#"
                 />
               </div>
