@@ -7,17 +7,17 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Slate & Sky Theme - Softer on eyes
-        'app-bg': '#f1f5f9',
-        'primary': '#0ea5e9',
-        'primary-hover': '#0284c7',
-        'secondary': '#64748b',
-        'secondary-hover': '#475569',
-        'surface': '#f8fafc',        // Softer off-white instead of pure white
-        'surface-alt': '#f1f5f9',    // Light slate
-        'border': '#e2e8f0',
-        'text-primary': '#0f172a',
-        'text-secondary': '#64748b',
+        // Blue Gradient Palette
+        'app-bg': '#f8f9fb',         // Lightest background
+        'primary': '#71a5de',        // Vibrant blue
+        'primary-hover': '#5a8fd1',  // Darker blue on hover
+        'secondary': '#83b0e1',      // Medium light blue
+        'secondary-hover': '#71a5de', // Primary blue on hover
+        'surface': '#ffffff',        // Pure white for cards
+        'surface-alt': '#e1ecf7',    // Very light blue
+        'border': '#aecbeb',         // Light blue border
+        'text-primary': '#1e293b',   // Dark slate for primary text
+        'text-secondary': '#475569', // Medium slate for secondary text
       },
     },
   },

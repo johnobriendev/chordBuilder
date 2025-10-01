@@ -540,13 +540,13 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
       <div className="mt-3 flex gap-2">
         <button
           onClick={clearDiagram}
-          className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+          className="flex items-center gap-2 px-4 py-2 bg-secondary text-white rounded-lg hover:bg-secondary-hover transition-colors"
         >
           <Trash2 size={16} /> Clear
         </button>
         <button
           onClick={handleSubmit}
-          className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors"
         >
           {initialChord ? (
             <>

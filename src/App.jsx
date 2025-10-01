@@ -387,26 +387,27 @@ function App() {
 
       <header className="bg-surface shadow-sm">
         <div className="max-w-[1400px] mx-auto px-4 py-3">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
-            <div className="flex items-center justify-between w-full sm:w-auto">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            {/* Logo and mobile menu toggle */}
+            <div className="flex items-center gap-4">
               <h1 className="text-xl sm:text-2xl font-light text-text-primary">chordBuilder</h1>
 
-
+              {/* Mobile menu toggle - shown only on small screens */}
               <button
                 onClick={() => setShowMobileMenu(!showMobileMenu)}
-                className="sm:hidden p-1.5 text-text-primary hover:bg-surface-alt rounded-lg"
+                className="md:hidden p-1.5 text-text-primary hover:bg-surface-alt rounded-lg"
               >
                 {showMobileMenu ? <X size={20} /> : <Menu size={20} />}
               </button>
             </div>
 
-            {/* Desktop navigation - always visible on sm+ screens */}
-            <div className="hidden sm:flex items-center gap-2">
+            {/* Desktop navigation - hidden on mobile, visible on md+ */}
+            <div className="hidden md:flex items-center gap-2">
               <AuthButton onOpenDashboard={() => setShowDashboard(true)} />
               <button
                 onClick={() => setShowHelp(true)}
                 className="px-3 py-1.5 text-sm bg-surface-alt hover:bg-gray-100
-                     text-text-secondary rounded-lg flex items-center gap-1 transition-colors"
+                     text-text-secondary rounded-lg flex items-center gap-1 transition-colors whitespace-nowrap"
               >
                 <HelpCircle size={14} />
                 How to Use
@@ -414,15 +415,15 @@ function App() {
               <button
                 onClick={() => setShowAbout(true)}
                 className="px-3 py-1.5 text-sm bg-surface-alt hover:bg-gray-100
-                     text-text-secondary rounded-lg flex items-center gap-1 transition-colors"
+                     text-text-secondary rounded-lg flex items-center gap-1 transition-colors whitespace-nowrap"
               >
                 <User size={14} />
                 About
               </button>
             </div>
 
-            {/* Desktop controls - always visible on sm+ screens */}
-            <div className="hidden sm:block w-full sm:w-auto">
+            {/* Desktop controls - hidden on mobile, visible on md+ */}
+            <div className="hidden md:block">
               <ChordSheetControls
                 gridConfig={gridConfig}
                 onGridChange={handleGridChange}
@@ -434,9 +435,9 @@ function App() {
             </div>
           </div>
 
-
+          {/* Mobile menu - shown when toggled */}
           {showMobileMenu && (
-            <div className="sm:hidden mt-4 pt-4 border-t border-border">
+            <div className="md:hidden mt-4 pt-4 border-t border-border">
               <div className="flex flex-col gap-3">
                 <AuthButton onOpenDashboard={() => setShowDashboard(true)} />
                 <button
@@ -464,8 +465,8 @@ function App() {
             </div>
           )}
 
-
-          <div className="sm:hidden mt-2 flex justify-center">
+          {/* Mobile controls - always visible on mobile */}
+          <div className="md:hidden mt-3">
             <ChordSheetControls
               gridConfig={gridConfig}
               onGridChange={handleGridChange}

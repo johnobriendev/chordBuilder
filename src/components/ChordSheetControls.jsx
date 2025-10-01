@@ -60,36 +60,34 @@ const ChordSheetControls = ({ gridConfig, onGridChange, onPreview, onClearReques
   };
 
   return (
-    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
-      <div className='flex gap-3 sm:gap-4'>
-        {/* Diagram Type Selector */}
-        <div className="flex items-center gap-1.5">
-          <Guitar size={16} className="text-text-secondary" />
-          <select
-            value={currentDiagramType}
-            onChange={handleDiagramTypeChange}
-            className="px-2 py-1.5 border border-border rounded-lg text-text-primary text-xs min-w-[120px] bg-surface hover:border-primary transition-colors"
-          >
-            <option value="6-fret">6-Fret Diagrams</option>
-            <option value="12-fret">12-Fret Diagrams</option>
-          </select>
-        </div>
+    <div className="flex flex-wrap items-center gap-2 md:gap-3">
+      {/* Diagram Type Selector */}
+      <div className="flex items-center gap-1.5">
+        <Guitar size={16} className="text-text-secondary" />
+        <select
+          value={currentDiagramType}
+          onChange={handleDiagramTypeChange}
+          className="px-2 py-1.5 border border-border rounded-lg text-text-primary text-xs bg-surface hover:border-primary transition-colors"
+        >
+          <option value="6-fret">6-Fret</option>
+          <option value="12-fret">12-Fret</option>
+        </select>
+      </div>
 
-        {/* Grid Size Selector */}
-        <div className="flex items-center gap-1.5">
-          <Grid size={16} className="text-text-secondary" />
-          <select
-            value={getCurrentGridValue()}
-            onChange={onGridChange}
-            className="px-2 py-1.5 border border-border rounded-lg text-text-primary text-sm min-w-[80px] bg-surface hover:border-primary transition-colors"
-          >
-            {availableGridOptions.map((option) => (
-              <option key={createGridValue(option)} value={createGridValue(option)}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </div>
+      {/* Grid Size Selector */}
+      <div className="flex items-center gap-1.5">
+        <Grid size={16} className="text-text-secondary" />
+        <select
+          value={getCurrentGridValue()}
+          onChange={onGridChange}
+          className="px-2 py-1.5 border border-border rounded-lg text-text-primary text-sm bg-surface hover:border-primary transition-colors"
+        >
+          {availableGridOptions.map((option) => (
+            <option key={createGridValue(option)} value={createGridValue(option)}>
+              {option.label}
+            </option>
+          ))}
+        </select>
       </div>
 
 

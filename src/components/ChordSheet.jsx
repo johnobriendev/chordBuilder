@@ -211,7 +211,7 @@ const ChordSheet = forwardRef(({
           ? (gridConfig.cols <= 4 ? '0.25in' : gridConfig.cols <= 6 ? '0.1in' : '0.05in')
           : '1rem',
         boxSizing: 'border-box',
-        backgroundColor: isPreview ? 'white' : '#f8fafc',
+        backgroundColor: isPreview ? 'white' : '#ffffff',
         ...getMobileStyles()
       }}
     >
@@ -293,11 +293,11 @@ const ChordSheet = forwardRef(({
         minHeight: isPreview ? '11in' : 'auto', // PDF vs screen height
         margin: '0',
         padding: isPreview ? '0' : '1.5rem',
-        backgroundColor: isPreview ? 'white' : '#f8fafc',
+        backgroundColor: isPreview ? 'white' : '#ffffff',
         overflow: isPreview ? 'hidden' : 'auto',
         boxSizing: 'border-box',
         borderRadius: isPreview ? '0' : '0.75rem',
-        border: isPreview ? 'none' : '1px solid #e2e8f0',
+        border: isPreview ? 'none' : '1px solid #aecbeb',
         boxShadow: isPreview ? 'none' : '0 1px 3px rgba(0, 0, 0, 0.06)'
       }}
     >
