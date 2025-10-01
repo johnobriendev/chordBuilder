@@ -79,11 +79,11 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
     
     if (fretCount === 6) {
       return {
-        small: { 
-          ...desktopConfigs.small, 
-          containerClass: 'w-24 h-24', 
-          wrapperClass: 'w-14', 
-          titleClass: 'text-[12px]', 
+        small: {
+          ...desktopConfigs.small,
+          containerClass: 'w-20 h-20',
+          wrapperClass: 'w-14',
+          titleClass: 'text-[12px]',
           triangleSize: 18,
           squareSize: 'w-4 h-4',
           xSize: 'text-2xl',
@@ -99,10 +99,10 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
           xSize: 'text-4xl',
           xWeight: 'font-normal'
         },
-        large: { 
-          ...desktopConfigs.large, 
-          containerClass: 'w-48 h-48', 
-          wrapperClass: 'w-24', 
+        large: {
+          ...desktopConfigs.large,
+          containerClass: 'w-40 h-40',
+          wrapperClass: 'w-24',
           titleClass: 'text-sm',
           triangleSize: 22,
           squareSize: 'w-6 h-6',

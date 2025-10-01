@@ -31,7 +31,7 @@ const getSpacingConfig = (cols, diagramType, isPreview = false) => {
         : (is12Fret ? '1.5rem' : '1rem'),   // ← CHORD SHEET: Vertical space
       columnGap: isPreview
         ? (is12Fret ? '3.5rem' : '6rem')    // ← PREVIEW: Horizontal space
-        : (is12Fret ? '2.5rem' : '2rem'),   // ← CHORD SHEET: Horizontal space
+        : (is12Fret ? '2.5rem' : '3rem'),   // ← CHORD SHEET: Horizontal space (increased for fret numbers)
       displaySize: is12Fret ? 'medium' : 'large'
     };
   }
@@ -55,7 +55,7 @@ const getSpacingConfig = (cols, diagramType, isPreview = false) => {
         : (is12Fret ? '0.75rem' : '0.5rem'), // ← CHORD SHEET: Vertical space
       columnGap: isPreview
         ? (is12Fret ? '2rem' : '1.5rem')    // ← PREVIEW: Horizontal space
-        : (is12Fret ? '1.5rem' : '1rem'),   // ← CHORD SHEET: Horizontal space
+        : (is12Fret ? '1.5rem' : '1.5rem'),   // ← CHORD SHEET: Horizontal space (increased for fret numbers)
       displaySize: 'small'
     };
   }
