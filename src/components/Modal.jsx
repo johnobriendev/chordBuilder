@@ -15,11 +15,11 @@ export const Modal = ({ isOpen, onClose, title, children, actions }) => {
             <X size={20} />
           </button>
         </div>
-        <div className="p-8 bg-surface-alt overflow-auto max-h-[80vh] modal-preview-content">
+        <div className={`p-8 bg-surface-alt overflow-auto max-h-[80vh] modal-preview-content ${!actions ? 'rounded-b-xl' : ''}`}>
           {children}
         </div>
         {actions && (
-          <div className="p-4 border-t border-border flex justify-end gap-2">
+          <div className="p-4 border-t border-border flex justify-end gap-2 rounded-b-xl">
             {actions}
           </div>
         )}
