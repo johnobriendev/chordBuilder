@@ -151,6 +151,34 @@ function App() {
     setEditingIndex(index);
   };
 
+  // Handler for copying a chord
+  const handleCopyChord = (chord) => {
+    // Check if there's room for another chord
+    const maxChords = getMaxChords(gridConfig);
+    if (chords.length >= maxChords) {
+      const gridLabel = `${gridConfig.rows}x${gridConfig.cols} ${gridConfig.diagramType}`;
+      showErrorMessage(`Cannot copy chord. The current ${gridLabel} grid can only display ${maxChords} chords. Please switch to a larger grid size or remove some chords.`);
+      return;
+    }
+
+    // Create a deep copy of the chord with a new ID
+    const copiedChord = {
+      ...chord,
+      id: Date.now().toString(), // Generate new unique ID
+      // Deep copy arrays to avoid reference issues
+      notes: [...(chord.notes || [])],
+      openStrings: [...(chord.openStrings || [])],
+      rootNotes: [...(chord.rootNotes || [])],
+      xMarks: [...(chord.xMarks || [])],
+      triangles: [...(chord.triangles || [])],
+      squares: [...(chord.squares || [])],
+      fretNumbers: [...(chord.fretNumbers || [])]
+    };
+
+    // Add the copied chord to the end of the array
+    setChords(prevChords => [...prevChords, copiedChord]);
+  };
+
   const handleClearSheet = () => {
     // Reset all the state that accumulates over time
     setChords([]); // Clear all chords - this is the main goal
@@ -504,6 +532,7 @@ function App() {
               gridConfig={gridConfig}
               setChords={setChords}
               onEditChord={handleEditChord}
+              onCopyChord={handleCopyChord}
               isInteractive={true}
               title={sheetTitle}
               onTitleChange={setSheetTitle}

@@ -1,7 +1,7 @@
 // src/components/ChordSheet.jsx
 import React, { forwardRef } from 'react'
 import ChordDisplay from './ChordDisplay';
-import { Trash2, Edit2 } from 'lucide-react';
+import { Trash2, Edit2, Copy } from 'lucide-react';
 
 // ====================================================================
 // SPACING CONFIGURATION - Controls space BETWEEN chord diagrams
@@ -88,6 +88,7 @@ const ChordSheet = forwardRef(({
   isInteractive = false, // true = can edit/delete chords
   setChords,
   onEditChord,
+  onCopyChord,
   title = "",
   onTitleChange
 }, ref) => {
@@ -246,19 +247,28 @@ const ChordSheet = forwardRef(({
                     title={`This ${chord.numFrets || 6}-fret chord may not display properly in ${gridConfig.diagramType} grid`} />
                 )}
 
-                {/* Edit/Delete buttons (only in interactive mode) */}
+                {/* Edit/Copy/Delete buttons (only in interactive mode) */}
                 {isInteractive && (
                   <div className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100
                                 transition-opacity flex gap-1 p-1 z-10">
                     <button
                       onClick={() => onEditChord(chord, originalIndex)}
                       className="p-1.5 bg-primary text-white rounded-lg hover:bg-primary-hover focus:outline-none transition-colors shadow-sm"
+                      title="Edit chord"
                     >
                       <Edit2 size={16} />
                     </button>
                     <button
+                      onClick={() => onCopyChord(chord)}
+                      className="p-1.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none transition-colors shadow-sm"
+                      title="Copy chord"
+                    >
+                      <Copy size={16} />
+                    </button>
+                    <button
                       onClick={() => handleDeleteChord(originalIndex)}
                       className="p-1.5 bg-red-500 text-white rounded-lg hover:bg-red-600 focus:outline-none transition-colors shadow-sm"
+                      title="Delete chord"
                     >
                       <Trash2 size={16} />
                     </button>
