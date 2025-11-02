@@ -148,14 +148,19 @@ const ChordSheet = forwardRef(({
   const getMobileStyles = () => {
     if (isPreview) return {}; // No mobile scaling in preview
 
-    const is12Fret = gridConfig.diagramType === '12-fret';
-    const baseScale = window.innerWidth < 640 ? 0.9 : 1.0;
-    const fretScale = is12Fret ? 0.85 : 1.0;
+    // Check if we're on mobile
+    const isMobile = window.innerWidth < 768;
 
+    if (!isMobile) return {};
+
+    // For mobile, maintain proper spacing between chords
+    // Don't compress the layout - let it scroll horizontally instead
     return {
       padding: '0.5rem',
-      transform: `scale(${baseScale * fretScale})`,
-      transformOrigin: 'top left'
+      // Maintain generous spacing on mobile so chords don't overlap
+      rowGap: '2rem',
+      columnGap: '2rem',
+      minWidth: 'fit-content' // Allow grid to expand beyond container width
     };
   };
 
@@ -189,33 +194,39 @@ const ChordSheet = forwardRef(({
   // ====================================================================
   // MAIN GRID CONTENT RENDERING
   // ====================================================================
-  const renderContent = () => (
-    <div
-      style={{
-        // MAIN GRID LAYOUT with separate row and column gaps
-        display: 'grid',
-        gridTemplateColumns: `repeat(${gridConfig.cols}, minmax(0, 1fr))`,
-        rowGap: spacing.rowGap,
-        columnGap: spacing.columnGap,
-        width: '100%',
-        // GRID-SPECIFIC PADDING FOR PDF
-        paddingTop: isPreview
-          ? (gridConfig.cols <= 4 ? '0.25in' : gridConfig.cols <= 6 ? '0.1in' : '0.05in')
-          : '1rem',
-        paddingLeft: isPreview
-          ? (gridConfig.cols <= 4 ? '0.75in' : gridConfig.cols <= 6 ? '0.75in' : '0.25in')
-          : (gridConfig.cols <= 4 ? '1rem' : gridConfig.cols <= 6 ? '1.5rem' : '0.75rem'),
-        paddingRight: isPreview
-          ? (gridConfig.cols <= 4 ? '0.75in' : gridConfig.cols <= 6 ? '0.75in' : '0.25in')
-          : (gridConfig.cols <= 4 ? '1rem' : gridConfig.cols <= 6 ? '1.5rem' : '0.75rem'),
-        paddingBottom: isPreview
-          ? (gridConfig.cols <= 4 ? '0.25in' : gridConfig.cols <= 6 ? '0.1in' : '0.05in')
-          : '1rem',
-        boxSizing: 'border-box',
-        backgroundColor: isPreview ? 'white' : '#ffffff',
-        ...getMobileStyles()
-      }}
-    >
+  const renderContent = () => {
+    const mobileStyles = getMobileStyles();
+    const isMobile = Object.keys(mobileStyles).length > 0;
+
+    return (
+      <div
+        style={{
+          // MAIN GRID LAYOUT with separate row and column gaps
+          display: 'grid',
+          // On mobile, use fixed width columns to prevent compression
+          gridTemplateColumns: isMobile
+            ? `repeat(${gridConfig.cols}, minmax(150px, 1fr))`
+            : `repeat(${gridConfig.cols}, minmax(0, 1fr))`,
+          rowGap: mobileStyles.rowGap || spacing.rowGap,
+          columnGap: mobileStyles.columnGap || spacing.columnGap,
+          width: isMobile ? mobileStyles.minWidth : '100%',
+          // GRID-SPECIFIC PADDING FOR PDF
+          paddingTop: isPreview
+            ? (gridConfig.cols <= 4 ? '0.25in' : gridConfig.cols <= 6 ? '0.1in' : '0.05in')
+            : (isMobile ? '0.5rem' : '1rem'),
+          paddingLeft: isPreview
+            ? (gridConfig.cols <= 4 ? '0.75in' : gridConfig.cols <= 6 ? '0.75in' : '0.25in')
+            : (isMobile ? '0.5rem' : (gridConfig.cols <= 4 ? '1rem' : gridConfig.cols <= 6 ? '1.5rem' : '0.75rem')),
+          paddingRight: isPreview
+            ? (gridConfig.cols <= 4 ? '0.75in' : gridConfig.cols <= 6 ? '0.75in' : '0.25in')
+            : (isMobile ? '0.5rem' : (gridConfig.cols <= 4 ? '1rem' : gridConfig.cols <= 6 ? '1.5rem' : '0.75rem')),
+          paddingBottom: isPreview
+            ? (gridConfig.cols <= 4 ? '0.25in' : gridConfig.cols <= 6 ? '0.1in' : '0.05in')
+            : (isMobile ? '0.5rem' : '1rem'),
+          boxSizing: 'border-box',
+          backgroundColor: isPreview ? 'white' : '#ffffff'
+        }}
+      >
       {slots.map((slot, index) => {
         const { chord, originalIndex, isCompatible } = slot;
 
@@ -287,28 +298,37 @@ const ChordSheet = forwardRef(({
         );
       })}
     </div>
-  );
+    );
+  };
 
   // ====================================================================
   // MAIN RENDER
   // ====================================================================
+  const isMobile = window.innerWidth < 768;
+
   return (
     <div
       ref={ref}
       id={id}
-      className={!isPreview ? 'max-w-full overflow-x-auto' : ''}
+      className={!isPreview ? 'max-w-full' : ''}
       style={{
         // OVERALL SHEET CONTAINER
         width: isPreview ? '8.5in' : '100%',   // PDF vs screen width
         minHeight: isPreview ? '11in' : 'auto', // PDF vs screen height
+        maxHeight: isPreview ? 'none' : (isMobile ? 'calc(100vh - 250px)' : 'none'),
         margin: '0',
-        padding: isPreview ? '0' : '1.5rem',
+        padding: isPreview ? '0' : (isMobile ? '0.75rem' : '1.5rem'),
         backgroundColor: isPreview ? 'white' : '#ffffff',
-        overflow: isPreview ? 'hidden' : 'auto',
+        // Enable both horizontal and vertical scrolling on mobile
+        overflow: isPreview ? 'hidden' : (isMobile ? 'auto' : 'auto'),
+        overflowX: isPreview ? 'hidden' : (isMobile ? 'scroll' : 'auto'),
+        overflowY: isPreview ? 'hidden' : (isMobile ? 'scroll' : 'auto'),
         boxSizing: 'border-box',
         borderRadius: isPreview ? '0' : '0.75rem',
         border: isPreview ? 'none' : '1px solid #aecbeb',
-        boxShadow: isPreview ? 'none' : '0 1px 3px rgba(0, 0, 0, 0.06)'
+        boxShadow: isPreview ? 'none' : '0 1px 3px rgba(0, 0, 0, 0.06)',
+        // Smooth scrolling for better UX
+        WebkitOverflowScrolling: 'touch'
       }}
     >
       {renderTitle()}
