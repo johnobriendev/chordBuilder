@@ -319,16 +319,16 @@ const ChordSheet = forwardRef(({
         margin: '0',
         padding: isPreview ? '0' : (isMobile ? '0.75rem' : '1.5rem'),
         backgroundColor: isPreview ? 'white' : '#ffffff',
-        // Enable both horizontal and vertical scrolling on mobile
-        overflow: isPreview ? 'hidden' : (isMobile ? 'auto' : 'auto'),
-        overflowX: isPreview ? 'hidden' : (isMobile ? 'scroll' : 'auto'),
-        overflowY: isPreview ? 'hidden' : (isMobile ? 'scroll' : 'auto'),
+        // Enable scrolling ONLY on mobile, not on desktop
+        overflow: isPreview ? 'hidden' : (isMobile ? 'auto' : 'visible'),
+        overflowX: isPreview ? 'hidden' : (isMobile ? 'scroll' : 'visible'),
+        overflowY: isPreview ? 'hidden' : (isMobile ? 'scroll' : 'visible'),
         boxSizing: 'border-box',
         borderRadius: isPreview ? '0' : '0.75rem',
         border: isPreview ? 'none' : '1px solid #aecbeb',
         boxShadow: isPreview ? 'none' : '0 1px 3px rgba(0, 0, 0, 0.06)',
-        // Smooth scrolling for better UX
-        WebkitOverflowScrolling: 'touch'
+        // Smooth scrolling for better UX on mobile
+        WebkitOverflowScrolling: isMobile ? 'touch' : 'auto'
       }}
     >
       {renderTitle()}
