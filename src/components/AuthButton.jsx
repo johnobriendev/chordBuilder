@@ -20,7 +20,7 @@ const AuthButton = ({onOpenDashboard}) => {
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-2 px-3 py-1.5 text-sm bg-green-50 text-green-700 rounded-lg border border-green-200">
           <User size={16} />
-          <span>{user?.name || user?.email || 'User'}</span>
+          <span>{user?.email || user?.name || 'User'}</span>
         </div>
         <button
           onClick={onOpenDashboard}
