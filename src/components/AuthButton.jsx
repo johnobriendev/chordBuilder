@@ -48,7 +48,11 @@ const AuthButton = ({onOpenDashboard}) => {
 
   return (
     <button
-      onClick={() => loginWithRedirect()}
+      onClick={() => loginWithRedirect({
+        authorizationParams: {
+          prompt: 'login'
+        }
+      })}
       className="px-3 py-1.5 text-sm bg-primary bg-opacity-10 hover:bg-opacity-20
                  text-primary rounded-lg flex items-center gap-2 transition-colors"
     >
