@@ -1,7 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Trash2, Plus, Save, Guitar, X, Triangle, Square } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Trash2, Plus, Save, Guitar, X, Triangle, Square, Download } from 'lucide-react';
+import ChordDisplay from './ChordDisplay';
+import { Modal } from './Modal';
+import { generateChordImage } from '../utils/imageUtils';
 
-const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
+const GuitarDiagram = ({
+  onAddToSheet = () => { },
+  initialChord = null,
+  onExportSuccess = () => { },
+  onExportError = () => { }
+}) => {
   // Dynamic fret count - this is the key change that enables 12-fret diagrams
   const [numStrings, setNumStrings] = useState(6);
   const [numFrets, setNumFrets] = useState(6); // New state for fret count
@@ -20,6 +28,9 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
 
   // NEW: Mode state - expanded to include symbol modes
   const [currentMode, setCurrentMode] = useState('normal'); // normal, root, x, triangle, square
+
+  const [showExportOptions, setShowExportOptions] = useState(false);
+  const exportRef = useRef(null);
 
 
   // Reset states when changing number of strings OR frets
@@ -267,6 +278,23 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
     clearDiagram();
   };
 
+  const handleExportImage = async (format) => {
+    setShowExportOptions(false);
+
+    const isEmpty = notes.size === 0 && openStrings.size === 0 && rootNotes.size === 0;
+    if (isEmpty) {
+      onExportError('Add some notes to the diagram before exporting an image.');
+      return;
+    }
+
+    const success = await generateChordImage(exportRef.current, title, format);
+    if (success) {
+      onExportSuccess('Image downloaded successfully!');
+    } else {
+      onExportError('Failed to export image. Please try again.');
+    }
+  };
+
   // Helper function to check if a position is the root note
   const isRootNote = (string, fret, isOpen = false) => {
     const noteId = isOpen ? createOpenStringId(string) : createNoteId(string, fret);
@@ -291,6 +319,21 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
   // Calculate the height dynamically based on fret count
   // 6 frets = 20rem, 12 frets should be proportionally taller was 28rem
   const diagramHeight = `${(20 * numFrets) / 6}rem`;
+
+  // Mirrors the shape handleSubmit sends via onAddToSheet, but reflects
+  // live state so it can be captured for image export at any time
+  const currentChordData = {
+    title: title || 'Untitled',
+    fretNumbers,
+    notes: Array.from(notes),
+    openStrings: Array.from(openStrings),
+    rootNotes: Array.from(rootNotes),
+    xMarks: Array.from(xMarks),
+    triangles: Array.from(triangles),
+    squares: Array.from(squares),
+    numStrings,
+    numFrets
+  };
 
   return (
     <div className="w-full max-w-lg mx-auto p-3">
@@ -540,17 +583,17 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
       <div className="mt-3 flex gap-2">
         <button
           onClick={clearDiagram}
-          className="flex items-center gap-2 px-4 py-2 bg-secondary text-white rounded-lg hover:bg-secondary-hover transition-colors"
+          className="flex-1 flex items-center justify-center gap-1.5 px-2 py-2 text-sm bg-secondary text-white rounded-lg hover:bg-secondary-hover transition-colors"
         >
           <Trash2 size={16} /> Clear
         </button>
         <button
           onClick={handleSubmit}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors"
+          className="flex-1 flex items-center justify-center gap-1.5 px-2 py-2 text-sm bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors"
         >
           {initialChord ? (
             <>
-              <Save size={16} /> Save Changes
+              <Save size={16} /> Save
             </>
           ) : (
             <>
@@ -558,6 +601,57 @@ const GuitarDiagram = ({ onAddToSheet = () => { }, initialChord = null }) => {
             </>
           )}
         </button>
+        <button
+          onClick={() => setShowExportOptions(true)}
+          className="flex-1 flex items-center justify-center gap-1.5 px-2 py-2 text-sm bg-surface-alt text-text-secondary rounded-lg hover:bg-gray-200 transition-colors"
+        >
+          <Download size={16} /> Export
+        </button>
+      </div>
+
+      <Modal
+        isOpen={showExportOptions}
+        onClose={() => setShowExportOptions(false)}
+        title="Export as"
+        maxWidth="max-w-sm"
+        actions={
+          <>
+            <button
+              onClick={() => setShowExportOptions(false)}
+              className="px-4 py-2 text-text-secondary hover:bg-surface-alt rounded-lg transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => handleExportImage('png')}
+              className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors"
+            >
+              PNG
+            </button>
+            <button
+              onClick={() => handleExportImage('jpeg')}
+              className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors"
+            >
+              JPG
+            </button>
+          </>
+        }
+      >
+        <p className="text-text-secondary">Choose a format to download this chord or scale diagram as an image.</p>
+      </Modal>
+
+      {/* Off-screen clean render used only for image export capture */}
+      <div
+        ref={exportRef}
+        style={{
+          position: 'absolute',
+          left: '-9999px',
+          top: 0,
+          backgroundColor: '#ffffff',
+          padding: '2rem 2rem 2rem 4rem'
+        }}
+      >
+        <ChordDisplay chord={currentChordData} size="large" isPreview={true} />
       </div>
     </div>
   );

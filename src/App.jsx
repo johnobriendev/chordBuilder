@@ -8,7 +8,7 @@ import Dashboard from './components/Dashboard';
 import { Modal } from './components/Modal';
 import AuthButton from './components/AuthButton';
 import { generatePDF } from './utils/pdfUtils';
-import { HelpCircle, AlertTriangle, CheckCircle, Menu, X, User, Instagram, Facebook, Youtube, Linkedin, Music, Code } from 'lucide-react';
+import { HelpCircle, AlertTriangle, CheckCircle, Menu, X, User, Instagram, Facebook, Youtube, Linkedin } from 'lucide-react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect } from 'react';
 import { setTokenGetter, createSheet, getCurrentUser, getSheet, updateSheet } from './services/api';
@@ -513,12 +513,11 @@ function App() {
           <div className="w-full lg:w-[400px] flex-shrink-0">
             <section className="bg-surface rounded-xl shadow-sm border border-border">
               <div className="p-6">
-                <h2 className="text-lg font-medium mb-4 text-text-primary">
-                  {editingChord ? 'Edit Chord' : 'Create New Chord or Scale'}
-                </h2>
                 <GuitarDiagram
                   onAddToSheet={handleAddChord}
                   initialChord={editingChord}
+                  onExportSuccess={showSuccessMessage}
+                  onExportError={showErrorMessage}
                   className="w-full max-w-sm mx-auto"
                 />
               </div>
@@ -726,14 +725,6 @@ function App() {
             <a href="https://www.linkedin.com/in/johnobriendev/" target="_blank" rel="noopener noreferrer"
               className="text-gray-600 hover:text-blue-600 transition-colors" title="Connect on LinkedIn">
               <Linkedin size={24} />
-            </a>
-            <a href="https://johnobrienguitar.com/" target="_blank" rel="noopener noreferrer"
-              className="text-gray-600 hover:text-blue-600 transition-colors" title="Visit my Music Site">
-              <Music size={24} />
-            </a>
-            <a href="https://johnobriendev.com/" target="_blank" rel="noopener noreferrer"
-              className="text-gray-600 hover:text-green-600 transition-colors" title="Visit my Dev Portfolio">
-              <Code size={24} />
             </a>
           </div>
         </div>

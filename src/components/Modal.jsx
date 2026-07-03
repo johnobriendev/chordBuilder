@@ -1,11 +1,11 @@
 import { X } from 'lucide-react';
 
-export const Modal = ({ isOpen, onClose, title, children, actions }) => {
+export const Modal = ({ isOpen, onClose, title, children, actions, maxWidth = 'max-w-4xl' }) => {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start sm:items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-surface rounded-xl shadow-xl max-w-4xl w-full my-4">
+      <div className={`bg-surface rounded-xl shadow-xl ${maxWidth} w-full my-4`}>
         <div className="p-4 border-b border-border flex justify-between items-center">
           <h3 className="text-lg font-semibold text-text-primary">{title}</h3>
           <button
