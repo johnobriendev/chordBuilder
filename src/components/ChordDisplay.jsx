@@ -318,7 +318,7 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
               {[...Array(NUM_FRETS)].map((_, fretIndex) => (
                 <div
                   key={`note-container-${stringIndex}-${fretIndex}`}
-                  className="absolute"
+                  className="absolute note-container"
                   style={{
                     left: `${(stringIndex * 100) / (NUM_STRINGS - 1)}%`,
                     top: `${((fretIndex * 100) / NUM_FRETS) + (100 / (NUM_FRETS * 2))}%`,
@@ -327,7 +327,10 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
                 >
                   {/* Base note - show if it's in the notes array OR if it's the root note */}
                   {(hasNote(stringIndex, fretIndex) || isRootNote(stringIndex, fretIndex)) && (
-                    <div className={`${sizeConfig.dotSize} rounded-full ${getNoteColor(stringIndex, fretIndex)}`} />
+                    <div
+                      className={`absolute ${sizeConfig.dotSize} rounded-full ${getNoteColor(stringIndex, fretIndex)}`}
+                      style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
+                    />
                   )}
                   
                   {/* NEW: Symbols */}
@@ -363,7 +366,7 @@ const ChordDisplay = ({ chord, size = 'medium', isPreview = false }) => {
                   
                   {hasXMark(stringIndex, fretIndex) && (
                     <div 
-                      className={`absolute text-black ${sizeConfig.xWeight} ${sizeConfig.xSize} pdf-x-mark-${size}`}
+                      className={`absolute text-black ${sizeConfig.xWeight} ${sizeConfig.xSize} pdf-x-mark-${size} fretted-x-mark`}
                       style={{ 
                         transform: 'translate(-45%, -50%)',
                         top: '50%',

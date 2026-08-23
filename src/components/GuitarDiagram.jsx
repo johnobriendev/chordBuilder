@@ -648,7 +648,7 @@ const GuitarDiagram = ({
           left: '-9999px',
           top: 0,
           backgroundColor: '#ffffff',
-          padding: '2rem 2rem 2rem 4rem'
+          padding: '0rem 1rem 1rem 1.5rem'
         }}
       >
         <ChordDisplay chord={currentChordData} size="large" isPreview={true} />

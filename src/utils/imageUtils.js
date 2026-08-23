@@ -16,6 +16,19 @@ const createSafeImageFilename = (title, extension) => {
 };
 
 export const generateChordImage = async (element, title, format = 'png') => {
+  // html2canvas computes note-container size from its in-flow children (the dot).
+  // This makes its translate(-50%,-50%) resolve to different pixel shifts depending
+  // on whether a dot coexists with the x-mark. Forcing containers to zero-size
+  // normalises the baseline so all absolute children position from the intersection point.
+  const styleEl = document.createElement('style');
+  styleEl.id = 'image-export-x-fix';
+  styleEl.innerHTML = `
+    .note-container { width: 0 !important; height: 0 !important; }
+    .fretted-x-mark { transform: translate(-25%, -50%) !important; }
+    .pdf-x-mark-large:not(.fretted-x-mark) { transform: translate(-25%, calc(-55% - 0px)) !important; }
+  `;
+  document.head.appendChild(styleEl);
+
   try {
     const canvas = await html2canvas(element, {
       scale: 3,
@@ -35,5 +48,7 @@ export const generateChordImage = async (element, title, format = 'png') => {
   } catch (error) {
     console.error('Error generating image:', error);
     return false;
+  } finally {
+    document.head.removeChild(styleEl);
   }
 };
