@@ -8,6 +8,7 @@ import Dashboard from './components/Dashboard';
 import { Modal } from './components/Modal';
 import AuthButton from './components/AuthButton';
 import { generatePDF } from './utils/pdfUtils';
+import { generateAllChordImages } from './utils/imageUtils';
 import { HelpCircle, AlertTriangle, CheckCircle, Menu, X, User, Instagram, Facebook, Youtube, Linkedin } from 'lucide-react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect } from 'react';
@@ -365,6 +366,27 @@ function App() {
     }
   };
 
+  const handleExportAllImages = async () => {
+    if (chords.length === 0) {
+      showErrorMessage('No chords to export. Please add some chords first.');
+      return;
+    }
+
+    showSuccessMessage(`Exporting ${chords.length} image${chords.length !== 1 ? 's' : ''}...`);
+
+    const success = await generateAllChordImages(
+      chords,
+      'png',
+      (current, total) => showSuccessMessage(`Exporting image ${current} of ${total}...`)
+    );
+
+    if (success) {
+      showSuccessMessage(`${chords.length} image${chords.length !== 1 ? 's' : ''} exported successfully!`);
+    } else {
+      showErrorMessage('Some images failed to export. Please try again.');
+    }
+  };
+
   const handleNewSheet = () => {
     setCurrentSheetId(null);
     setChords([]);
@@ -459,6 +481,7 @@ function App() {
                 onClearRequest={handleClearSheetRequest}
                 onSaveSheet={handleSaveSheet}
                 onNewSheet={handleNewSheet}
+                onExportAll={handleExportAllImages}
               />
             </div>
           </div>

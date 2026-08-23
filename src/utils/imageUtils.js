@@ -1,4 +1,11 @@
 import html2canvas from 'html2canvas';
+import { createRoot } from 'react-dom/client';
+import { flushSync } from 'react-dom';
+import React from 'react';
+import ChordDisplay from '../components/ChordDisplay';
+
+const EXPORT_CONTAINER_STYLE =
+  'position: absolute; left: -9999px; top: 0; background-color: #ffffff; padding: 0.5rem 1rem 1rem 2.25rem;';
 
 const createSafeImageFilename = (title, extension) => {
   let safeTitle = (title || '')
@@ -51,4 +58,46 @@ export const generateChordImage = async (element, title, format = 'png') => {
   } finally {
     document.head.removeChild(styleEl);
   }
+};
+
+export const generateAllChordImages = async (chords, format = 'png', onProgress) => {
+  if (!chords || chords.length === 0) return false;
+
+  let allSucceeded = true;
+
+  for (let i = 0; i < chords.length; i++) {
+    if (onProgress) onProgress(i + 1, chords.length);
+
+    const chord = chords[i];
+    const container = document.createElement('div');
+    container.style.cssText = EXPORT_CONTAINER_STYLE;
+    document.body.appendChild(container);
+
+    const root = createRoot(container);
+
+    try {
+      flushSync(() => {
+        root.render(
+          React.createElement(ChordDisplay, { chord, size: 'large', isPreview: true })
+        );
+      });
+
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      const success = await generateChordImage(container, chord.title || `chord-${i + 1}`, format);
+      if (!success) allSucceeded = false;
+
+      if (i < chords.length - 1) {
+        await new Promise(resolve => setTimeout(resolve, 300));
+      }
+    } catch (error) {
+      console.error(`Error exporting chord "${chord.title}":`, error);
+      allSucceeded = false;
+    } finally {
+      root.unmount();
+      document.body.removeChild(container);
+    }
+  }
+
+  return allSucceeded;
 };

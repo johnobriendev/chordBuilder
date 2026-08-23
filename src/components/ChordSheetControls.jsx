@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Grid, Eye, Guitar, Trash2, Save, Plus, ChevronDown } from 'lucide-react';
+import { Grid, Eye, Guitar, Trash2, Save, Plus, ChevronDown, Images } from 'lucide-react';
 import { useAuth0 } from '@auth0/auth0-react';
 
-const ChordSheetControls = ({ gridConfig, onGridChange, onPreview, onClearRequest, onSaveSheet, onNewSheet }) => {
+const ChordSheetControls = ({ gridConfig, onGridChange, onPreview, onClearRequest, onSaveSheet, onNewSheet, onExportAll }) => {
   const { isAuthenticated } = useAuth0();
   const [showActions, setShowActions] = useState(false);
 
@@ -145,6 +145,15 @@ const ChordSheetControls = ({ gridConfig, onGridChange, onPreview, onClearReques
               >
                 <Eye size={14} /> Preview & Download
               </button>
+              <button
+                onClick={() => {
+                  onExportAll();
+                  setShowActions(false);
+                }}
+                className="w-full flex items-center gap-2.5 px-3 py-2 text-left hover:bg-primary hover:bg-opacity-10 text-primary transition-colors"
+              >
+                <Images size={14} /> Export All Images
+              </button>
             </div>
           </div>
         )}
@@ -166,6 +175,9 @@ const ChordSheetControls = ({ gridConfig, onGridChange, onPreview, onClearReques
         )}
         <button onClick={onPreview} className="p-1.5 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors shadow-sm" title="Preview">
           <Eye size={16} />
+        </button>
+        <button onClick={onExportAll} className="p-1.5 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors shadow-sm" title="Export All Images">
+          <Images size={16} />
         </button>
       </div>
     </div>
